@@ -6,523 +6,250 @@
 
 ## System Overview
 
-```
-                                    LASS ECOSYSTEM
- ============================================================================
-                                        
-                              .lass file
-                                  |
-                                  v
- ============================================================================
- |                         @lass-lang/core                                  |
- |                      (Bundler-Agnostic Transpiler)                       |
- |                                                                          |
- |   .lass source ──► Scanner ──► Transpiler ──► JavaScript Module          |
- |                                                                          |
- ============================================================================
-                                  |
-                                  v
- ============================================================================
- |                      @lass-lang/vite-plugin-lass                         |
- |                       (Vite Integration Layer)                           |
- |                                                                          |
- |   JS Module ──► Vite Hooks ──► Module Graph + CSS Extraction             |
- |                                                                          |
- ============================================================================
-                                  |
-                                  v
-                           Browser / Build
+```mermaid
+flowchart TB
+    subgraph Input
+        LASS[".lass file"]
+    end
+
+    subgraph Core["@lass-lang/core<br/>(Bundler-Agnostic Transpiler)"]
+        SCANNER["Scanner"]
+        TRANSPILER["Transpiler"]
+        LASS --> SCANNER --> TRANSPILER
+    end
+
+    subgraph Plugin["@lass-lang/vite-plugin-lass<br/>(Vite Integration Layer)"]
+        HOOKS["Vite Hooks"]
+        GRAPH["Module Graph"]
+        CSS_EXT["CSS Extraction"]
+        TRANSPILER --> HOOKS
+        HOOKS --> GRAPH
+        HOOKS --> CSS_EXT
+    end
+
+    subgraph Output
+        BROWSER["Browser / Build"]
+    end
+
+    GRAPH --> BROWSER
+    CSS_EXT --> BROWSER
 ```
 
 ## Package Architecture
 
-```
-┌───────────────────────────────────────────────────────────────────────────┐
-│                              WORKSPACE ROOT                               │
-│                          @lass-lang/dev-workspace                         │
-├───────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  packages/                                                                │
-│  ├────────────────────────────────────────────────────────────────────────┤
-│  │                                                                        │
-│  │  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  │  @lass-lang/core                                                │   │
-│  │  │  ══════════════                                                 │   │
-│  │  │  The transpiler. Converts .lass to .js                          │   │
-│  │  │                                                                 │   │
-│  │  │  src/                                                           │   │
-│  │  │  ├── index.ts      Main entry, transpile() function             │   │
-│  │  │  ├── scanner.ts    Zone detection, expression finding           │   │
-│  │  │  └── errors.ts     Error types and formatting                   │   │
-│  │  │                                                                 │   │
-│  │  │  Exports:                                                       │   │
-│  │  │  • transpile(source, options) → { code, map? }                  │   │
-│  │  │  • Scanner class                                                │   │
-│  │  │  • Error types                                                  │   │
-│  │  └─────────────────────────────────────────────────────────────────┘   │
-│  │                              │                                         │
-│  │                              │ depends on (dev)                        │
-│  │                              ▼                                         │
-│  │  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  │  @lass-lang/axioms                                              │   │
-│  │  │  ════════════════                                               │   │
-│  │  │  Test fixtures in markdown. Language specification.             │   │
-│  │  │                                                                 │   │
-│  │  │  files/                                                         │   │
-│  │  │  ├── css-passthrough.common.md    Pure CSS behavior             │   │
-│  │  │  ├── two-zone-model.common.md     Preamble + CSS zones          │   │
-│  │  │  ├── expressions.common.md        {{ expr }} interpolation      │   │
-│  │  │  ├── array-handling.common.md     Array auto-join               │   │
-│  │  │  └── module-graph.common.md       Vite integration (vite-only)  │   │
-│  │  │                                                                 │   │
-│  │  │  src/                                                           │   │
-│  │  │  ├── loader.ts     Parses axiom markdown files                  │   │
-│  │  │  └── types.ts      Axiom type definitions                       │   │
-│  │  └─────────────────────────────────────────────────────────────────┘   │
-│  │                                                                        │
-│  └────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  plugins/                                                                 │
-│  ├────────────────────────────────────────────────────────────────────────┤
-│  │                                                                        │
-│  │  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │  │  @lass-lang/vite-plugin-lass                                    │   │
-│  │  │  ══════════════════════════                                     │   │
-│  │  │  Vite plugin. Integrates transpiler with bundler.               │   │
-│  │  │                                                                 │   │
-│  │  │  src/                                                           │   │
-│  │  │  ├── index.ts          Plugin factory, exports lass()           │   │
-│  │  │  └── lib/                                                       │   │
-│  │  │      ├── 1-resolve.ts  resolveId hook (virtual modules)         │   │
-│  │  │      ├── 2-transform.ts transform hook (transpilation)          │   │
-│  │  │      ├── 3-load.ts     load hook (CSS extraction)               │   │
-│  │  │      ├── 4-hmr.ts      Hot Module Replacement                   │   │
-│  │  │      ├── state.ts      Shared plugin state                      │   │
-│  │  │      ├── utils.ts      Helper functions                         │   │
-│  │  │      ├── constants.ts  Plugin constants                         │   │
-│  │  │      └── types.ts      Type definitions                         │   │
-│  │  │                                                                 │   │
-│  │  │  test-app/             Manual testing application               │   │
-│  │  │  test-integration/     Browser-based integration tests          │   │
-│  │  │                                                                 │   │
-│  │  │  Dependencies:                                                  │   │
-│  │  │  • @lass-lang/core (runtime)                                    │   │
-│  │  │  • vite (peer)                                                  │   │
-│  │  └─────────────────────────────────────────────────────────────────┘   │
-│  │                                                                        │
-│  └────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-└───────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Workspace["@lass-lang/dev-workspace"]
+        subgraph Packages["packages/"]
+            subgraph Core["@lass-lang/core"]
+                CORE_INDEX["src/index.ts<br/>transpile() function"]
+                CORE_SCANNER["src/scanner.ts<br/>Zone detection"]
+                CORE_ERRORS["src/errors.ts<br/>Error types"]
+            end
+
+            subgraph Axioms["@lass-lang/axioms"]
+                AXIOM_FILES["files/<br/>*.common.md"]
+                AXIOM_LOADER["src/loader.ts"]
+                AXIOM_TYPES["src/types.ts"]
+            end
+        end
+
+        subgraph Plugins["plugins/"]
+            subgraph VitePlugin["@lass-lang/vite-plugin-lass"]
+                VP_INDEX["src/index.ts<br/>Plugin factory"]
+                VP_RESOLVE["src/lib/1-resolve.ts"]
+                VP_TRANSFORM["src/lib/2-transform.ts"]
+                VP_LOAD["src/lib/3-load.ts"]
+                VP_HMR["src/lib/4-hmr.ts"]
+                VP_STATE["src/lib/state.ts"]
+                VP_UTILS["src/lib/utils.ts"]
+            end
+        end
+    end
+
+    Core -.->|"devDependency"| Axioms
+    VitePlugin -->|"dependency"| Core
 ```
 
 ## Transpilation Pipeline (@lass-lang/core)
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           INPUT: .lass file                                 │
-│                                                                             │
-│   import { colors } from './tokens.js'                                      │
-│   const primary = colors.brand                                              │
-│   ---                                                                       │
-│   .button { background: {{ primary }}; }                                    │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  STEP 1: detectZones()                                                      │
-│  ══════════════════════                                                     │
-│                                                                             │
-│  Scanner.findSeparator() splits on "---":                                   │
-│                                                                             │
-│  ┌──────────────────────┐    ┌────────────────────────────────────────┐     │
-│  │  PREAMBLE ZONE       │    │  CSS ZONE                              │     │
-│  │  (JavaScript)        │    │  (CSS with expressions)                │     │
-│  │                      │    │                                        │     │
-│  │  import { colors }   │    │  .button { background: {{ primary }}; }│     │
-│  │    from './tokens'   │    │                                        │     │
-│  │  const primary =     │    │                                        │     │
-│  │    colors.brand      │    │                                        │     │
-│  └──────────────────────┘    └────────────────────────────────────────┘     │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  STEP 2: processExpressions()                                               │
-│  ═════════════════════════════                                              │
-│                                                                             │
-│  Scanner.findExpressions() finds {{ expr }} patterns:                       │
-│                                                                             │
-│  Input:  ".button { background: {{ primary }}; }"                           │
-│                                   ▲                                         │
-│                                   └─── Expression found                     │
-│                                                                             │
-│  Output: ".button { background: ${__lassExpr(primary)}; }"                  │
-│                                  ▲                                          │
-│                                  └─── Becomes template interpolation        │
-│                                                                             │
-│  The __lassExpr() helper handles:                                           │
-│  • null/undefined → ""                                                      │
-│  • arrays → flattened and joined                                            │
-│  • other → String()                                                         │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  STEP 3: buildOutput()                                                      │
-│  ══════════════════════                                                     │
-│                                                                             │
-│  Assembles final JavaScript module:                                         │
-│                                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────┐    │
-│  │  const __lassExpr = v => v == null ? '' : ...;  // Helper           │    │
-│  │                                                                     │    │
-│  │  import { colors } from './tokens.js'           // Preamble         │    │
-│  │  const primary = colors.brand                                       │    │
-│  │                                                                     │    │
-│  │  export default `.button { background: ${__lassExpr(primary)}; }`;  │    │
-│  │                   ▲                                                 │    │
-│  │                   └─── Template literal with CSS                    │    │
-│  └─────────────────────────────────────────────────────────────────────┘    │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        OUTPUT: JavaScript Module                            │
-│                                                                             │
-│  • Standard ES Module with default export                                   │
-│  • Imports are standard JS imports (bundler resolves them)                  │
-│  • Default export is the CSS string                                         │
-│  • Preamble code runs when module is imported                               │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Input["INPUT: .lass file"]
+        INPUT_CODE["import { colors } from './tokens.js'<br/>const primary = colors.brand<br/>---<br/>.button { background: {{ primary }}; }"]
+    end
+
+    subgraph Step1["STEP 1: detectZones()"]
+        FIND_SEP["Scanner.findSeparator()"]
+        subgraph Zones["Split on '---'"]
+            PREAMBLE["PREAMBLE ZONE<br/>(JavaScript)<br/><br/>import { colors }...<br/>const primary = ..."]
+            CSS_ZONE["CSS ZONE<br/>(CSS with expressions)<br/><br/>.button { background: {{ primary }}; }"]
+        end
+        INPUT_CODE --> FIND_SEP --> Zones
+    end
+
+    subgraph Step2["STEP 2: processExpressions()"]
+        FIND_EXPR["Scanner.findExpressions()"]
+        REPLACE["{{ primary }}<br/>↓<br/>${__lassExpr(primary)}"]
+        Zones --> FIND_EXPR --> REPLACE
+    end
+
+    subgraph Step3["STEP 3: buildOutput()"]
+        ASSEMBLE["Assemble JavaScript Module"]
+        OUTPUT_CODE["const __lassExpr = v => ...<br/><br/>import { colors } from './tokens.js'<br/>const primary = colors.brand<br/><br/>export default `.button { background: ${__lassExpr(primary)}; }`;"]
+        REPLACE --> ASSEMBLE --> OUTPUT_CODE
+    end
+
+    subgraph Output["OUTPUT: JavaScript Module"]
+        FEATURES["• Standard ES Module<br/>• Imports resolved by bundler<br/>• Default export = CSS string<br/>• Preamble runs on import"]
+    end
+
+    OUTPUT_CODE --> FEATURES
 ```
 
 ## Vite Plugin Flow (@lass-lang/vite-plugin-lass)
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         VITE DEV SERVER / BUILD                             │
-│                                                                             │
-│   import './styles.lass'                                                    │
-│           │                                                                 │
-│           ▼                                                                 │
-│   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │  1. RESOLVE (1-resolve.ts)                                          │   │
-│   │  ═══════════════════════════                                        │   │
-│   │                                                                     │   │
-│   │  • Handles .lass file resolution                                    │   │
-│   │  • Creates virtual modules: /path/file.lass.css                     │   │
-│   │                                                                     │   │
-│   │  file.lass → resolved                                               │   │
-│   │  file.lass.css → virtual module (for CSS extraction)                │   │
-│   └─────────────────────────────────────────────────────────────────────┘   │
-│           │                                                                 │
-│           ▼                                                                 │
-│   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │  2. TRANSFORM (2-transform.ts)                                      │   │
-│   │  ═══════════════════════════════                                    │   │
-│   │                                                                     │   │
-│   │  • Calls @lass-lang/core transpile()                                │   │
-│   │  • Returns JS module that:                                          │   │
-│   │    - Imports the virtual .lass.css file                             │   │
-│   │    - Executes preamble code                                         │   │
-│   │    - Exports CSS string                                             │   │
-│   │                                                                     │   │
-│   │  Output JS participates in Vite's MODULE GRAPH                      │   │
-│   │  (This is the "killer feature" - mutations persist!)                │   │
-│   └─────────────────────────────────────────────────────────────────────┘   │
-│           │                                                                 │
-│           ▼                                                                 │
-│   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │  3. LOAD (3-load.ts)                                                │   │
-│   │  ═════════════════════                                              │   │
-│   │                                                                     │   │
-│   │  • Handles virtual .lass.css modules                                │   │
-│   │  • Executes transpiled JS (in isolation) to get CSS string          │   │
-│   │  • Returns CSS to Vite's CSS pipeline                               │   │
-│   │                                                                     │   │
-│   │  Virtual module → Pure CSS string                                   │   │
-│   └─────────────────────────────────────────────────────────────────────┘   │
-│           │                                                                 │
-│           ▼                                                                 │
-│   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │  4. HMR (4-hmr.ts)                                                  │   │
-│   │  ═══════════════════                                                │   │
-│   │                                                                     │   │
-│   │  • Tracks dependencies (imports in preamble)                        │   │
-│   │  • Invalidates modules when .lass or deps change                    │   │
-│   │  • Enables live reload during development                           │   │
-│   └─────────────────────────────────────────────────────────────────────┘   │
-│           │                                                                 │
-│           ▼                                                                 │
-│                                                                             │
-│   ┌───────────────────────┐    ┌───────────────────────────────────────┐    │
-│   │  JS in Module Graph   │    │  CSS in Vite's CSS Pipeline           │    │
-│   │  (imports, mutations) │    │  (bundling, minification)             │    │
-│   └───────────────────────┘    └───────────────────────────────────────┘    │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Vite["VITE DEV SERVER / BUILD"]
+        IMPORT["import './styles.lass'"]
+
+        subgraph Resolve["1. RESOLVE (1-resolve.ts)"]
+            R_DESC["• Handles .lass file resolution<br/>• Creates virtual modules"]
+            R_FLOW["file.lass → resolved<br/>file.lass.css → virtual module"]
+        end
+
+        subgraph Transform["2. TRANSFORM (2-transform.ts)"]
+            T_DESC["• Calls @lass-lang/core transpile()<br/>• Returns JS module with CSS import<br/>• Executes preamble code"]
+            T_KEY["⭐ Output participates in MODULE GRAPH<br/>(Killer feature - mutations persist!)"]
+        end
+
+        subgraph Load["3. LOAD (3-load.ts)"]
+            L_DESC["• Handles virtual .lass.css modules<br/>• Executes JS in isolation for CSS<br/>• Returns CSS to Vite pipeline"]
+            L_FLOW["Virtual module → Pure CSS string"]
+        end
+
+        subgraph HMR["4. HMR (4-hmr.ts)"]
+            H_DESC["• Tracks dependencies<br/>• Invalidates on changes<br/>• Enables live reload"]
+        end
+
+        IMPORT --> Resolve --> Transform --> Load --> HMR
+
+        subgraph Output["Output"]
+            JS_OUT["JS in Module Graph<br/>(imports, mutations)"]
+            CSS_OUT["CSS in Vite Pipeline<br/>(bundling, minification)"]
+        end
+
+        HMR --> JS_OUT
+        HMR --> CSS_OUT
+    end
 ```
 
 ## The Killer Feature: Module Graph Integration
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    MODULE GRAPH PARTICIPATION                               │
-│                                                                             │
-│  This is what makes Lass unique among CSS preprocessors.                    │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │   shared-state.js                                                    │  │
-│  │   ════════════════                                                   │  │
-│  │   export const state = { value: 'initial' }                          │  │
-│  │                     │                                                │  │
-│  │                     │ imported by both                               │  │
-│  │          ┌──────────┴──────────┐                                     │  │
-│  │          ▼                     ▼                                     │  │
-│  │   ┌─────────────────┐   ┌─────────────────┐                         │  │
-│  │   │  theme.lass     │   │  main.js        │                         │  │
-│  │   │  ═══════════    │   │  ════════       │                         │  │
-│  │   │                 │   │                 │                         │  │
-│  │   │  import {state} │   │  import {state} │                         │  │
-│  │   │  state.value =  │   │  import './lass'│                         │  │
-│  │   │    'from-lass'  │   │                 │                         │  │
-│  │   │  ---            │   │  // state.value │                         │  │
-│  │   │  .box { ... }   │   │  // is now      │                         │  │
-│  │   │                 │   │  // 'from-lass' │                         │  │
-│  │   └─────────────────┘   └─────────────────┘                         │  │
-│  │          │                     │                                     │  │
-│  │          │ SAME module         │                                     │  │
-│  │          │ instance!           │                                     │  │
-│  │          └──────────┬──────────┘                                     │  │
-│  │                     ▼                                                │  │
-│  │              ┌─────────────┐                                         │  │
-│  │              │ shared-state│                                         │  │
-│  │              │ { value:    │                                         │  │
-│  │              │ 'from-lass'}│                                         │  │
-│  │              └─────────────┘                                         │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  WHY THIS MATTERS:                                                          │
-│  • Lass files can import and MUTATE shared state                            │
-│  • Other JS files see those mutations                                       │
-│  • Enables design tokens, theme switching, dynamic styling                  │
-│  • No other CSS preprocessor can do this                                    │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Feature["MODULE GRAPH PARTICIPATION"]
+        STATE["shared-state.js<br/>────────────────<br/>export const state = { value: 'initial' }"]
+
+        subgraph Importers["Both import the same module"]
+            LASS["theme.lass<br/>───────────<br/>import {state}<br/>state.value = 'from-lass'<br/>---<br/>.box { ... }"]
+            MAIN["main.js<br/>────────<br/>import {state}<br/>import './theme.lass'<br/><br/>// state.value<br/>// is now 'from-lass'"]
+        end
+
+        STATE --> LASS
+        STATE --> MAIN
+
+        SHARED["🔗 SAME module instance!<br/>────────────────<br/>shared-state<br/>{ value: 'from-lass' }"]
+
+        LASS --> SHARED
+        MAIN --> SHARED
+    end
+
+    subgraph Why["WHY THIS MATTERS"]
+        W1["• Lass files can import and MUTATE shared state"]
+        W2["• Other JS files see those mutations"]
+        W3["• Enables design tokens, theme switching, dynamic styling"]
+        W4["• No other CSS preprocessor can do this"]
+    end
+
+    Feature --> Why
 ```
 
 ## Test Infrastructure
 
-```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                           TEST ARCHITECTURE                                │
-│                                                                            │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  UNIT TESTS (pnpm test)                                             │   │
-│  │  ═══════════════════════                                            │   │
-│  │                                                                     │   │
-│  │  @lass-lang/axioms     27 tests   Axiom loader functionality        │   │
-│  │  @lass-lang/core      154 tests   Scanner, transpiler, errors       │   │
-│  │  vite-plugin-lass      54 tests   Plugin hooks, transforms          │   │
-│  │                       ─────────                                     │   │
-│  │  Total:               235 tests                                     │   │
-│  │                                                                     │   │
-│  │  Framework: Vitest 4.0.18                                           │   │
-│  │  Coverage: 100% line coverage                                       │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  INTEGRATION TESTS (pnpm test:integration)                          │   │
-│  │  ═════════════════════════════════════════                          │   │
-│  │                                                                     │   │
-│  │  Location: plugins/vite-plugin-lass/test-integration/               │   │
-│  │                                                                     │   │
-│  │  • Runs in real Chromium browser (Vitest Browser Mode)              │   │
-│  │  • Uses Playwright for browser automation                           │   │
-│  │  • Verifies module graph participation (killer feature)             │   │
-│  │  • Verifies CSS injection and styling                               │   │
-│  │                                                                     │   │
-│  │  Tests:                                                             │   │
-│  │  • Module graph mutation persistence                                │   │
-│  │  • Import order behavior                                            │   │
-│  │  • CSS application to DOM                                           │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  AXIOM-DRIVEN DEVELOPMENT                                           │   │
-│  │  ═════════════════════════                                          │   │
-│  │                                                                     │   │
-│  │  Axioms in @lass-lang/axioms define expected behavior:              │   │
-│  │                                                                     │   │
-│  │  ```markdown                                                        │   │
-│  │  ## valid: expression interpolation                                 │   │
-│  │                                                                     │   │
-│  │  ```lass                                                            │   │
-│  │  const x = 42                                                       │   │
-│  │  ---                                                                │   │
-│  │  .foo { width: {{ x }}px; }                                         │   │
-│  │  ```                                                                │   │
-│  │                                                                     │   │
-│  │  ```css                                                             │   │
-│  │  .foo { width: 42px; }                                              │   │
-│  │  ```                                                                │   │
-│  │  ```                                                                │   │
-│  │                                                                     │   │
-│  │  Axiom status:                                                      │   │
-│  │  • implemented: Run in unit tests                                   │   │
-│  │  • not-implemented: Skipped (future work)                           │   │
-│  │  • vite-only: Run in integration tests                              │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Tests["TEST ARCHITECTURE"]
+        subgraph Unit["UNIT TESTS (pnpm test)"]
+            U_AXIOMS["@lass-lang/axioms<br/>27 tests"]
+            U_CORE["@lass-lang/core<br/>154 tests"]
+            U_PLUGIN["vite-plugin-lass<br/>54 tests"]
+            U_TOTAL["Total: 235 tests<br/>100% line coverage"]
+        end
+
+        subgraph Integration["INTEGRATION TESTS (pnpm test:integration)"]
+            I_LOC["Location: plugins/vite-plugin-lass/test-integration/"]
+            I_BROWSER["Runs in real Chromium browser<br/>(Vitest Browser Mode + Playwright)"]
+            I_TESTS["Tests:<br/>• Module graph mutation<br/>• Import order behavior<br/>• CSS application to DOM<br/>• HMR infrastructure"]
+        end
+
+        subgraph Axioms["AXIOM-DRIVEN DEVELOPMENT"]
+            A_DESC["Axioms define expected behavior"]
+            A_STATUS["Status types:<br/>• implemented → unit tests<br/>• not-implemented → skipped<br/>• vite-only → integration tests"]
+        end
+    end
+
+    Unit --> Integration --> Axioms
 ```
 
 ## Dependency Graph
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          PACKAGE DEPENDENCIES                               │
-│                                                                             │
-│                                                                             │
-│                    ┌──────────────────────────┐                             │
-│                    │    @lass-lang/axioms     │                             │
-│                    │    (test fixtures)       │                             │
-│                    └──────────────────────────┘                             │
-│                                 ▲                                           │
-│                                 │ devDependency                             │
-│                                 │                                           │
-│                    ┌──────────────────────────┐                             │
-│                    │     @lass-lang/core      │                             │
-│                    │     (transpiler)         │                             │
-│                    └──────────────────────────┘                             │
-│                                 ▲                                           │
-│                                 │ dependency                                │
-│                                 │                                           │
-│                    ┌──────────────────────────┐                             │
-│                    │ @lass-lang/vite-plugin   │                             │
-│                    │ (bundler integration)    │                             │
-│                    └──────────────────────────┘                             │
-│                                 ▲                                           │
-│                                 │ peerDependency: vite                      │
-│                                 │                                           │
-│                    ┌──────────────────────────┐                             │
-│                    │      User Project        │                             │
-│                    │   (vite.config.ts)       │                             │
-│                    └──────────────────────────┘                             │
-│                                                                             │
-│                                                                             │
-│  External Dependencies:                                                     │
-│  ══════════════════════                                                     │
-│                                                                             │
-│  @lass-lang/core:                                                           │
-│    └── (none - zero runtime dependencies)                                   │
-│                                                                             │
-│  @lass-lang/vite-plugin-lass:                                               │
-│    ├── @lass-lang/core (runtime)                                            │
-│    └── vite (peer, ^5.0.0 || ^6.0.0)                                        │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart BT
+    subgraph External["External Dependencies"]
+        NONE["@lass-lang/core: (none)"]
+        VITE["vite ^5.0.0 || ^6.0.0"]
+    end
+
+    AXIOMS["@lass-lang/axioms<br/>(test fixtures)"]
+    CORE["@lass-lang/core<br/>(transpiler)"]
+    PLUGIN["@lass-lang/vite-plugin-lass<br/>(bundler integration)"]
+    USER["User Project<br/>(vite.config.ts)"]
+
+    AXIOMS -.->|"devDependency"| CORE
+    CORE -->|"dependency"| PLUGIN
+    VITE -.->|"peerDependency"| PLUGIN
+    PLUGIN --> USER
 ```
 
 ## File Processing Example
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  COMPLETE EXAMPLE: button.lass → CSS in Browser                             │
-│                                                                             │
-│  INPUT FILE: src/styles/button.lass                                         │
-│  ═══════════════════════════════════                                        │
-│                                                                             │
-│  import { spacing, colors } from '../tokens.js'                             │
-│  import { lighten } from '../utils.js'                                      │
-│                                                                             │
-│  const hoverBg = lighten(colors.primary, 0.1)                               │
-│  ---                                                                        │
-│  .button {                                                                  │
-│    padding: {{ spacing.md }}px {{ spacing.lg }}px;                          │
-│    background: {{ colors.primary }};                                        │
-│    color: white;                                                            │
-│    border: none;                                                            │
-│    border-radius: 4px;                                                      │
-│    cursor: pointer;                                                         │
-│  }                                                                          │
-│                                                                             │
-│  .button:hover {                                                            │
-│    background: {{ hoverBg }};                                               │
-│  }                                                                          │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                       @lass-lang/core transpile()
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  TRANSPILED: JavaScript Module                                              │
-│  ═════════════════════════════                                              │
-│                                                                             │
-│  const __lassExpr = v => v == null ? '' : Array.isArray(v)                  │
-│    ? v.flat(Infinity).map(x => x == null ? '' : String(x)).join('')         │
-│    : String(v);                                                             │
-│                                                                             │
-│  import { spacing, colors } from '../tokens.js'                             │
-│  import { lighten } from '../utils.js'                                      │
-│                                                                             │
-│  const hoverBg = lighten(colors.primary, 0.1)                               │
-│                                                                             │
-│  export default `.button {                                                  │
-│    padding: ${__lassExpr(spacing.md)}px ${__lassExpr(spacing.lg)}px;        │
-│    background: ${__lassExpr(colors.primary)};                               │
-│    color: white;                                                            │
-│    border: none;                                                            │
-│    border-radius: 4px;                                                      │
-│    cursor: pointer;                                                         │
-│  }                                                                          │
-│                                                                             │
-│  .button:hover {                                                            │
-│    background: ${__lassExpr(hoverBg)};                                      │
-│  }`;                                                                        │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                    Vite executes module (imports resolve)
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  EXECUTED: CSS String (runtime)                                             │
-│  ══════════════════════════════                                             │
-│                                                                             │
-│  .button {                                                                  │
-│    padding: 12px 24px;                                                      │
-│    background: #3b82f6;                                                     │
-│    color: white;                                                            │
-│    border: none;                                                            │
-│    border-radius: 4px;                                                      │
-│    cursor: pointer;                                                         │
-│  }                                                                          │
-│                                                                             │
-│  .button:hover {                                                            │
-│    background: #5b9cf6;                                                     │
-│  }                                                                          │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                         Vite CSS Pipeline
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  BROWSER: Styles Applied                                                    │
-│  ════════════════════════                                                   │
-│                                                                             │
-│  <style> or linked CSS file with final styles                               │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Input["INPUT: src/styles/button.lass"]
+        INPUT_FILE["import { spacing, colors } from '../tokens.js'<br/>import { lighten } from '../utils.js'<br/><br/>const hoverBg = lighten(colors.primary, 0.1)<br/>---<br/>.button {<br/>  padding: {{ spacing.md }}px {{ spacing.lg }}px;<br/>  background: {{ colors.primary }};<br/>  ...<br/>}<br/>.button:hover {<br/>  background: {{ hoverBg }};<br/>}"]
+    end
+
+    TRANSPILE["@lass-lang/core transpile()"]
+
+    subgraph Transpiled["TRANSPILED: JavaScript Module"]
+        JS_OUT["const __lassExpr = v => ...<br/><br/>import { spacing, colors } from '../tokens.js'<br/>import { lighten } from '../utils.js'<br/><br/>const hoverBg = lighten(colors.primary, 0.1)<br/><br/>export default `.button {<br/>  padding: ${__lassExpr(spacing.md)}px ...;<br/>  background: ${__lassExpr(colors.primary)};<br/>  ...<br/>}<br/>.button:hover {<br/>  background: ${__lassExpr(hoverBg)};<br/>}`;"]
+    end
+
+    EXECUTE["Vite executes module<br/>(imports resolve)"]
+
+    subgraph Executed["EXECUTED: CSS String"]
+        CSS_OUT[".button {<br/>  padding: 12px 24px;<br/>  background: #3b82f6;<br/>  ...<br/>}<br/>.button:hover {<br/>  background: #5b9cf6;<br/>}"]
+    end
+
+    PIPELINE["Vite CSS Pipeline"]
+
+    subgraph Browser["BROWSER: Styles Applied"]
+        FINAL["&lt;style&gt; or linked CSS file<br/>with final styles"]
+    end
+
+    INPUT_FILE --> TRANSPILE --> Transpiled --> EXECUTE --> Executed --> PIPELINE --> Browser
 ```
 
 ---
@@ -531,6 +258,7 @@
 
 | Date       | Version | Changes                                    |
 |------------|---------|-------------------------------------------|
+| 2026-02-06 | 1.1     | Convert ASCII diagrams to Mermaid         |
 | 2026-02-06 | 1.0     | Initial diagram (Story P.1 complete)      |
 |            |         | - Core transpiler architecture            |
 |            |         | - Vite plugin flow                        |
@@ -548,4 +276,4 @@ When to update this document:
 - Test infrastructure changes
 - New Vite hook added
 
-Keep diagrams ASCII-based for compatibility with all markdown renderers.
+Diagrams use Mermaid syntax for GitHub/GitLab rendering compatibility.
