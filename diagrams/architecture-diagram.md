@@ -90,7 +90,7 @@ sequenceDiagram
     HMR-->>Vite: invalidate modules
 ```
 
-## Module Graph Integration (Killer Feature)
+## Module Graph Integration
 
 ```mermaid
 flowchart LR

@@ -10,7 +10,7 @@ Documentation for the Lass language and tooling.
   - Package architecture
   - Transpilation pipeline
   - Vite plugin flow
-  - Module graph integration (killer feature)
+  - Module graph integration
   - Test infrastructure
   - Dependency graph
 
