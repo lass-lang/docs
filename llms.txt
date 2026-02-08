@@ -1,0 +1,67 @@
+# Lass Language Reference (for LLMs)
+
+> This file will be auto-generated in Story 7.5 from axioms fixtures.
+> For now, this is a placeholder with basic syntax.
+
+## What is Lass?
+
+Lass = JavaScript-enhanced CSS. Write JS in a preamble, use it in styles, get static CSS output.
+
+## File Structure
+
+```
+---
+// JavaScript preamble (runs at build time)
+const x = 1;
+---
+
+/* CSS zone with Lass syntax */
+.selector { property: value; }
+```
+
+## Syntax Quick Reference
+
+| Syntax | Purpose | Example |
+|--------|---------|---------|
+| `---` | Preamble delimiters | `--- const x = 1; ---` |
+| `{{ expr }}` | Expression interpolation | `width: {{ x * 10 }}px;` |
+| `@(prop)` | Style lookup (full) | `color: @(--brand);` |
+| `@prop` | Style lookup (shorthand) | `color: @--brand;` |
+| `$param` | Variable substitution | `font-size: $size;` |
+| `@{ code }` | Style block injection | `@{ dynamicStyles }` |
+| `//` | Single-line comment | `// stripped from output` |
+
+## Installation
+
+```bash
+npm install lass vite-plugin-lass
+```
+
+```js
+// vite.config.js
+import lass from 'vite-plugin-lass';
+export default { plugins: [lass()] };
+```
+
+## Example
+
+Input (.lass):
+```
+---
+const brand = '#6366f1';
+const space = n => `${n * 0.25}rem`;
+---
+
+.btn {
+  background: {{ brand }};
+  padding: {{ space(4) }};
+}
+```
+
+Output (.css):
+```css
+.btn {
+  background: #6366f1;
+  padding: 1rem;
+}
+```
