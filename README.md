@@ -9,29 +9,26 @@
 Any valid CSS works as-is:
 
 ```lass
-.button-primary {
-  background: #6366f1;
+.button {
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
+}
+
+.button-primary {
+  background: #6366f1;
   border: 2px solid #6366f1;
   box-shadow: 0 2px 4px #6366f133;
 }
 
 .button-secondary {
   background: #8b5cf6;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
   border: 2px solid #8b5cf6;
   box-shadow: 0 2px 4px #8b5cf633;
 }
 
 .button-danger {
   background: #ef4444;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
   border: 2px solid #ef4444;
   box-shadow: 0 2px 4px #ef444433;
 }
@@ -39,7 +36,7 @@ Any valid CSS works as-is:
 
 ### With Lass
 
-Same output. One color definition. `@background` reuses the value:
+`@background` reuses the color for border and shadow:
 
 ```lass
 const colors = {
@@ -50,19 +47,22 @@ const colors = {
 
 ---
 
+.button {
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
 {{ Object.keys(colors).map(name => @{
   .button-{{ name }} {
     background: {{ colors[name] }};
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
     border: 2px solid @background;
     box-shadow: 0 2px 4px @(background)33;
   }
 }) }}
 ```
 
-Add a variant? One line in `colors`. Change the padding? One place.
+Add a variant? One line in `colors`.
 
 ## Documentation
 
