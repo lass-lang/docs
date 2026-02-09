@@ -29,12 +29,12 @@ Outputs: `.m-1 { margin: 0.25rem; }` `.m-2 { margin: 0.5rem; }` ...
 
 ```lass
 .box {
-  color: #6366f1;
-  border-color: @color;
+  border: 2px solid #6366f1;
+  outline: @border;
 }
 ```
 
-Read CSS values set earlier with `@prop` - outputs `border-color: #6366f1;`
+Read CSS values set earlier with `@prop` - outputs `outline: 2px solid #6366f1;`
 
 ## Documentation
 

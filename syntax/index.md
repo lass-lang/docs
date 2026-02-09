@@ -226,34 +226,34 @@ Works for properties starting with a letter:
 
 ```lass
 .box {
-  color: red;
-  border-color: @color;
+  border: 2px solid blue;
+  outline: @border;
 }
 ```
 
 ```css
 .box {
-  color: red;
-  border-color: red;
+  border: 2px solid blue;
+  outline: 2px solid blue;
 }
 ```
 
 ### Parent walk-up
 
 ```lass
-.parent {
-  color: red;
-  .child {
-    background: @color;
+.card {
+  padding: 1.5rem;
+  .content {
+    margin: @padding;
   }
 }
 ```
 
 ```css
-.parent {
-  color: red;
-  .child {
-    background: red;
+.card {
+  padding: 1.5rem;
+  .content {
+    margin: 1.5rem;
   }
 }
 ```

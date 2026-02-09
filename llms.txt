@@ -50,13 +50,13 @@ Reads last-declared value, walks up selector tree:
 
 ```lass
 .box {
-  color: blue;
-  border-color: @color;        /* shorthand */
-  outline-color: @(color);     /* full form */
-  background: @(--custom);     /* custom props need @() */
+  border: 2px solid blue;
+  outline: @border;            /* shorthand */
+  box-shadow: 0 0 0 4px @(border-color);  /* full form */
+  padding: @(--spacing);       /* custom props need @() */
 }
 ```
-Output: `border-color: blue; outline-color: blue; background: [value of --custom]`
+Output: `outline: 2px solid blue; box-shadow: 0 0 0 4px blue; padding: [value of --spacing]`
 
 Unresolved lookups preserved for PostCSS.
 
