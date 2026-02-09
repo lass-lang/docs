@@ -6,8 +6,10 @@
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { parseAxiomContent, type TestCase } from '@lass-lang/axioms';
+import { extractTestCasesFromMD, type TestCase } from '@lass-lang/axioms';
 import { transpile } from '@lass-lang/core';
+
+export type { TestCase } from '@lass-lang/axioms';
 
 export interface FileResults {
   file: string;
@@ -69,7 +71,7 @@ export function findMarkdownFiles(dir: string): string[] {
 export function parseDocFile(filePath: string, baseDir: string): FileResults {
   const content = readFileSync(filePath, 'utf-8');
   const relPath = relative(baseDir, filePath);
-  const { testCases } = parseAxiomContent(content, relPath);
+  const testCases = extractTestCasesFromMD(content, relPath);
 
   return { file: relPath, testCases };
 }

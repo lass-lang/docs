@@ -56,12 +56,10 @@ describe('test-helpers', () => {
   describe('runValidTestCase', () => {
     test('transpiles and executes valid lass code', async () => {
       const testCase = {
-        name: 'test',
+        description: 'test',
         outcome: 'valid' as const,
-        visibility: 'doc' as const,
-        skip: false,
         input: '.box { color: red; }',
-        expected: '.box { color: red; }',
+        output: '.box { color: red; }',
         sourceFile: 'test.md',
       };
 

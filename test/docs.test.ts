@@ -2,7 +2,7 @@
  * Documentation example tests
  *
  * Dynamically generates vitest tests from markdown documentation files.
- * Uses test:begin/test:end markers to identify testable examples.
+ * Uses <test-case> elements to identify testable examples.
  */
 
 import { describe, test, expect } from 'vitest';
@@ -29,18 +29,18 @@ for (const filePath of markdownFiles) {
   describe(file, () => {
     for (const testCase of testCases) {
       if (testCase.outcome === 'valid') {
-        test(testCase.name, async () => {
+        test(testCase.description, async () => {
           const actual = await runValidTestCase(testCase);
-          expect(actual).toBe(testCase.expected);
+          expect(actual).toBe(testCase.output);
         });
       } else if (testCase.outcome === 'invalid') {
-        test(testCase.name, async () => {
+        test(testCase.description, async () => {
           try {
             await runValidTestCase(testCase);
-            expect.fail(`Expected error containing "${testCase.expected}"`);
+            expect.fail(`Expected error containing "${testCase.output}"`);
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
-            expect(errorMessage).toContain(testCase.expected);
+            expect(errorMessage).toContain(testCase.output);
           }
         });
       }
