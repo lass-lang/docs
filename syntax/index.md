@@ -202,7 +202,7 @@ const isDisabled = true;
 
 ## Style Lookup (`@(prop)` / `@prop`)
 
-Read the last-declared value of a CSS property. Resolution walks up the selector tree.
+In the CSS zone, read the last-declared value of a CSS property. Use it in value positions - resolution walks up the selector tree.
 
 ### Full syntax `@(prop)`
 
