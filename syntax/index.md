@@ -130,16 +130,16 @@ const prop = 'background-color'
 ### Function calls
 
 ```lass
-function px(n) { return n + 'px' }
+const fluid = (min, max) => `clamp(${min}rem, 5vw, ${max}rem)`;
 ---
-.box {
-  margin: {{ px(16) }};
+.title {
+  font-size: {{ fluid(1.5, 3) }};
 }
 ```
 
 ```css
-.box {
-  margin: 16px;
+.title {
+  font-size: clamp(1.5rem, 5vw, 3rem);
 }
 ```
 
