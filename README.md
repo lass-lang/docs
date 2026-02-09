@@ -75,7 +75,7 @@ Add a variant? One line in `colors`.
 - **JavaScript Preamble** - Define variables, functions, and imports before the `---` separator
 - **Expression Interpolation** - Use `{{ expr }}` to inject JS values into CSS
 - **Style Lookup** - Read CSS values with `@(property)` or `@prop` shorthand
-- **Variable Substitution** - Simple `$param` text replacement
+- **Variable Substitution** - Simple `$param` text replacement in CSS
 - **Style Blocks** - Generate CSS from JS with `@{ cssText }`
 - **Zero Runtime** - Everything compiles to static CSS
 
