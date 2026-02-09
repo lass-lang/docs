@@ -9,11 +9,13 @@
 Any valid CSS works as-is:
 
 ```lass
-.button {
+.button-primary {
   background: #6366f1;
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
+  border: 2px solid #6366f1;
+  box-shadow: 0 2px 4px #6366f133;
 }
 
 .button-secondary {
@@ -21,17 +23,29 @@ Any valid CSS works as-is:
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
+  border: 2px solid #8b5cf6;
+  box-shadow: 0 2px 4px #8b5cf633;
+}
+
+.button-danger {
+  background: #ef4444;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 2px solid #ef4444;
+  box-shadow: 0 2px 4px #ef444433;
 }
 ```
 
-### Then Add JavaScript
+### With Lass
 
-See the repetition? Add a preamble above `---` to DRY it up:
+Same output. One color definition. `@background` reuses the value:
 
 ```lass
 const colors = {
   primary: '#6366f1',
   secondary: '#8b5cf6',
+  danger: '#ef4444',
 };
 
 ---
@@ -42,29 +56,13 @@ const colors = {
     color: white;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
+    border: 2px solid @background;
+    box-shadow: 0 2px 4px @(background)33;
   }
 }) }}
 ```
 
-Same output, single source of truth. Add a new variant? Just add it to `colors`.
-
-### Style Lookup
-
-Reuse values within a rule with `@prop`:
-
-```lass
-.button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  
-  &:focus {
-    outline: 2px solid currentColor;
-    outline-offset: @padding;
-  }
-}
-```
-
-`@padding` resolves to `0.75rem 1.5rem` at build time.
+Add a variant? One line in `colors`. Change the padding? One place.
 
 ## Documentation
 
