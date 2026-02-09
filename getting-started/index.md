@@ -47,7 +47,7 @@ Bun.build({
 
 Create a file with the `.lass` extension. Lass files are just CSS - write styles exactly as you would in a `.css` file:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 :root {
   --color-primary: #6366f1;
@@ -99,7 +99,7 @@ Create a file with the `.lass` extension. Lass files are just CSS - write styles
   background: var(--color-secondary);
 }
 ```
-<!-- test:end -->
+</test-case>
 
 That's it! Any valid CSS works in a `.lass` file.
 
@@ -131,7 +131,7 @@ Your Lass styles are now active. Edit the `.lass` file and see changes reflected
 
 Want to do more? Add a JavaScript preamble before a `---` separator to unlock the full power of Lass:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const primary = '#6366f1';
 const secondary = '#8b5cf6';
@@ -190,7 +190,7 @@ const spacing = (n) => `${n * 0.25}rem`;
   background: #8b5cf6;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 The preamble lets you:
 - **Define variables** - Colors, sizes, breakpoints
@@ -230,7 +230,7 @@ Ensure this file is included in your `tsconfig.json`:
 
 Use `.module.lass` for scoped class names:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const shadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)';
 
@@ -265,7 +265,7 @@ const shadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)';
   margin-bottom: 0.5rem;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 Import with a default import to get scoped class names:
 
@@ -322,7 +322,7 @@ Create `src/lass.d.ts` with the declarations shown in the [TypeScript Support](#
 
 Use `{{ }}` for expressions (computed at build time):
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const size = 16;
 
@@ -341,11 +341,11 @@ const size = 16;
   line-height: 32px;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 Use `$name` for simple text substitution (no computation). Variables must be `$`-prefixed:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const $unit = 'rem';
 
@@ -362,13 +362,13 @@ const $unit = 'rem';
   margin: 1rem;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Preamble Must Come First
 
 When using JavaScript, the preamble must come **before** the `---` separator:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const color = 'blue';
 
@@ -381,7 +381,7 @@ const color = 'blue';
 
 .box { color: blue; }
 ```
-<!-- test:end -->
+</test-case>
 
 Without a preamble, you don't need a separator at all - just write CSS directly.
 

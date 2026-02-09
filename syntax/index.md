@@ -27,7 +27,7 @@ If there's no `---`, the entire file is CSS zone - plain CSS works as-is.
 
 ### With preamble
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const $color = 'blue'
 ---
@@ -41,11 +41,11 @@ p {
   color: blue;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Without preamble (pure CSS)
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 p {
   color: red;
@@ -57,11 +57,11 @@ p {
   color: red;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Functions in preamble
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const space = (n) => `${n * 0.25}rem`;
 ---
@@ -77,7 +77,7 @@ const space = (n) => `${n * 0.25}rem`;
   gap: 0.5rem;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ---
 
@@ -87,7 +87,7 @@ const space = (n) => `${n * 0.25}rem`;
 
 ### Value position
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const gap = 23
 ---
@@ -101,11 +101,11 @@ const gap = 23
   padding: 46px;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Selector position
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const tag = 'article'
 ---
@@ -119,11 +119,11 @@ article {
   display: block;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Property name position
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const prop = 'background-color'
 ---
@@ -137,11 +137,11 @@ const prop = 'background-color'
   background-color: blue;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Function calls
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const fluid = (min, max) => `clamp(${min}rem, 5vw, ${max}rem)`;
 ---
@@ -155,13 +155,13 @@ const fluid = (min, max) => `clamp(${min}rem, 5vw, ${max}rem)`;
   font-size: clamp(1.5rem, 5vw, 3rem);
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Array auto-join
 
 Arrays are automatically joined with space (CSS-friendly for shorthand properties):
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const items = ['a', 'b', 'c']
 ---
@@ -175,11 +175,11 @@ const items = ['a', 'b', 'c']
   --items: A B C;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 For different separators, use explicit `.join()`:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const stops = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3'];
 ---
@@ -193,13 +193,13 @@ const stops = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3'];
   background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Null/undefined handling
 
 `null`, `undefined`, and `false` produce empty string - just like JSX conditional rendering:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const isLarge = false;
 const isDisabled = true;
@@ -216,7 +216,7 @@ const isDisabled = true;
   opacity: 0.5; pointer-events: none;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ---
 
@@ -226,7 +226,7 @@ In the CSS zone, read the last-declared value of a CSS property. Use it in value
 
 ### Full syntax `@(prop)`
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 .box {
   border: 1px solid black;
@@ -240,13 +240,13 @@ In the CSS zone, read the last-declared value of a CSS property. Use it in value
   outline: 1px solid black;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Shorthand `@prop`
 
 Works for properties starting with a letter:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 .box {
   border: 2px solid blue;
@@ -260,11 +260,11 @@ Works for properties starting with a letter:
   outline: 2px solid blue;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Parent walk-up
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 .card {
   padding: 1.5rem;
@@ -282,13 +282,13 @@ Works for properties starting with a letter:
   }
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Custom properties
 
 `@(--custom)` works but `var(--custom)` is usually better (browser-resolved, supports fallbacks). Use `@()` for custom properties when you need build-time resolution:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 .box {
   --base-size: 16px;
@@ -304,13 +304,13 @@ Works for properties starting with a letter:
   margin: var(--base-size);
 }
 ```
-<!-- test:end -->
+</test-case>
 
 Note: `@--custom` shorthand doesn't work due to the `--` prefix. Use `@(--custom)`.
 
 ### Inside expressions
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const double = (v) => parseFloat(v) * 2 + 'px';
 ---
@@ -326,7 +326,7 @@ const double = (v) => parseFloat(v) * 2 + 'px';
   margin: 32px;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 Note: `parseFloat('16px')` returns `16` - JavaScript parses the leading number.
 
@@ -334,7 +334,7 @@ Note: `parseFloat('16px')` returns `16` - JavaScript parses the leading number.
 
 Properties not found are preserved (for PostCSS or other tools):
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 .box {
   color: @(font-size);
@@ -346,7 +346,7 @@ Properties not found are preserved (for PostCSS or other tools):
   color: @(font-size);
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ---
 
@@ -356,7 +356,7 @@ Simple text substitution from `$`-prefixed variables. No expression evaluation.
 
 ### Basic substitution
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const $color = 'red'
 ---
@@ -370,11 +370,11 @@ p {
   color: red;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### In selectors
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const $component = 'card'
 ---
@@ -388,11 +388,11 @@ const $component = 'card'
   display: block;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Text-only (no evaluation)
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const $gap = 23
 ---
@@ -406,7 +406,7 @@ const $gap = 23
   padding: 23 * 2;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 Use `{{ $gap * 2 }}` for evaluated math.
 
@@ -414,7 +414,7 @@ Use `{{ $gap * 2 }}` for evaluated math.
 
 `$param` substitutes text, so the value goes into CSS `calc()`:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const $gap = 23
 ---
@@ -428,7 +428,7 @@ const $gap = 23
   padding: calc(23 * 1px);
 }
 ```
-<!-- test:end -->
+</test-case>
 
 The browser evaluates `calc(23 * 1px)` = `23px`. For build-time math, use `{{ }}`.
 
@@ -444,7 +444,7 @@ The browser evaluates `calc(23 * 1px)` = `23px`. For build-time math, use `{{ }}
 
 `$name` inside quotes is literal text:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const $color = 'red'
 ---
@@ -458,7 +458,7 @@ const $color = 'red'
   content: "the value is $color";
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ---
 
@@ -468,7 +468,7 @@ Create CSS strings from within JS expressions. The inverse of `{{ }}`.
 
 ### Basic style block
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const makeBorder = () => @{ border: 1px solid; }
 ---
@@ -482,13 +482,13 @@ const makeBorder = () => @{ border: 1px solid; }
   border: 1px solid;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### With expressions inside
 
 `{{ }}` inside `@{ }` enables dynamic values within generated blocks:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const colors = { primary: '#6366f1', secondary: '#8b5cf6' };
 ---
@@ -507,13 +507,13 @@ const colors = { primary: '#6366f1', secondary: '#8b5cf6' };
   background: #8b5cf6;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Generating utilities
 
 Use `{{ }}` with template literals for dynamic CSS generation:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const sizes = [1, 2, 4, 8]
 ---
@@ -526,11 +526,11 @@ const sizes = [1, 2, 4, 8]
 .m-4 { margin: 1rem; }
 .m-8 { margin: 2rem; }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Mixin pattern
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 function card(bg) {
   return @{
@@ -552,11 +552,11 @@ border-radius: 8px;
 padding: 16px;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Conditional pattern (replaces @if/@else)
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const darkMode = true
 ---
@@ -577,11 +577,11 @@ body {
   color: #e0e0e0;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Loop pattern (replaces @each/@for)
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const breakpoints = { sm: '640px', md: '768px' }
 ---
@@ -606,7 +606,7 @@ const breakpoints = { sm: '640px', md: '768px' }
   }
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ---
 
@@ -616,7 +616,7 @@ Use `//` for inline comments in the CSS zone - they're stripped from output, jus
 
 ### Single-line stripped
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 p {
   // this comment is stripped
@@ -630,11 +630,11 @@ p {
   color: red;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Inline stripped
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 p {
   color: red; // this is stripped
@@ -646,11 +646,11 @@ p {
   color: red; 
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### CSS comments preserved
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 /* preserved */
 p {
@@ -664,11 +664,11 @@ p {
   color: red; /* also preserved */
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### Protected in strings and URLs
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 a {
   content: "https://example.com";
@@ -686,7 +686,7 @@ a {
   background: url(https://example.com/image.png);
 }
 ```
-<!-- test:end -->
+</test-case>
 
 Both pass through unchanged - `//` inside strings and URLs is not a comment.
 

@@ -5,13 +5,17 @@
   "type": "module",
   "description": "Lass language documentation with tested code examples",
   "scripts": {
+    "lint:docs": "tsx scripts/lint-docs.ts",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@lass-lang/axioms": "workspace:*",
     "@lass-lang/core": "workspace:*",
     "@vitest/coverage-v8": "^4.0.18",
+    "husky": "^9.1.7",
+    "tsx": "^4.19.4",
     "vitest": "^4.0.18"
   }
 }

@@ -8,7 +8,7 @@
 
 Any valid CSS works as-is:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 .button {
   color: white;
@@ -60,13 +60,13 @@ Any valid CSS works as-is:
   box-shadow: 0 2px 4px #ef444433;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 ### With Lass
 
 Generate button variants from a color map:
 
-<!-- test:begin valid -->
+<test-case type="valid">
 ```lass
 const colors = {
   primary: '#6366f1',
@@ -115,7 +115,7 @@ const colors = {
   box-shadow: 0 2px 4px #ef444433;
 }
 ```
-<!-- test:end -->
+</test-case>
 
 Add a variant? One line in `colors`.
 
