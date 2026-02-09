@@ -1,33 +1,14 @@
 # Getting Started
 
-Get Lass running in your Vite project in under 10 minutes.
+## Vite Plugin
 
-## Prerequisites
-
-Before you begin, make sure you have:
-
-- **Node.js 20+** - Check with `node --version`
-- **A Vite-based project** - Lass works with Vite 5.x and 6.x
-
-If you don't have a Vite project yet:
-
-```bash
-npm create vite@latest my-app -- --template vanilla
-cd my-app
-npm install
-```
-
-## Installation
-
-Install the Lass Vite plugin:
+For Vite projects, install the plugin:
 
 ```bash
 npm install @lass-lang/vite-plugin-lass --save-dev
 ```
 
-## Vite Configuration
-
-Add the Lass plugin to your Vite config:
+Add to your Vite config:
 
 ```js
 // vite.config.js
@@ -39,16 +20,17 @@ export default defineConfig({
 });
 ```
 
-For TypeScript projects:
+## CLI
 
-```typescript
-// vite.config.ts
-import { defineConfig } from 'vite';
-import lass from '@lass-lang/vite-plugin-lass';
+For standalone compilation (no bundler):
 
-export default defineConfig({
-  plugins: [lass()],
-});
+```bash
+npm install @lass-lang/cli --save-dev
+```
+
+```bash
+npx lass styles.lass -o styles.css
+npx lass src/styles --outdir dist/css
 ```
 
 ## Your First .lass File
