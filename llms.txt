@@ -1,67 +1,127 @@
-# Lass Language Reference (for LLMs)
+# Lass Language Reference
 
-> This file will be auto-generated in Story 7.5 from axioms fixtures.
-> For now, this is a placeholder with basic syntax.
-
-## What is Lass?
-
-Lass = JavaScript-enhanced CSS. Write JS in a preamble, use it in styles, get static CSS output.
+Lass = CSS + optional JavaScript preamble. Compiles to static CSS at build time.
 
 ## File Structure
 
 ```
----
-// JavaScript preamble (runs at build time)
+// JavaScript preamble (optional)
 const x = 1;
+
 ---
 
-/* CSS zone with Lass syntax */
+/* CSS zone */
 .selector { property: value; }
 ```
 
-## Syntax Quick Reference
+No `---` = pure CSS zone (plain CSS works as-is).
 
-| Syntax | Purpose | Example |
-|--------|---------|---------|
-| `---` | Preamble delimiters | `--- const x = 1; ---` |
-| `{{ expr }}` | Expression interpolation | `width: {{ x * 10 }}px;` |
-| `@(prop)` | Style lookup (full) | `color: @(--brand);` |
-| `@prop` | Style lookup (shorthand) | `color: @--brand;` |
-| `$param` | Variable substitution | `font-size: $size;` |
-| `@{ code }` | Style block injection | `@{ dynamicStyles }` |
-| `//` | Single-line comment | `// stripped from output` |
+## Syntax
+
+| Syntax | What it does |
+|--------|--------------|
+| `---` | Separates JS preamble from CSS zone |
+| `{{ expr }}` | Evaluates JS expression, inserts result |
+| `@(prop)` | Reads last value of CSS property |
+| `@prop` | Shorthand for `@(prop)` (letters only) |
+| `$name` | Text substitution from `$`-prefixed var |
+| `@{ css }` | Creates CSS string in JS context |
+| `//` | Single-line comment (stripped) |
+
+## Expression Interpolation `{{ }}`
+
+Works in value, selector, and property name positions:
+
+```lass
+const size = 16
+const tag = 'article'
+const prop = 'color'
+---
+{{ tag }} { {{ prop }}: {{ size }}px; }
+```
+Output: `article { color: 16px; }`
+
+Arrays auto-join: `{{ [1,2,3] }}` → `123`
+Null/undefined/false → empty string
+
+## Style Lookup `@(prop)` / `@prop`
+
+Reads last-declared value, walks up selector tree:
+
+```lass
+.box {
+  color: blue;
+  border-color: @color;        /* shorthand */
+  outline-color: @(color);     /* full form */
+  background: @(--custom);     /* custom props need @() */
+}
+```
+Output: `border-color: blue; outline-color: blue; background: [value of --custom]`
+
+Unresolved lookups preserved for PostCSS.
+
+## Variable Substitution `$name`
+
+Text substitution only (no evaluation). Variables must be `$`-prefixed:
+
+```lass
+const $gap = 8
+---
+.box { padding: $gap * 2; }
+```
+Output: `padding: 8 * 2;` (literal text - browser sees this)
+
+For build-time math: `{{ $gap * 2 }}` → `padding: 16;`
+
+Special: `null` → `unset`, `undefined` → preserved
+
+## Style Blocks `@{ }`
+
+CSS strings in JS. Enables loops/conditionals:
+
+```lass
+const sizes = [1, 2, 4]
+---
+{{ sizes.map(n => @{ .m-{{ n }} { margin: {{ n * 4 }}px; } }) }}
+```
+Output: `.m-1 { margin: 4px; } .m-2 { margin: 8px; } .m-4 { margin: 16px; }`
+
+Mixin pattern:
+```lass
+function card(bg) { return @{ background: {{ bg }}; padding: 16px; } }
+---
+.card { {{ card('white') }} }
+```
+
+## Comments
+
+`//` stripped, `/* */` preserved:
+
+```lass
+// this disappears
+/* this stays */
+.box { color: red; // gone }
+```
 
 ## Installation
 
 ```bash
-npm install lass vite-plugin-lass
+npm install @lass-lang/vite-plugin-lass --save-dev
 ```
 
 ```js
 // vite.config.js
-import lass from 'vite-plugin-lass';
+import lass from '@lass-lang/vite-plugin-lass';
 export default { plugins: [lass()] };
 ```
 
-## Example
+## TypeScript
 
-Input (.lass):
-```
----
-const brand = '#6366f1';
-const space = n => `${n * 0.25}rem`;
----
-
-.btn {
-  background: {{ brand }};
-  padding: {{ space(4) }};
-}
-```
-
-Output (.css):
-```css
-.btn {
-  background: #6366f1;
-  padding: 1rem;
+```typescript
+// src/lass.d.ts
+declare module '*.lass';
+declare module '*.module.lass' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
 }
 ```
