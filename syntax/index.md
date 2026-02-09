@@ -445,10 +445,9 @@ const makeBorder = () => @{ border: 1px solid; }
 `{{ }}` inside `@{ }` enables dynamic values within generated blocks:
 
 ```lass
-const variants = ['primary', 'secondary'];
 const colors = { primary: '#6366f1', secondary: '#8b5cf6' };
 ---
-{{ variants.map(v => @{
+{{ Object.keys(colors).map(v => @{
   .btn-{{ v }} {
     background: {{ colors[v] }};
   }
