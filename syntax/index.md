@@ -283,9 +283,11 @@ Note: `@--custom` shorthand doesn't work due to the `--` prefix. Use `@(--custom
 ### Inside expressions
 
 ```lass
+const double = (v) => parseFloat(v) * 2 + 'px';
+---
 .box {
   padding: 16px;
-  margin: {{ parseInt(@(padding)) * 2 }}px;
+  margin: {{ double(@(padding)) }};
 }
 ```
 
@@ -295,6 +297,8 @@ Note: `@--custom` shorthand doesn't work due to the `--` prefix. Use `@(--custom
   margin: 32px;
 }
 ```
+
+Note: `parseFloat('16px')` returns `16` - JavaScript parses the leading number.
 
 ### Unresolved lookups
 
