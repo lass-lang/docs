@@ -558,7 +558,7 @@ const breakpoints = { sm: '640px', md: '768px' }
 
 ## Comments (`//`)
 
-Single-line comments are stripped from output. CSS `/* */` comments are preserved.
+Use `//` for inline comments in the CSS zone - they're stripped from output, just like SCSS or Less. Standard CSS `/* */` comments are preserved.
 
 ### Single-line stripped
 
