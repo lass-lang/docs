@@ -145,7 +145,7 @@ function px(n) { return n + 'px' }
 
 ### Array auto-join
 
-Arrays are automatically joined with empty string (no separator):
+Arrays are automatically joined with space (CSS-friendly for shorthand properties):
 
 ```lass
 const items = ['a', 'b', 'c']
@@ -157,11 +157,11 @@ const items = ['a', 'b', 'c']
 
 ```css
 .list {
-  --items: ABC;
+  --items: A B C;
 }
 ```
 
-For formatted output, use explicit `.join()`:
+For different separators, use explicit `.join()`:
 
 ```lass
 const sizes = [1, 2, 4, 8]

@@ -41,7 +41,7 @@ const prop = 'color'
 ```
 Output: `article { color: 16px; }`
 
-Arrays auto-join: `{{ [1,2,3] }}` → `123`
+Arrays auto-join with space: `{{ [1,2,3] }}` → `1 2 3`
 Null/undefined/false → empty string
 
 ## Style Lookup `@(prop)` / `@prop`
