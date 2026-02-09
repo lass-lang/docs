@@ -1,14 +1,21 @@
 # Getting Started
 
-## Vite Plugin
+## CLI
 
-For Vite projects, install the plugin:
+```bash
+npm install @lass-lang/cli
+```
+
+```bash
+npx lass input.lass -o output.css
+npx lass src/styles --outdir dist/css
+```
+
+## Vite
 
 ```bash
 npm install @lass-lang/vite-plugin-lass --save-dev
 ```
-
-Add to your Vite config:
 
 ```js
 // vite.config.js
@@ -20,17 +27,20 @@ export default defineConfig({
 });
 ```
 
-## CLI
-
-For standalone compilation (no bundler):
+## Bun
 
 ```bash
-npm install @lass-lang/cli --save-dev
+bun add @lass-lang/bun-plugin-lass --dev
 ```
 
-```bash
-npx lass styles.lass -o styles.css
-npx lass src/styles --outdir dist/css
+```js
+// build.js
+import lass from '@lass-lang/bun-plugin-lass';
+
+Bun.build({
+  entrypoints: ['./src/index.ts'],
+  plugins: [lass()],
+});
 ```
 
 ## Your First .lass File
