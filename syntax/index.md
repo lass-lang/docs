@@ -8,7 +8,7 @@ Complete reference for Lass syntax elements.
 |--------|---------|---------|
 | `---` | Zone separator | JS preamble before, CSS after |
 | `{{ expr }}` | Expression interpolation | `width: {{ x * 10 }}px;` |
-| `@(prop)` | Style lookup (full) | `color: @(--brand);` |
+| `@(prop)` | Style lookup (full) | `outline: @(border);` |
 | `@prop` | Style lookup (shorthand) | `border-left: @border;` |
 | `$name` | Variable substitution | `color: $primary;` |
 | `@{ css }` | Style block | `{{ @{ color: red; } }}` |
@@ -258,23 +258,27 @@ Works for properties starting with a letter:
 }
 ```
 
-### Custom properties (use full syntax)
+### Custom properties
 
-`@--custom` doesn't work - use `@(--custom)`:
+`@(--custom)` works but `var(--custom)` is usually better (browser-resolved, supports fallbacks). Use `@()` for custom properties when you need build-time resolution:
 
 ```lass
 .box {
-  --accent-color: blue;
-  color: @(--accent-color);
+  --base-size: 16px;
+  padding: @(--base-size);           /* build-time: becomes 16px */
+  margin: var(--base-size);          /* runtime: stays as var() */
 }
 ```
 
 ```css
 .box {
-  --accent-color: blue;
-  color: blue;
+  --base-size: 16px;
+  padding: 16px;
+  margin: var(--base-size);
 }
 ```
+
+Note: `@--custom` shorthand doesn't work due to the `--` prefix. Use `@(--custom)`.
 
 ### Inside expressions
 

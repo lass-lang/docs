@@ -52,13 +52,12 @@ Reads last-declared value, walks up selector tree:
 .box {
   border: 2px solid blue;
   outline: @border;            /* shorthand */
-  box-shadow: 0 0 0 4px @(border-color);  /* full form */
-  padding: @(--spacing);       /* custom props need @() */
+  box-shadow: 0 0 0 4px @(border-color);  /* full form - extracts part */
 }
 ```
-Output: `outline: 2px solid blue; box-shadow: 0 0 0 4px blue; padding: [value of --spacing]`
+Output: `outline: 2px solid blue; box-shadow: 0 0 0 4px blue;`
 
-Unresolved lookups preserved for PostCSS.
+Unresolved lookups preserved for PostCSS. For custom properties, prefer `var(--name)` over `@(--name)`.
 
 ## Variable Substitution `$name`
 
