@@ -4,7 +4,7 @@
 
 ## Examples
 
-### Just CSS
+### Start with CSS
 
 Any valid CSS works as-is:
 
@@ -12,17 +12,23 @@ Any valid CSS works as-is:
 .button {
   background: #6366f1;
   color: white;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.button-secondary {
+  background: #8b5cf6;
+  color: white;
+  padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
 }
 ```
 
-### Add JavaScript When You Need It
+### Then Add JavaScript
 
-Add a preamble above `---` to unlock variables, functions, and loops:
+See the repetition? Add a preamble above `---` to DRY it up:
 
 ```lass
-const space = (n) => `${n * 0.25}rem`;
 const colors = {
   primary: '#6366f1',
   secondary: '#8b5cf6',
@@ -30,46 +36,35 @@ const colors = {
 
 ---
 
-.card {
-  padding: {{ space(6) }};
-  background: {{ colors.primary }};
-}
-
 {{ Object.keys(colors).map(name => @{
-  .text-{{ name }} {
-    color: {{ colors[name] }};
+  .button-{{ name }} {
+    background: {{ colors[name] }};
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
   }
 }) }}
 ```
 
-Outputs:
-
-```css
-.card {
-  padding: 1.5rem;
-  background: #6366f1;
-}
-
-.text-primary {
-  color: #6366f1;
-}
-.text-secondary {
-  color: #8b5cf6;
-}
-```
+Same output, single source of truth. Add a new variant? Just add it to `colors`.
 
 ### Style Lookup
 
-Reuse CSS values with `@prop`:
+Reuse values within a rule with `@prop`:
 
 ```lass
-.box {
-  border: 2px solid #6366f1;
-  outline: @border;
+.button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  
+  &:focus {
+    outline: 2px solid currentColor;
+    outline-offset: @padding;
+  }
 }
 ```
 
-Outputs: `outline: 2px solid #6366f1;`
+`@padding` resolves to `0.75rem 1.5rem` at build time.
 
 ## Documentation
 
