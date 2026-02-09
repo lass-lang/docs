@@ -8,6 +8,7 @@
 
 Any valid CSS works as-is:
 
+<!-- test:begin valid -->
 ```lass
 .button {
   color: white;
@@ -34,10 +35,38 @@ Any valid CSS works as-is:
 }
 ```
 
+```css
+.button {
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.button-primary {
+  background: #6366f1;
+  border: 2px solid #6366f1;
+  box-shadow: 0 2px 4px #6366f133;
+}
+
+.button-secondary {
+  background: #8b5cf6;
+  border: 2px solid #8b5cf6;
+  box-shadow: 0 2px 4px #8b5cf633;
+}
+
+.button-danger {
+  background: #ef4444;
+  border: 2px solid #ef4444;
+  box-shadow: 0 2px 4px #ef444433;
+}
+```
+<!-- test:end -->
+
 ### With Lass
 
-`@background` reuses the color for border and shadow:
+Generate button variants from a color map:
 
+<!-- test:begin valid -->
 ```lass
 const colors = {
   primary: '#6366f1',
@@ -53,14 +82,40 @@ const colors = {
   border-radius: 0.5rem;
 }
 
-{{ Object.keys(colors).map(name => @{
+{{ Object.entries(colors).map(([name, color]) => @{
   .button-{{ name }} {
-    background: {{ colors[name] }};
-    border: 2px solid @background;
-    box-shadow: 0 2px 4px @(background)33;
+    background: {{ color }};
+    border: 2px solid {{ color }};
+    box-shadow: 0 2px 4px {{ color }}33;
   }
 }) }}
 ```
+
+```css
+
+.button {
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.button-primary {
+  background: #6366f1;
+  border: 2px solid #6366f1;
+  box-shadow: 0 2px 4px #6366f133;
+}
+.button-secondary {
+  background: #8b5cf6;
+  border: 2px solid #8b5cf6;
+  box-shadow: 0 2px 4px #8b5cf633;
+}
+.button-danger {
+  background: #ef4444;
+  border: 2px solid #ef4444;
+  box-shadow: 0 2px 4px #ef444433;
+}
+```
+<!-- test:end -->
 
 Add a variant? One line in `colors`.
 

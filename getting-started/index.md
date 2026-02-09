@@ -47,9 +47,8 @@ Bun.build({
 
 Create a file with the `.lass` extension. Lass files are just CSS - write styles exactly as you would in a `.css` file:
 
+<!-- test:begin valid -->
 ```lass
-/* src/styles/theme.lass */
-
 :root {
   --color-primary: #6366f1;
   --color-secondary: #8b5cf6;
@@ -74,6 +73,33 @@ Create a file with the `.lass` extension. Lass files are just CSS - write styles
   background: var(--color-secondary);
 }
 ```
+
+```css
+:root {
+  --color-primary: #6366f1;
+  --color-secondary: #8b5cf6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.button {
+  background: var(--color-primary);
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--color-secondary);
+}
+```
+<!-- test:end -->
 
 That's it! Any valid CSS works in a `.lass` file.
 
@@ -105,17 +131,14 @@ Your Lass styles are now active. Edit the `.lass` file and see changes reflected
 
 Want to do more? Add a JavaScript preamble before a `---` separator to unlock the full power of Lass:
 
+<!-- test:begin valid -->
 ```lass
-// src/styles/theme.lass
-
-// JavaScript preamble - runs at build time
 const primary = '#6366f1';
 const secondary = '#8b5cf6';
 const spacing = (n) => `${n * 0.25}rem`;
 
 ---
 
-/* CSS zone - use JS values with {{ }} */
 :root {
   --color-primary: {{ primary }};
   --color-secondary: {{ secondary }};
@@ -140,6 +163,34 @@ const spacing = (n) => `${n * 0.25}rem`;
   background: {{ secondary }};
 }
 ```
+
+```css
+
+:root {
+  --color-primary: #6366f1;
+  --color-secondary: #8b5cf6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.button {
+  background: #6366f1;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #8b5cf6;
+}
+```
+<!-- test:end -->
 
 The preamble lets you:
 - **Define variables** - Colors, sizes, breakpoints
@@ -179,9 +230,8 @@ Ensure this file is included in your `tsconfig.json`:
 
 Use `.module.lass` for scoped class names:
 
+<!-- test:begin valid -->
 ```lass
-// src/components/Card.module.lass
-
 const shadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)';
 
 ---
@@ -199,6 +249,23 @@ const shadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)';
   margin-bottom: 0.5rem;
 }
 ```
+
+```css
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  padding: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+```
+<!-- test:end -->
 
 Import with a default import to get scoped class names:
 
@@ -255,41 +322,66 @@ Create `src/lass.d.ts` with the declarations shown in the [TypeScript Support](#
 
 Use `{{ }}` for expressions (computed at build time):
 
+<!-- test:begin valid -->
 ```lass
 const size = 16;
 
 ---
 
 .text {
-  font-size: {{ size }}px;      /* Result: 16px */
-  font-size: {{ size * 2 }}px;  /* Result: 32px */
+  font-size: {{ size }}px;
+  line-height: {{ size * 2 }}px;
 }
 ```
 
+```css
+
+.text {
+  font-size: 16px;
+  line-height: 32px;
+}
+```
+<!-- test:end -->
+
 Use `$name` for simple text substitution (no computation). Variables must be `$`-prefixed:
 
+<!-- test:begin valid -->
 ```lass
 const $unit = 'rem';
 
 ---
 
 .box {
-  margin: 1$unit;  /* Result: 1rem */
+  margin: 1$unit;
 }
 ```
+
+```css
+
+.box {
+  margin: 1rem;
+}
+```
+<!-- test:end -->
 
 ### Preamble Must Come First
 
 When using JavaScript, the preamble must come **before** the `---` separator:
 
+<!-- test:begin valid -->
 ```lass
-// Correct - JS first, then ---, then CSS
 const color = 'blue';
 
 ---
 
 .box { color: {{ color }}; }
 ```
+
+```css
+
+.box { color: blue; }
+```
+<!-- test:end -->
 
 Without a preamble, you don't need a separator at all - just write CSS directly.
 

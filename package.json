@@ -1,0 +1,17 @@
+{
+  "name": "@lass-lang/docs",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Lass language documentation with tested code examples",
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@lass-lang/axioms": "workspace:*",
+    "@lass-lang/core": "workspace:*",
+    "@vitest/coverage-v8": "^4.0.18",
+    "vitest": "^4.0.18"
+  }
+}
