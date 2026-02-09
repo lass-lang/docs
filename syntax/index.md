@@ -164,19 +164,16 @@ const items = ['a', 'b', 'c']
 For different separators, use explicit `.join()`:
 
 ```lass
-const sizes = [1, 2, 4, 8]
+const stops = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3'];
 ---
-:root {
-  {{ sizes.map(s => '--space-' + s + ': ' + (s * 4) + 'px;').join('\n  ') }}
+.gradient {
+  background: linear-gradient(90deg, {{ stops.join(', ') }});
 }
 ```
 
 ```css
-:root {
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-4: 16px;
-  --space-8: 32px;
+.gradient {
+  background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
 }
 ```
 
