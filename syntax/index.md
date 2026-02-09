@@ -179,19 +179,22 @@ const stops = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3'];
 
 ### Null/undefined handling
 
-`null`, `undefined`, and `false` produce empty string (React-style):
+`null`, `undefined`, and `false` produce empty string - just like JSX conditional rendering:
 
 ```lass
-const value = null
+const isLarge = false;
+const isDisabled = true;
 ---
-.box {
-  color: red{{ value }};
+.button {
+  {{ isLarge && @{ padding: 1.5rem 2rem; } }}
+  {{ isDisabled && @{ opacity: 0.5; pointer-events: none; } }}
 }
 ```
 
 ```css
-.box {
-  color: red;
+.button {
+  
+  opacity: 0.5; pointer-events: none;
 }
 ```
 
