@@ -442,19 +442,25 @@ const makeBorder = () => @{ border: 1px solid; }
 
 ### With expressions inside
 
-`{{ }}` inside `@{ }` works:
+`{{ }}` inside `@{ }` enables dynamic values within generated blocks:
 
 ```lass
-const size = 10
+const variants = ['primary', 'secondary'];
+const colors = { primary: '#6366f1', secondary: '#8b5cf6' };
 ---
-.box {
-  {{ @{ padding: {{ size }}px; } }}
-}
+{{ variants.map(v => @{
+  .btn-{{ v }} {
+    background: {{ colors[v] }};
+  }
+}) }}
 ```
 
 ```css
-.box {
-  padding: 10px;
+.btn-primary {
+  background: #6366f1;
+}
+.btn-secondary {
+  background: #8b5cf6;
 }
 ```
 
