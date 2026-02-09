@@ -6,10 +6,10 @@
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { extractTestCasesFromMD, type TestCase } from '@lass-lang/axioms';
+import { extractTestCasesFromMD, type TestCase } from './extractor.js';
 import { transpile } from '@lass-lang/core';
 
-export type { TestCase } from '@lass-lang/axioms';
+export { extractTestCasesFromMD, type TestCase } from './extractor.js';
 
 export interface FileResults {
   file: string;
@@ -40,11 +40,17 @@ export async function runValidTestCase(testCase: TestCase): Promise<string> {
   return executeTranspiledCode(code);
 }
 
+export interface FindOptions {
+  /** Directory names to exclude from search */
+  exclude?: string[];
+}
+
 /**
  * Find all markdown files in a directory recursively
  */
-export function findMarkdownFiles(dir: string): string[] {
+export function findMarkdownFiles(dir: string, options: FindOptions = {}): string[] {
   const files: string[] = [];
+  const { exclude = [] } = options;
 
   for (const entry of readdirSync(dir)) {
     // Skip hidden files, node_modules, and internal directories
@@ -52,11 +58,16 @@ export function findMarkdownFiles(dir: string): string[] {
       continue;
     }
 
+    // Skip excluded directories
+    if (exclude.includes(entry)) {
+      continue;
+    }
+
     const fullPath = join(dir, entry);
     const stat = statSync(fullPath);
 
     if (stat.isDirectory()) {
-      files.push(...findMarkdownFiles(fullPath));
+      files.push(...findMarkdownFiles(fullPath, options));
     } else if (entry.endsWith('.md')) {
       files.push(fullPath);
     }

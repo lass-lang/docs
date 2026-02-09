@@ -3,6 +3,8 @@
  *
  * Dynamically generates vitest tests from markdown documentation files.
  * Uses <test-case> elements to identify testable examples.
+ *
+ * Note: Axiom files in content/axioms/ are tested separately in axioms.test.ts
  */
 
 import { describe, test, expect } from 'vitest';
@@ -17,8 +19,8 @@ import {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const docsDir = join(__dirname, '..');
 
-// Find all markdown files
-const markdownFiles = findMarkdownFiles(docsDir);
+// Find all markdown files, excluding axioms directory (tested separately)
+const markdownFiles = findMarkdownFiles(docsDir, { exclude: ['axioms'] });
 
 // Parse each file and generate tests
 for (const filePath of markdownFiles) {

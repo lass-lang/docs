@@ -1,9 +1,18 @@
 {
   "name": "@lass-lang/docs",
-  "private": true,
   "version": "0.0.1",
   "type": "module",
   "description": "Lass language documentation with tested code examples",
+  "exports": {
+    ".": {
+      "types": "./src/extractor.ts",
+      "import": "./src/extractor.ts"
+    },
+    "./test-helpers": {
+      "types": "./src/test-helpers.ts",
+      "import": "./src/test-helpers.ts"
+    }
+  },
   "scripts": {
     "lint:docs": "tsx scripts/lint-docs.ts",
     "test": "vitest run",
@@ -12,7 +21,6 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
-    "@lass-lang/axioms": "workspace:*",
     "@lass-lang/core": "workspace:*",
     "@vitest/coverage-v8": "^4.0.18",
     "husky": "^9.1.7",
