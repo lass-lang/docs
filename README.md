@@ -1,161 +1,46 @@
-# Lass
+# @lass-lang/docs
 
-**CSS with JavaScript superpowers.** Zero runtime - compiles to static CSS.
+Documentation package for the Lass language with tested code examples.
 
-## Examples
+## Structure
 
-### Start with CSS
-
-Any valid CSS works as-is:
-
-<test-case type="valid">
-```lass
-.button {
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-}
-
-.button-primary {
-  background: #6366f1;
-  border: 2px solid #6366f1;
-  box-shadow: 0 2px 4px #6366f133;
-}
-
-.button-secondary {
-  background: #8b5cf6;
-  border: 2px solid #8b5cf6;
-  box-shadow: 0 2px 4px #8b5cf633;
-}
-
-.button-danger {
-  background: #ef4444;
-  border: 2px solid #ef4444;
-  box-shadow: 0 2px 4px #ef444433;
-}
+```
+content/           # Documentation content
+  index.md         # Homepage
+  getting-started/ # Getting started guide
+  syntax/          # Syntax reference
+  llms.txt         # AI-friendly single-page reference
 ```
 
-```css
-.button {
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-}
-
-.button-primary {
-  background: #6366f1;
-  border: 2px solid #6366f1;
-  box-shadow: 0 2px 4px #6366f133;
-}
-
-.button-secondary {
-  background: #8b5cf6;
-  border: 2px solid #8b5cf6;
-  box-shadow: 0 2px 4px #8b5cf633;
-}
-
-.button-danger {
-  background: #ef4444;
-  border: 2px solid #ef4444;
-  box-shadow: 0 2px 4px #ef444433;
-}
-```
-</test-case>
-
-### With Lass
-
-Generate button variants from a color map:
-
-<test-case type="valid">
-```lass
-const colors = {
-  primary: '#6366f1',
-  secondary: '#8b5cf6',
-  danger: '#ef4444',
-};
-
----
-
-.button {
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-}
-
-{{ Object.entries(colors).map(([name, color]) => @{
-  .button-{{ name }} {
-    background: {{ color }};
-    border: 2px solid {{ color }};
-    box-shadow: 0 2px 4px {{ color }}33;
-  }
-}) }}
-```
-
-```css
-
-.button {
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-}
-
-.button-primary {
-  background: #6366f1;
-  border: 2px solid #6366f1;
-  box-shadow: 0 2px 4px #6366f133;
-}
-.button-secondary {
-  background: #8b5cf6;
-  border: 2px solid #8b5cf6;
-  box-shadow: 0 2px 4px #8b5cf633;
-}
-.button-danger {
-  background: #ef4444;
-  border: 2px solid #ef4444;
-  box-shadow: 0 2px 4px #ef444433;
-}
-```
-</test-case>
-
-Add a variant? One line in `colors`.
-
-## Documentation
-
-- [Getting Started](./getting-started/index.md) - Installation and first steps
-- [Syntax Reference](./syntax/index.md) - Complete language reference
-- [llms.txt](./llms.txt) - AI-friendly single-page reference
-
-## Key Features
-
-- **JavaScript Preamble** - Define variables, functions, and imports before the `---` separator
-- **Expression Interpolation** - Use `{{ expr }}` to inject JS values into CSS
-- **Style Lookup** - Read CSS values with `@(property)` or `@prop` shorthand
-- **Variable Substitution** - Simple `$param` text replacement in CSS
-- **Style Blocks** - Generate CSS from JS with `@{ cssText }`
-- **Zero Runtime** - Everything compiles to static CSS
-
-## Installation
+## Scripts
 
 ```bash
-npm install @lass-lang/vite-plugin-lass --save-dev
+pnpm test          # Run all doc example tests
+pnpm test:coverage # Run tests with coverage
+pnpm lint:docs     # Check all lass+css pairs are wrapped in <test-case>
 ```
 
-```js
-// vite.config.js
-import { defineConfig } from 'vite';
-import lass from '@lass-lang/vite-plugin-lass';
+## Writing Documentation
 
-export default defineConfig({
-  plugins: [lass()]
-});
+Code examples use `<test-case>` elements to ensure they stay correct:
+
+```markdown
+<test-case type="valid">
+```lass
+const x = 10;
+---
+.box { width: {{ x }}px; }
 ```
 
-## Links
+```css
+.box { width: 10px; }
+```
+</test-case>
+```
 
-- [GitHub Repository](https://github.com/lass-lang/lass)
-- [npm: @lass-lang/vite-plugin-lass](https://www.npmjs.com/package/@lass-lang/vite-plugin-lass)
-- [npm: @lass-lang/core](https://www.npmjs.com/package/@lass-lang/core)
+The test runner extracts these pairs and verifies the Lass input compiles to the expected CSS output.
 
-## License
+## Test Types
 
-MIT
+- `type="valid"` - Lass compiles to expected CSS
+- `type="invalid"` - Lass throws error containing expected message

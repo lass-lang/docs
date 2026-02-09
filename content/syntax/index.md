@@ -692,4 +692,4 @@ Both pass through unchanged - `//` inside strings and URLs is not a comment.
 
 ---
 
-[Back to Home](../README.md) | [Getting Started](../getting-started/index.md)
+[Back to Home](../index.md) | [Getting Started](../getting-started/index.md)

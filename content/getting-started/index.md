@@ -394,4 +394,4 @@ You now have Lass running in your project. Explore more:
 
 ---
 
-[Back to Home](../README.md) | [Next: Syntax Reference](../syntax/index.md)
+[Back to Home](../index.md) | [Next: Syntax Reference](../syntax/index.md)
