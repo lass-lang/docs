@@ -1,31 +1,66 @@
 # Lass
 
-**JavaScript-enhanced stylesheets for modern web development.**
+**CSS with JavaScript superpowers.** Zero runtime - compiles to static CSS.
 
-Lass is CSS - with optional JavaScript superpowers. Everything compiles to static CSS at build time.
+## Examples
 
 ### Just CSS
+
+Any valid CSS works as-is:
 
 ```lass
 .button {
   background: #6366f1;
+  color: white;
   padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
 }
 ```
 
-### JavaScript Power
+### Add JavaScript When You Need It
+
+Add a preamble above `---` to unlock variables, functions, and loops:
 
 ```lass
-const sizes = [1, 2, 4, 8];
+const space = (n) => `${n * 0.25}rem`;
+const colors = {
+  primary: '#6366f1',
+  secondary: '#8b5cf6',
+};
 
 ---
 
-{{ sizes.map(n => `.m-${n} { margin: ${n * 0.25}rem; }`).join('\n') }}
+.card {
+  padding: {{ space(6) }};
+  background: {{ colors.primary }};
+}
+
+{{ Object.keys(colors).map(name => @{
+  .text-{{ name }} {
+    color: {{ colors[name] }};
+  }
+}) }}
 ```
 
-Outputs: `.m-1 { margin: 0.25rem; }` `.m-2 { margin: 0.5rem; }` ...
+Outputs:
+
+```css
+.card {
+  padding: 1.5rem;
+  background: #6366f1;
+}
+
+.text-primary {
+  color: #6366f1;
+}
+.text-secondary {
+  color: #8b5cf6;
+}
+```
 
 ### Style Lookup
+
+Reuse CSS values with `@prop`:
 
 ```lass
 .box {
@@ -34,7 +69,7 @@ Outputs: `.m-1 { margin: 0.25rem; }` `.m-2 { margin: 0.5rem; }` ...
 }
 ```
 
-Read CSS values set earlier with `@prop` - outputs `outline: 2px solid #6366f1;`
+Outputs: `outline: 2px solid #6366f1;`
 
 ## Documentation
 
