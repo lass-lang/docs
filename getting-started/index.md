@@ -19,23 +19,11 @@ npm install
 
 ## Installation
 
-Install the Lass Vite plugin as a dev dependency:
+Install the Lass Vite plugin:
 
 ```bash
-# npm
 npm install @lass-lang/vite-plugin-lass --save-dev
-
-# pnpm
-pnpm add @lass-lang/vite-plugin-lass --save-dev
-
-# yarn
-yarn add @lass-lang/vite-plugin-lass --dev
-
-# bun
-bun add @lass-lang/vite-plugin-lass --dev
 ```
-
-> **Note:** You only need `@lass-lang/vite-plugin-lass`. The core transpiler (`@lass-lang/core`) is included as a dependency.
 
 ## Vite Configuration
 
