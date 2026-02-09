@@ -58,18 +58,18 @@ p {
 ### Functions in preamble
 
 ```lass
-function rem(px) {
-  return (px / 16) + 'rem'
-}
+const space = (n) => `${n * 0.25}rem`;
 ---
-h1 {
-  font-size: {{ rem(32) }};
+.card {
+  padding: {{ space(4) }} {{ space(6) }};
+  gap: {{ space(2) }};
 }
 ```
 
 ```css
-h1 {
-  font-size: 2rem;
+.card {
+  padding: 1rem 1.5rem;
+  gap: 0.5rem;
 }
 ```
 
