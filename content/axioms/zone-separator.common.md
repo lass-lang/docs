@@ -20,6 +20,11 @@ A `.lass` file is split into two zones by a `---` separator:
 - **Below `---`**: the CSS zone. Standard CSS, plus Lass symbols
   (`$name`, `{{ }}`, `@{ }`, `@prop`, `//`).
 
+The separator can include an optional comment after any whitespace:
+`--- here starts the CSS`. Everything after the whitespace is ignored.
+Note: whitespace is required after the dashes — `---nospace` is **not**
+a separator (this avoids confusion with CSS custom properties like `--foo`).
+
 If there's no `---`, the entire file is a CSS zone — which is why plain
 CSS files work as-is (see [css-passthrough](./css-passthrough.common.md)).
 
@@ -301,6 +306,77 @@ p {
 ---
 */
 p {
+  color: test;
+}
+```
+
+</test-case>
+
+
+<test-case type="valid">
+
+## valid: separator with comment
+
+The `---` separator can have an optional comment after a space.
+Everything after `--- ` is ignored by the transpiler. The behavior
+is identical to a bare `---`.
+
+```lass
+const $primary = '#2563eb'
+--- here starts the CSS
+.button {
+  background: $primary;
+}
+```
+
+```css
+.button {
+  background: #2563eb;
+}
+```
+
+</test-case>
+
+
+<test-case type="valid">
+
+## valid: separator with comment and no preamble
+
+A `--- comment` with no content above it is valid. The entire file
+below the separator is treated as CSS zone, and the comment is stripped.
+
+```lass
+--- just the reset here
+p {
+  color: red;
+}
+```
+
+```css
+p {
+  color: red;
+}
+```
+
+</test-case>
+
+
+<test-case type="valid">
+
+## valid: separator with only spaces after dashes
+
+A `---` followed by only whitespace is still a valid separator.
+
+```lass
+const $x = 'test'
+---   
+.box {
+  color: $x;
+}
+```
+
+```css
+.box {
   color: test;
 }
 ```

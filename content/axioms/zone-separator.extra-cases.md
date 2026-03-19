@@ -179,6 +179,79 @@ Multiple --- separators
 </test-case>
 
 
+<test-case type="valid">
+
+## valid: separator with tab after dashes
+
+A `---` followed by a tab and then comment text is recognized as
+a separator. Any whitespace character after `---` starts the comment.
+
+```lass
+const $x = 'blue'
+---	comment with tab
+p {
+  color: $x;
+}
+```
+
+```css
+p {
+  color: blue;
+}
+```
+
+</test-case>
+
+
+<test-case type="valid">
+
+## valid: separator with long comment
+
+A `---` can be followed by a long descriptive comment. The entire
+comment text is stripped and has no effect on output.
+
+```lass
+const $bg = '#f0f0f0'
+--- this is a very long comment explaining that the CSS zone below defines the page background
+body {
+  background: $bg;
+}
+```
+
+```css
+body {
+  background: #f0f0f0;
+}
+```
+
+</test-case>
+
+
+<test-case type="valid">
+
+## valid: no space after dashes is not separator
+
+`---nospace` (no whitespace after the three dashes) is NOT recognized
+as a separator. The entire file is treated as CSS zone (no zones
+detected), and the content passes through as-is.
+
+```lass
+---nospace
+p {
+  color: red;
+}
+```
+
+```css
+---nospace
+p {
+  color: red;
+}
+```
+
+</test-case>
+
+
 # Story 2.2: Preamble Execution
 
 These test cases verify that preamble code executes when the transpiled

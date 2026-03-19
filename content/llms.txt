@@ -15,16 +15,14 @@ const x = 1;
 ```
 
 No `---` = pure CSS zone (plain CSS works as-is).
+`--- comment text` is also valid (space required after `---`; comment is ignored).
 
 ## Syntax
 
 | Syntax | What it does |
 |--------|--------------|
-| `---` | Separates JS preamble from CSS zone |
+| `---` / `--- comment` | Separates JS preamble from CSS zone (optional comment after space) |
 | `{{ expr }}` | Evaluates JS expression, inserts result |
-| `@(prop)` | Reads last value of CSS property |
-| `@prop` | Shorthand for `@(prop)` (letters only) |
-| `$name` | Text substitution from `$`-prefixed var |
 | `@{ css }` | Creates CSS string in JS context |
 | `//` | Single-line comment (stripped) |
 
