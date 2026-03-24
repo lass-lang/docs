@@ -133,6 +133,7 @@ Want to do more? Add a JavaScript preamble before a `---` separator to unlock th
 
 <test-case type="valid">
 ```lass
+---
 const primary = '#6366f1';
 const secondary = '#8b5cf6';
 const spacing = (n) => `${n * 0.25}rem`;
@@ -232,6 +233,7 @@ Use `.module.lass` for scoped class names:
 
 <test-case type="valid">
 ```lass
+---
 const shadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)';
 
 ---
@@ -324,6 +326,7 @@ Use `{{ }}` for expressions (computed at build time):
 
 <test-case type="valid">
 ```lass
+---
 const size = 16;
 
 ---
@@ -347,6 +350,7 @@ Use `$name` for simple text substitution (no computation). Variables must be `$`
 
 <test-case type="valid">
 ```lass
+---
 const $unit = 'rem';
 
 ---
@@ -370,6 +374,7 @@ When using JavaScript, the preamble must come **before** the `---` separator:
 
 <test-case type="valid">
 ```lass
+---
 const color = 'blue';
 
 ---

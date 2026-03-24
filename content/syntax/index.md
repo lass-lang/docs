@@ -4,31 +4,33 @@ Complete reference for Lass syntax elements.
 
 ## Quick Reference
 
-| Syntax | Purpose | Example |
-|--------|---------|---------|
-| `---` | Zone separator | JS preamble before, CSS after |
-| `{{ expr }}` | Expression interpolation | `width: {{ x * 10 }}px;` |
-| `@(prop)` | Style lookup (full) | `outline: @(border);` |
-| `@prop` | Style lookup (shorthand) | `border-left: @border;` |
-| `$name` | Variable substitution | `color: $primary;` |
-| `@{ css }` | Style block | `{{ @{ color: red; } }}` |
-| `//` | Single-line comment | `// stripped from output` |
+| Syntax       | Purpose                  | Example                       |
+|--------------|--------------------------|-------------------------------|
+| `---`        | Zone separator           | JS preamble before, CSS after |
+| `{{ expr }}` | Expression interpolation | `width: {{ x * 10 }}px;`      |
+| `@(prop)`    | Style lookup             | `outline: @(border);`         |
+| `$name`      | Variable substitution    | `color: $primary;`            |
+| `@{ css }`   | Style block              | `{{ @{ color: red; } }}`      |
+| `//`         | Single-line comment      | `// stripped from output`     |
 
 ---
 
 ## Zone Separator (`---`)
 
-A `.lass` file is split into two zones by a `---` separator:
+A `.lass` file is split into two zones by opening and closing `---` delimiters:
 
-- **Above `---`**: JavaScript preamble (imports, variables, functions)
-- **Below `---`**: CSS zone with Lass syntax extensions
+- **Opening `---`** (line 1): Marks the start of JS preamble
+- **Closing `---`**: Marks the end of preamble; everything after is CSS zone
+- **Between delimiters**: JavaScript (imports, variables, functions)
+- **After closing delimiter**: CSS zone with Lass syntax extensions
 
-If there's no `---`, the entire file is CSS zone - plain CSS works as-is.
+If there's no opening `---` on line 1, the entire file is CSS zone - plain CSS works as-is.
 
 ### With preamble
 
 <test-case type="valid">
 ```lass
+---
 const $color = 'blue'
 ---
 p {
@@ -63,6 +65,7 @@ p {
 
 <test-case type="valid">
 ```lass
+---
 const space = (n) => `${n * 0.25}rem`;
 ---
 .card {
@@ -89,6 +92,7 @@ const space = (n) => `${n * 0.25}rem`;
 
 <test-case type="valid">
 ```lass
+---
 const gap = 23
 ---
 .box {
@@ -107,6 +111,7 @@ const gap = 23
 
 <test-case type="valid">
 ```lass
+---
 const tag = 'article'
 ---
 {{ tag }} {
@@ -125,6 +130,7 @@ article {
 
 <test-case type="valid">
 ```lass
+---
 const prop = 'background-color'
 ---
 .box {
@@ -143,6 +149,7 @@ const prop = 'background-color'
 
 <test-case type="valid">
 ```lass
+---
 const fluid = (min, max) => `clamp(${min}rem, 5vw, ${max}rem)`;
 ---
 .title {
@@ -163,6 +170,7 @@ Arrays are automatically joined with space (CSS-friendly for shorthand propertie
 
 <test-case type="valid">
 ```lass
+---
 const items = ['a', 'b', 'c']
 ---
 .list {
@@ -181,6 +189,7 @@ For different separators, use explicit `.join()`:
 
 <test-case type="valid">
 ```lass
+---
 const stops = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3'];
 ---
 .gradient {
@@ -201,6 +210,7 @@ const stops = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3'];
 
 <test-case type="valid">
 ```lass
+---
 const isLarge = false;
 const isDisabled = true;
 ---
@@ -220,11 +230,11 @@ const isDisabled = true;
 
 ---
 
-## Style Lookup (`@(prop)` / `@prop`)
+## Style Lookup (`@(prop)`)
 
 In the CSS zone, read the last-declared value of a CSS property. Use it in value positions - resolution walks up the selector tree.
 
-### Full syntax `@(prop)`
+### Basic usage
 
 <test-case type="valid">
 ```lass
@@ -242,26 +252,6 @@ In the CSS zone, read the last-declared value of a CSS property. Use it in value
 ```
 </test-case>
 
-### Shorthand `@prop`
-
-Works for properties starting with a letter:
-
-<test-case type="valid">
-```lass
-.box {
-  border: 2px solid blue;
-  outline: @border;
-}
-```
-
-```css
-.box {
-  border: 2px solid blue;
-  outline: 2px solid blue;
-}
-```
-</test-case>
-
 ### Parent walk-up
 
 <test-case type="valid">
@@ -269,7 +259,7 @@ Works for properties starting with a letter:
 .card {
   padding: 1.5rem;
   .content {
-    margin: @padding;
+    margin: @(padding);
   }
 }
 ```
@@ -306,12 +296,11 @@ Works for properties starting with a letter:
 ```
 </test-case>
 
-Note: `@--custom` shorthand doesn't work due to the `--` prefix. Use `@(--custom)`.
-
 ### Inside expressions
 
 <test-case type="valid">
 ```lass
+---
 const double = (v) => parseFloat(v) * 2 + 'px';
 ---
 .box {
@@ -358,6 +347,7 @@ Simple text substitution from `$`-prefixed variables. No expression evaluation.
 
 <test-case type="valid">
 ```lass
+---
 const $color = 'red'
 ---
 p {
@@ -376,6 +366,7 @@ p {
 
 <test-case type="valid">
 ```lass
+---
 const $component = 'card'
 ---
 .$component {
@@ -394,6 +385,7 @@ const $component = 'card'
 
 <test-case type="valid">
 ```lass
+---
 const $gap = 23
 ---
 .box {
@@ -416,6 +408,7 @@ Use `{{ $gap * 2 }}` for evaluated math.
 
 <test-case type="valid">
 ```lass
+---
 const $gap = 23
 ---
 .box {
@@ -446,6 +439,7 @@ The browser evaluates `calc(23 * 1px)` = `23px`. For build-time math, use `{{ }}
 
 <test-case type="valid">
 ```lass
+---
 const $color = 'red'
 ---
 .quote {
@@ -470,6 +464,7 @@ Create CSS strings from within JS expressions. The inverse of `{{ }}`.
 
 <test-case type="valid">
 ```lass
+---
 const makeBorder = () => @{ border: 1px solid; }
 ---
 .box {
@@ -490,6 +485,7 @@ const makeBorder = () => @{ border: 1px solid; }
 
 <test-case type="valid">
 ```lass
+---
 const colors = { primary: '#6366f1', secondary: '#8b5cf6' };
 ---
 {{ Object.keys(colors).map(v => @{
@@ -515,6 +511,7 @@ Use `{{ }}` with template literals for dynamic CSS generation:
 
 <test-case type="valid">
 ```lass
+---
 const sizes = [1, 2, 4, 8]
 ---
 {{ sizes.map(n => `.m-${n} { margin: ${n * 0.25}rem; }`).join('\n') }}
@@ -532,6 +529,7 @@ const sizes = [1, 2, 4, 8]
 
 <test-case type="valid">
 ```lass
+---
 function card(bg) {
   return @{
     background: {{ bg }};
@@ -558,6 +556,7 @@ padding: 16px;
 
 <test-case type="valid">
 ```lass
+---
 const darkMode = true
 ---
 body {
@@ -583,6 +582,7 @@ body {
 
 <test-case type="valid">
 ```lass
+---
 const breakpoints = { sm: '640px', md: '768px' }
 ---
 {{ Object.entries(breakpoints).map(([name, width]) => @{

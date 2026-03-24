@@ -21,7 +21,7 @@ This means nesting resolution happens downstream: the bundler's CSS
 pipeline (PostCSS, Lightning CSS) or the browser itself flattens the
 nesting. Lass stays out of the way.
 
-Lass symbols (`$name`, `{{ }}`, `@prop`, `//`) work inside nested
+Lass symbols (`$name`, `{{ }}`, `@(prop)`, `//`) work inside nested
 blocks exactly as they do elsewhere in the CSS zone — the scanner
 doesn't treat nested CSS any differently.
 

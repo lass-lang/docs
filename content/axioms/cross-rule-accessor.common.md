@@ -17,7 +17,7 @@ grab a property value. You specify the selector to target and the
 property to read — the runtime walks the CSS output accumulated so far
 to find the match.
 
-This is the one accessor that crosses selector tree boundaries. `@prop`
+This is the one accessor that crosses selector tree boundaries. `@(prop)`
 only looks within the current tree (and its parents); `@(selector {prop})`
 can look at any rule that's already been output.
 

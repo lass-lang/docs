@@ -9,7 +9,7 @@ description: >
   string slice + lazy regex lookup during transpilation. The explicit @()
   syntax is unambiguous and supports custom properties like @(--accent).
 tags: [symbol-system, accessor, compile-time, accumulator]
-see-also: [style-lookup-shorthand, cross-rule-accessor, selector-lookup]
+see-also: [cross-rule-accessor, selector-lookup]
 ---
 
 # @(prop) Property Accessor

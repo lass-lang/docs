@@ -5,7 +5,8 @@ Lass = CSS + optional JavaScript preamble. Compiles to static CSS at build time.
 ## File Structure
 
 ```
-// JavaScript preamble (optional)
+---
+// JavaScript preamble (between opening and closing delimiters)
 const x = 1;
 
 ---
@@ -14,8 +15,9 @@ const x = 1;
 .selector { property: value; }
 ```
 
-No `---` = pure CSS zone (plain CSS works as-is).
-`--- comment text` is also valid (space required after `---`; comment is ignored).
+Opening `---` on line 1 marks JS preamble start. Closing `---` ends preamble.
+No opening `---` = pure CSS zone (plain CSS works as-is).
+`--- comment text` is valid (space required after `---`; comment is ignored).
 
 ## Syntax
 
@@ -31,6 +33,7 @@ No `---` = pure CSS zone (plain CSS works as-is).
 Works in value, selector, and property name positions:
 
 ```lass
+---
 const size = 16
 const tag = 'article'
 const prop = 'color'
@@ -42,15 +45,15 @@ Output: `article { color: 16px; }`
 Arrays auto-join with space: `{{ [1,2,3] }}` → `1 2 3`
 Null/undefined/false → empty string
 
-## Style Lookup `@(prop)` / `@prop`
+## Style Lookup `@(prop)`
 
 Reads last-declared value, walks up selector tree:
 
 ```lass
 .box {
   border: 2px solid blue;
-  outline: @border;            /* shorthand */
-  box-shadow: 0 0 0 4px @(border-color);  /* full form - extracts part */
+  outline: @(border);
+  box-shadow: 0 0 0 4px @(border-color);
 }
 ```
 Output: `outline: 2px solid blue; box-shadow: 0 0 0 4px blue;`
@@ -62,6 +65,7 @@ Unresolved lookups preserved for PostCSS. For custom properties, prefer `var(--n
 Text substitution only (no evaluation). Variables must be `$`-prefixed:
 
 ```lass
+---
 const $gap = 8
 ---
 .box { padding: $gap * 2; }
@@ -77,6 +81,7 @@ Special: `null` → `unset`, `undefined` → preserved
 CSS strings in JS. Enables loops/conditionals:
 
 ```lass
+---
 const sizes = [1, 2, 4]
 ---
 {{ sizes.map(n => @{ .m-{{ n }} { margin: {{ n * 4 }}px; } }) }}
@@ -85,6 +90,7 @@ Output: `.m-1 { margin: 4px; } .m-2 { margin: 8px; } .m-4 { margin: 16px; }`
 
 Mixin pattern:
 ```lass
+---
 function card(bg) { return @{ background: {{ bg }}; padding: 16px; } }
 ---
 .card { {{ card('white') }} }

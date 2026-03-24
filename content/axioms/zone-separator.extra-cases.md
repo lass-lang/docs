@@ -4,21 +4,21 @@ fr: FR-ZONE
 phase: MVP
 status: implemented
 description: >
-  Extra test cases for zone separator. Story 2.1 tests zone detection,
+  Extra test cases for zone delimiters. Story 2.1 tests zone detection,
   Story 2.2 tests preamble execution. Variable substitution is Story 2.3.
 tags: [foundational, two-zone, preamble, story-2.1, story-2.2]
 ---
 
-# Zone Separator - Extra Cases
+# Zone Delimiters - Extra Cases
 
 These test cases focus on zone detection (Story 2.1) and preamble execution
 (Story 2.2) without requiring variable substitution (Story 2.3).
 
 <test-case type="valid">
 
-## valid: no separator — pure CSS zone
+## valid: no delimiter — pure CSS zone
 
-Without `---`, the entire file is CSS zone. This is backward compatible
+Without `---` on line 1, the entire file is CSS zone. This is backward compatible
 with plain CSS files.
 
 ```lass
@@ -40,10 +40,11 @@ p {
 
 ## valid: empty preamble
 
-A `---` with nothing above it is valid. The preamble is empty, the CSS
-zone starts immediately after the separator.
+Opening and closing `---` with nothing between them is valid. The preamble 
+is empty, the CSS zone starts immediately after the closing delimiter.
 
 ```lass
+---
 ---
 p {
   color: red;
@@ -67,6 +68,7 @@ Story 2.1: The preamble executes as JS, CSS zone passes through. No variable
 substitution yet (that's Story 2.3).
 
 ```lass
+---
 const x = 'defined but not used'
 ---
 p {
@@ -90,6 +92,7 @@ p {
 Story 2.1: CSS zone content passes through unchanged.
 
 ```lass
+---
 const unused = 42
 ---
 .button {
@@ -115,6 +118,7 @@ const unused = 42
 Multiple JS statements in preamble all execute. CSS passes through.
 
 ```lass
+---
 const a = 1
 const b = 2
 const c = a + b
@@ -140,6 +144,7 @@ const c = a + b
 JS comments in preamble work correctly.
 
 ```lass
+---
 // This is a comment
 const x = 1 // inline comment
 /* block comment */
@@ -158,13 +163,15 @@ div {
 </test-case>
 
 
-<test-case type="invalid">
+<test-case type="valid">
 
-## invalid: multiple --- separators
+## valid: extra --- in CSS zone
 
-Only one `---` is allowed per file. A second `---` is an error.
+The second `---` closes the preamble. Extra `---` in the CSS zone is treated
+as CSS text (which CSS parsers will error on naturally).
 
 ```lass
+---
 const a = 1
 ---
 p { color: red; }
@@ -172,8 +179,10 @@ p { color: red; }
 p { color: blue; }
 ```
 
-```error
-Multiple --- separators
+```css
+p { color: red; }
+---
+p { color: blue; }
 ```
 
 </test-case>
@@ -181,12 +190,13 @@ Multiple --- separators
 
 <test-case type="valid">
 
-## valid: separator with tab after dashes
+## valid: delimiter with tab after dashes
 
 A `---` followed by a tab and then comment text is recognized as
-a separator. Any whitespace character after `---` starts the comment.
+a delimiter. Any whitespace character after `---` starts the comment.
 
 ```lass
+---
 const $x = 'blue'
 ---	comment with tab
 p {
@@ -205,12 +215,13 @@ p {
 
 <test-case type="valid">
 
-## valid: separator with long comment
+## valid: delimiter with long comment
 
 A `---` can be followed by a long descriptive comment. The entire
 comment text is stripped and has no effect on output.
 
 ```lass
+---
 const $bg = '#f0f0f0'
 --- this is a very long comment explaining that the CSS zone below defines the page background
 body {
@@ -229,11 +240,11 @@ body {
 
 <test-case type="valid">
 
-## valid: no space after dashes is not separator
+## valid: no space after dashes is not delimiter
 
 `---nospace` (no whitespace after the three dashes) is NOT recognized
-as a separator. The entire file is treated as CSS zone (no zones
-detected), and the content passes through as-is.
+as a delimiter. Since it's on line 1, the file has no preamble and is 
+treated as pure CSS zone, passing through as-is.
 
 ```lass
 ---nospace
@@ -266,6 +277,7 @@ Story 2.2: Preamble code executes. Variables are defined in scope.
 The CSS zone passes through unchanged (substitution is Story 2.3).
 
 ```lass
+---
 const color = "blue"
 ---
 p {
@@ -289,6 +301,7 @@ p {
 Story 2.2: Complex preamble expressions execute correctly.
 
 ```lass
+---
 let size = 10
 size = size * 2
 const doubled = size
@@ -314,6 +327,7 @@ const doubled = size
 Story 2.2: Functions defined in preamble are available in scope.
 
 ```lass
+---
 function rem(px) {
   return (px / 16) + 'rem'
 }
@@ -340,6 +354,7 @@ h1 {
 Story 4.1: $name in CSS zone is substituted with the variable value.
 
 ```lass
+---
 const $color = "blue"
 ---
 p {
@@ -363,6 +378,7 @@ p {
 Story 2.2: A preamble with only whitespace is treated as empty.
 
 ```lass
+---
    
 ---
 p {
@@ -387,6 +403,7 @@ Story 2.2: Side effects like console.log execute when module is imported.
 The CSS output is unchanged - side effects don't affect output.
 
 ```lass
+---
 console.log("Preamble executed!")
 const message = "hello"
 ---
@@ -411,6 +428,7 @@ const message = "hello"
 Story 2.2: Async functions can be defined in preamble.
 
 ```lass
+---
 async function fetchData() {
   return "data"
 }
@@ -442,6 +460,7 @@ Note: The CSS output below does NOT depend on the import - it just proves
 the import syntax passes through without errors during transpilation.
 
 ```lass
+---
 const imported = true
 ---
 .button {

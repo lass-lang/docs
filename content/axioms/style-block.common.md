@@ -603,9 +603,9 @@ the outer CSS context, NOT be quoted as JS.
 
 <test-case type="valid">
 
-## valid: @prop shorthand inside @{ }
+## valid: @(prop) lookup inside @{ }
 
-The `@prop` shorthand also works inside style blocks.
+The `@(prop)` lookup also works inside style blocks.
 
 ```lass
 ---
@@ -613,7 +613,7 @@ The `@prop` shorthand also works inside style blocks.
     border: 2px solid red;
     {{ @{
         .child {
-            outline: @border;
+            outline: @(border);
         }
     } }}
 }

@@ -22,7 +22,7 @@ can adopt Lass incrementally, one file at a time, without changing a
 single line.
 
 The transpiler only transforms Lass-specific symbols (`$name`, `{{ }}`,
-`@{ }`, `@prop`, `//`). Everything else passes through untouched. And
+`@{ }`, `@(prop)`, `//`). Everything else passes through untouched. And
 even those symbols are ignored inside CSS string literals (`"..."`,
 `'...'`), `url()` values, and `/* */` comments — so existing CSS that
 happens to contain `$` or `{{` in those contexts won't break.

@@ -68,6 +68,7 @@ Generate button variants from a color map:
 
 <test-case type="valid">
 ```lass
+---
 const colors = {
   primary: '#6366f1',
   secondary: '#8b5cf6',
@@ -129,7 +130,7 @@ Add a variant? One line in `colors`.
 
 - **JavaScript Preamble** - Define variables, functions, and imports before the `---` separator
 - **Expression Interpolation** - Use `{{ expr }}` to inject JS values into CSS
-- **Style Lookup** - Read CSS values with `@(property)` or `@prop` shorthand
+- **Style Lookup** - Read CSS values with `@(property)`
 - **Variable Substitution** - Simple `$param` text replacement in CSS
 - **Style Blocks** - Generate CSS from JS with `@{ cssText }`
 - **Zero Runtime** - Everything compiles to static CSS
