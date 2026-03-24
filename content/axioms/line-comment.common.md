@@ -26,7 +26,6 @@ just text.
 ## valid: basic comment stripped
 
 ```lass
----
 p {
   // this comment is stripped
   color: red;
@@ -51,7 +50,6 @@ p {
 before it is preserved.
 
 ```lass
----
 p {
   color: red; // this is stripped
 }
@@ -73,7 +71,6 @@ p {
 `/* */` comments are standard CSS — they pass through into the output.
 
 ```lass
----
 /* preserved */
 p {
   color: red; /* also preserved */
@@ -97,7 +94,6 @@ p {
 `//` stripped, `/* */` preserved — they coexist.
 
 ```lass
----
 // this line disappears
 /* this stays */
 p {
@@ -125,7 +121,6 @@ p {
 The scanner skips `//` detection inside string literals.
 
 ```lass
----
 a {
   content: "https://example.com";
 }
@@ -147,7 +142,6 @@ a {
 The scanner skips `//` detection inside `url()`.
 
 ```lass
----
 .bg {
   background: url(https://example.com/image.png);
 }
@@ -170,7 +164,6 @@ The scanner skips `//` detection inside `url()`.
 `/* */` takes precedence.
 
 ```lass
----
 /* This contains // but it's all one CSS comment */
 p {
   color: red;
@@ -192,7 +185,6 @@ p {
 ## valid: comment-only file produces empty output
 
 ```lass
----
 // nothing but a comment
 ```
 
@@ -237,7 +229,6 @@ the output is truncated. The transpiler detects this at end-of-file and
 reports an error.
 
 ```lass
----
 p {
   color: red;
 }

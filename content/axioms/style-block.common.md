@@ -54,6 +54,7 @@ produces clean, consistent output.
 The simplest case: a function returning a CSS fragment.
 
 ```lass
+---
 const makeBorder = () => @{ border: 1px solid; }
 ---
 .box {
@@ -77,6 +78,7 @@ const makeBorder = () => @{ border: 1px solid; }
 Style blocks in the preamble become JS template literals.
 
 ```lass
+---
 const $size = 10
 const makeRule = () => @{ padding: {{ $size }}px; }
 ---
@@ -102,7 +104,6 @@ const makeRule = () => @{ padding: {{ $size }}px; }
 This is a pipeline ordering requirement.
 
 ```lass
----
 .box {
     color: blue;
     {{ @{ border-color: @(color); } }}
@@ -126,6 +127,7 @@ This is a pipeline ordering requirement.
 `{{ }}` inside `@{ }` becomes `${ }` in the output template literal.
 
 ```lass
+---
 const size = 10
 ---
 .box {
@@ -150,6 +152,7 @@ Array.map with style blocks demonstrates the auto-join behavior.
 Each style block produces a string, and the array is auto-joined with space separator.
 
 ```lass
+---
 const sizes = [10, 20, 30]
 ---
 .box {
@@ -175,6 +178,7 @@ JS template literal nesting handles this naturally. Note that arrays
 are joined without separator, so items concatenate directly.
 
 ```lass
+---
 const themes = ['light', 'dark']
 const sizes = [10, 20]
 ---
@@ -218,7 +222,6 @@ const sizes = [10, 20]
 `@{` inside a string literal is NOT treated as a style block opener.
 
 ```lass
----
 .box::before {
     content: "This is not @{ a style block }";
 }
@@ -240,7 +243,6 @@ const sizes = [10, 20]
 `@{` inside a block comment is NOT treated as a style block opener.
 
 ```lass
----
 /* This is not @{ a style block } */
 .box {
     color: red;
@@ -265,6 +267,7 @@ JS braces inside `{{ }}` within a style block are handled correctly.
 Only the outermost `}` closes the style block.
 
 ```lass
+---
 const makeRule = (x) => @{ 
     color: {{ x > 0 ? 'blue' : 'red' }}; 
 }
@@ -290,6 +293,7 @@ const makeRule = (x) => @{
 An empty `@{ }` produces an empty template literal.
 
 ```lass
+---
 const showBorder = false
 ---
 .box {
@@ -315,7 +319,6 @@ const showBorder = false
 Whitespace-only style blocks are trimmed to empty string.
 
 ```lass
----
 .box {
     padding: 16px;{{ @{   } }}
 }
@@ -337,7 +340,6 @@ Whitespace-only style blocks are trimmed to empty string.
 Multiple style blocks can appear adjacent to each other.
 
 ```lass
----
 .box {
     {{ @{ a: 1; } }}{{ @{ b: 2; } }}
 }
@@ -360,6 +362,7 @@ Object property access inside `{{ }}` within style blocks works correctly.
 Arrays are joined with space separator.
 
 ```lass
+---
 const colors = { primary: 'blue', secondary: 'red' }
 ---
 .box {
@@ -383,6 +386,7 @@ const colors = { primary: 'blue', secondary: 'red' }
 `$param` substitution works inside style blocks.
 
 ```lass
+---
 const $radius = '8px'
 ---
 .box {
@@ -406,6 +410,7 @@ const $radius = '8px'
 A function returning a style block acts like a mixin.
 
 ```lass
+---
 function card(bg) {
   return @{
     background: {{ bg }};
@@ -437,6 +442,7 @@ padding: 16px;
 Style blocks can generate any CSS construct including at-rules.
 
 ```lass
+---
 const breakpoints = { sm: '640px', md: '768px' }
 ---
 {{ Object.entries(breakpoints).map(([name, width]) => @{
@@ -471,6 +477,7 @@ const breakpoints = { sm: '640px', md: '768px' }
 Ternary with style blocks replaces traditional @if/@else.
 
 ```lass
+---
 const darkMode = true
 ---
 body {
@@ -502,7 +509,6 @@ When `$param` references an undefined variable inside a style block,
 it should be preserved as literal text (same behavior as CSS zone).
 
 ```lass
----
 .box {
     {{ @{ color: $undefinedVar; } }}
 }
@@ -525,6 +531,7 @@ When `$param` references a null variable inside a style block,
 it should become 'unset' (same behavior as CSS zone).
 
 ```lass
+---
 const $nullVar = null
 ---
 .box {
@@ -550,6 +557,7 @@ which can then be called via `{{ }}` in the CSS zone. This
 demonstrates the power of style blocks as reusable CSS generators.
 
 ```lass
+---
 const getBg = () => @{ linear-gradient(red, blue) }
 ---
 .box {
@@ -574,7 +582,6 @@ When `@(prop)` appears inside a style block, it should resolve from
 the outer CSS context, NOT be quoted as JS.
 
 ```lass
----
 .parent {
     background: white;
     color: black;
@@ -608,7 +615,6 @@ the outer CSS context, NOT be quoted as JS.
 The `@(prop)` lookup also works inside style blocks.
 
 ```lass
----
 .parent {
     border: 2px solid red;
     {{ @{
@@ -638,7 +644,6 @@ The `@(prop)` lookup also works inside style blocks.
 Style blocks can contain nested CSS blocks with their own braces.
 
 ```lass
----
 .wrapper {
     {{ @{
         .outer {
@@ -672,7 +677,6 @@ Style blocks can contain nested CSS blocks with their own braces.
 Array.map with style blocks that use @(prop) from outer context.
 
 ```lass
----
 .theme {
     --primary: blue;
     --secondary: red;
@@ -712,6 +716,7 @@ goes as deep as you need. This pattern generates CSS for all combinations
 of variants and states.
 
 ```lass
+---
 const variants = ['primary', 'secondary']
 const states = ['hover', 'active']
 ---
@@ -756,6 +761,7 @@ const states = ['hover', 'active']
 for each item. This replaces the `@each` / `@for` loop pattern from Sass.
 
 ```lass
+---
 const menuSections = ['home', 'categories', 'on-sell', 'basket']
 ---
 header > nav {
@@ -796,7 +802,6 @@ it is passed through unchanged. This allows compatibility with future
 CSS syntax or other tools that might use this pattern.
 
 ```lass
----
 .box {
   @{ border: 1px solid; }
 }
@@ -819,7 +824,6 @@ If `@{` appears in the CSS zone without a matching `}`, it is preserved
 as literal text. This is graceful degradation, not an error.
 
 ```lass
----
 .box {
   content: "@{ unclosed";
 }

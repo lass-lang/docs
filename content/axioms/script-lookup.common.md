@@ -51,6 +51,7 @@ Use `url("...")` with quotes if you need literal `$name`.
 ## valid: basic substitution
 
 ```lass
+---
 const $color = 'red'
 ---
 p {
@@ -72,6 +73,7 @@ p {
 ## valid: multiple variables
 
 ```lass
+---
 const $primary = '#3b82f6'
 const $radius = '8px'
 ---
@@ -99,6 +101,7 @@ const $radius = '8px'
 text stays as-is.
 
 ```lass
+---
 const $gap = 23
 ---
 .box {
@@ -123,6 +126,7 @@ Because `calc()` evaluates math at browser runtime, pasting a number
 into `calc()` gives you a working expression.
 
 ```lass
+---
 const $gap = 23
 ---
 .box {
@@ -146,6 +150,7 @@ const $gap = 23
 When the variable holds a number, its string representation is inserted.
 
 ```lass
+---
 const $cols = 12
 ---
 .grid {
@@ -170,6 +175,7 @@ const $cols = 12
 substitution happens on the raw text before any CSS parsing.
 
 ```lass
+---
 const $component = 'card'
 ---
 .$component {
@@ -194,6 +200,7 @@ const $component = 'card'
 `$urlHeader` has the prefix, so `$urlHeader` substitutes.
 
 ```lass
+---
 const headerImages = ['ici']
 const $urlHeader = headerImages[0]
 ---
@@ -221,6 +228,7 @@ const $urlHeader = headerImages[0]
 skips symbol detection inside CSS strings.
 
 ```lass
+---
 const $color = 'red'
 ---
 .quote {
@@ -245,6 +253,7 @@ const $color = 'red'
 function is not a protected context.
 
 ```lass
+---
 const $path = 'images'
 ---
 .bg {
@@ -269,6 +278,7 @@ const $path = 'images'
 Use this form if you need literal `$path` in the output.
 
 ```lass
+---
 const $path = 'images'
 ---
 .bg {
@@ -294,6 +304,7 @@ use the `{{ $param }}` expression bridge. `{{ }}` is processed universally
 (Story 2.5), so it works in all contexts.
 
 ```lass
+---
 const $path = 'images'
 ---
 .bg {
@@ -323,6 +334,7 @@ For cases where the boundary is ambiguous (e.g., `$colorPrimary` when
 you want `blue` + `Primary`), use the expression bridge: `{{ $color }}Primary`.
 
 ```lass
+---
 const $prefix = 'app'
 ---
 .$prefix-header {
@@ -347,6 +359,7 @@ The `;` at end of a declaration is not part of the identifier — `$size`
 substitutes correctly.
 
 ```lass
+---
 const $size = '16px'
 ---
 p {
@@ -372,6 +385,7 @@ is used. The output is `[object Object]` — almost certainly not what
 you want, but it's the correct behavior for dumb text substitution.
 
 ```lass
+---
 const $obj = { a: 1 }
 ---
 p {
@@ -396,6 +410,7 @@ When a `$`-prefixed variable holds `undefined`, the original `$name`
 is preserved in the output. This avoids silent empty output.
 
 ```lass
+---
 const $x = undefined
 ---
 p {
@@ -420,6 +435,7 @@ When a `$`-prefixed variable holds `null`, the CSS keyword `unset`
 is output. This is a CSS-meaningful fallback.
 
 ```lass
+---
 const $border = null
 ---
 p {
@@ -444,7 +460,6 @@ A `$` not followed by a valid JS identifier start character is not a
 Lass symbol — it's literal CSS text.
 
 ```lass
----
 p {
   content: "costs $";
 }
@@ -475,7 +490,6 @@ degradation and compatibility with tools that might process `$name`
 as a different syntax.
 
 ```lass
----
 p {
   color: $undefined;
 }

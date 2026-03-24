@@ -439,7 +439,6 @@ is treated as JS preamble. The CSS zone is empty. This creates a pure JS file.
 ```lass
 ---
 const css = 'body { color: red; }'
-export default css
 ```
 
 ```css

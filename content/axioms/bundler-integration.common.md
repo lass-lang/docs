@@ -39,6 +39,7 @@ A `.lass` file imported in a JS/TS module produces CSS that Vite
 injects into the page.
 
 ```lass
+---
 const $brand = '#3b82f6'
 ---
 .button {
@@ -93,7 +94,6 @@ The `.lass` plugin doesn't need to know about PostCSS; it just produces
 CSS and hands it to Vite.
 
 ```lass
----
 .grid {
   display: grid;
   gap: 16px;
@@ -123,6 +123,7 @@ styles in the browser.
 > invalidates the module and calls `transform()` again.
 
 ```lass
+---
 const $color = 'red'
 ---
 p {
@@ -149,6 +150,7 @@ expressions, and `@{ }` fragments produces clean CSS output.
 > Skipped: Requires `@{ }` fragment syntax (Epic 5)
 
 ```lass
+---
 const breakpoints = { sm: '640px', lg: '1024px' }
 const $maxWidth = '1200px'
 ---
@@ -195,7 +197,6 @@ When the transpiler encounters a scan error, the Vite plugin surfaces
 it as a Vite build error with the original `.lass` source location.
 
 ```lass
----
 p {
   color: {{ 'red';
 }

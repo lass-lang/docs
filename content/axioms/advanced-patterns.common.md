@@ -34,6 +34,7 @@ Compare to Sass:
 
 In Lass, it's just JavaScript:
 ```lass
+---
 const media = (...types) => content => types.map($type => @{
     @media $type { {{content($type)}} }
 })
@@ -54,6 +55,7 @@ A media query mixin using curried functions. The outer function takes
 configuration (media types), the inner function takes content callback.
 
 ```lass
+---
 const media = (...types) => content => types.map($type => @{
     @media $type {
         {{content($type)}}
@@ -91,6 +93,7 @@ The callback receives the current iteration value, enabling conditional logic.
 Note: Use ternary with `''` or `null` for conditional content (falsy values are suppressed).
 
 ```lass
+---
 const media = (...types) => content => types.map($type => @{
     @media $type {
         {{content($type)}}
@@ -133,6 +136,7 @@ Mixins can be plain JavaScript files, imported via standard ES modules.
 This is the recommended pattern for sharing reusable Lass utilities.
 
 ```lass
+---
 // Simulating: import { media } from './mixins.js'
 const media = (...types) => content => types.map($type => @{
     @media $type {
@@ -165,6 +169,7 @@ const media = (...types) => content => types.map($type => @{
 A more practical example: responsive breakpoints using an object configuration.
 
 ```lass
+---
 const breakpoints = { sm: '640px', md: '768px', lg: '1024px' }
 const responsive = (config) => content => 
     Object.entries(config).map(([name, width]) => @{
@@ -208,6 +213,7 @@ const responsive = (config) => content =>
 Style blocks can return style blocks - enabling deep composition.
 
 ```lass
+---
 const withHover = (base, hover) => @{
     {{base}}
     &:hover {
@@ -242,6 +248,7 @@ const withHover = (base, hover) => @{
 Generate utility classes from configuration objects - similar to Tailwind's approach.
 
 ```lass
+---
 const sizes = { sm: '0.5rem', md: '1rem', lg: '2rem' }
 const spacingUtils = (prop, prefix) => 
     Object.entries(sizes).map(([name, value]) => @{
@@ -300,6 +307,7 @@ export const withStates = (base, states) => `
 
 Then in your `.lass` file:
 ```lass
+---
 import { media, responsive } from '@my-org/lass-mixins'
 ---
 {{media('screen', 'print')($type => @{ ... })}}

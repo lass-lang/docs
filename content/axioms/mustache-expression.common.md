@@ -36,6 +36,7 @@ All JS variables in scope from the preamble are accessible inside `{{ }}`.
 The most basic case: a single variable reference inside `{{ }}`.
 
 ```lass
+---
 const color = "blue"
 ---
 .box {
@@ -59,6 +60,7 @@ const color = "blue"
 `{{ gap * 2 }}` evaluates the multiplication and outputs `46`.
 
 ```lass
+---
 const gap = 23
 ---
 .box {
@@ -83,6 +85,7 @@ Any JS expression works, including ternaries. Useful for conditional
 values without needing a full `if` block.
 
 ```lass
+---
 const darkMode = true
 ---
 body {
@@ -106,6 +109,7 @@ body {
 Functions defined in the preamble (or imported) work inside `{{ }}`.
 
 ```lass
+---
 function px(n) { return n + 'px' }
 ---
 .box {
@@ -129,7 +133,6 @@ function px(n) { return n + 'px' }
 A string literal inside `{{ }}` outputs its value directly.
 
 ```lass
----
 .error {
   color: {{ "red" }};
 }
@@ -152,6 +155,7 @@ Multiple `{{ }}` expressions can appear in a single property value.
 Each is evaluated independently.
 
 ```lass
+---
 const top = 10
 const right = 20
 const bottom = 30
@@ -178,6 +182,7 @@ const left = 40
 The result of the expression replaces `{{ }}` in the selector text.
 
 ```lass
+---
 const tag = 'article'
 ---
 {{ tag }} {
@@ -201,6 +206,7 @@ article {
 `{{ }}` can generate the property name itself.
 
 ```lass
+---
 const prop = 'background-color'
 ---
 .box {
@@ -224,6 +230,7 @@ const prop = 'background-color'
 Expressions can access nested object properties.
 
 ```lass
+---
 const theme = { colors: { primary: '#3b82f6' } }
 ---
 .button {
@@ -248,6 +255,7 @@ You can use `.map().join()` to produce multiple declarations from an
 array. The join separator controls formatting.
 
 ```lass
+---
 const sizes = [1, 2, 4, 8]
 ---
 :root {
@@ -275,6 +283,7 @@ const sizes = [1, 2, 4, 8]
 interpolations. The scanner handles the nesting correctly.
 
 ```lass
+---
 const items = ['a', 'b']
 ---
 .list {
@@ -300,6 +309,7 @@ Expressions containing object literals with braces work correctly.
 The scanner tracks brace depth to find the closing `}}`.
 
 ```lass
+---
 const getStyle = (opts) => opts.value
 ---
 .box {
@@ -324,6 +334,7 @@ const getStyle = (opts) => opts.value
 next `}}` regardless of line breaks.
 
 ```lass
+---
 const sizes = { sm: '640px', lg: '1024px' }
 ---
 :root {
@@ -352,6 +363,7 @@ const sizes = { sm: '640px', lg: '1024px' }
 Numeric results are coerced to strings.
 
 ```lass
+---
 const width = 100
 ---
 .box {
@@ -375,6 +387,7 @@ const width = 100
 Whitespace inside `{{ }}` is trimmed from the expression.
 
 ```lass
+---
 const x = 42
 ---
 .box {
@@ -398,7 +411,6 @@ const x = 42
 A file without `{{ }}` expressions passes through unchanged.
 
 ```lass
----
 .box {
   color: red;
 }
@@ -421,7 +433,6 @@ An empty `{{ }}` with no expression inside is a scan error. There's
 nothing to evaluate.
 
 ```lass
----
 p {
   color: {{ }};
 }
@@ -441,7 +452,6 @@ Empty {{ }} expression
 If `{{` isn't closed by a matching `}}`, the scanner reports an error.
 
 ```lass
----
 p {
   color: {{ 'red';
 }
@@ -462,7 +472,6 @@ Only expressions are allowed inside `{{ }}`. Statements like `if` or
 `for` without a return value cause a runtime error.
 
 ```lass
----
 p {
   color: {{ if (true) { 'red' } }};
 }
@@ -488,6 +497,7 @@ This enables clean `.map()` patterns without manual `.join(' ')`.
 If any element contains newlines, newline is used as separator instead.
 
 ```lass
+---
 const items = ['a', 'b', 'c']
 ---
 .list {
@@ -511,6 +521,7 @@ const items = ['a', 'b', 'c']
 Numeric array elements are coerced to strings then joined with space separator.
 
 ```lass
+---
 const nums = [1, 2, 3]
 ---
 .box {
@@ -535,6 +546,7 @@ Nested arrays are recursively flattened before joining with space separator.
 `[[1, 2], [3, 4]]` becomes `'1 2 3 4'`.
 
 ```lass
+---
 const matrix = [[1, 2], [3, 4]]
 ---
 .grid {
@@ -558,6 +570,7 @@ const matrix = [[1, 2], [3, 4]]
 An empty array produces an empty string output.
 
 ```lass
+---
 const items = []
 ---
 .box {
@@ -581,6 +594,7 @@ const items = []
 Arrays containing null elements filter out null during join.
 
 ```lass
+---
 const items = [1, null, 2]
 ---
 .box {
@@ -604,6 +618,7 @@ const items = [1, null, 2]
 Arrays containing undefined elements filter out undefined during join.
 
 ```lass
+---
 const items = ['a', undefined, 'b']
 ---
 .box {
@@ -627,6 +642,7 @@ const items = ['a', undefined, 'b']
 Arrays with mixed types (strings, numbers) are all coerced to strings and joined with space.
 
 ```lass
+---
 const mixed = ['a', 1, 'b', 2]
 ---
 .box {
@@ -650,6 +666,7 @@ const mixed = ['a', 1, 'b', 2]
 `null` returned from an expression produces empty string (React-style silent handling).
 
 ```lass
+---
 const value = null
 ---
 .box {
@@ -673,6 +690,7 @@ const value = null
 `undefined` returned from an expression produces empty string.
 
 ```lass
+---
 const value = undefined
 ---
 .box {
@@ -696,6 +714,7 @@ const value = undefined
 Explicit `.join('')` continues to work for backward compatibility.
 
 ```lass
+---
 const sizes = [1, 2, 4]
 ---
 :root {
@@ -720,6 +739,7 @@ The canonical use case: generating multiple CSS declarations from an array.
 Arrays are joined with space separator.
 
 ```lass
+---
 const colors = [{name: "primary", value: "blue"}, {name: "secondary", value: "red"}]
 ---
 :root {
@@ -743,6 +763,7 @@ const colors = [{name: "primary", value: "blue"}, {name: "secondary", value: "re
 A ternary that returns undefined on one branch produces empty string.
 
 ```lass
+---
 const showColor = false
 ---
 .box {
@@ -766,6 +787,7 @@ const showColor = false
 Functions that return null produce empty string output.
 
 ```lass
+---
 function maybeValue() { return null }
 ---
 .box {
@@ -789,6 +811,7 @@ function maybeValue() { return null }
 Zero (0) is falsy but not null/undefined, so it outputs as "0".
 
 ```lass
+---
 const count = 0
 ---
 .box {
@@ -813,6 +836,7 @@ Boolean `false` is now suppressed (outputs empty string) just like `null` and `u
 This enables cleaner conditional patterns like `{{condition && @{ ... }}}`.
 
 ```lass
+---
 const flag = false
 ---
 .box {
@@ -836,6 +860,7 @@ const flag = false
 Empty string remains empty string (not converted to something else).
 
 ```lass
+---
 const empty = ''
 ---
 .box {
@@ -864,6 +889,7 @@ const empty = ''
 This enables dynamic content values like pseudo-element text.
 
 ```lass
+---
 const name = "world"
 ---
 .greeting::before {
@@ -887,6 +913,7 @@ const name = "world"
 `{{ }}` works inside single-quoted strings too.
 
 ```lass
+---
 const label = "Click me"
 ---
 .button::after {
@@ -910,6 +937,7 @@ const label = "Click me"
 `{{ }}` is processed inside `url()` values, enabling dynamic asset paths.
 
 ```lass
+---
 const imgPath = "images/hero"
 ---
 .hero {
@@ -933,6 +961,7 @@ const imgPath = "images/hero"
 `{{ }}` is processed inside CSS block comments, useful for dynamic metadata.
 
 ```lass
+---
 const version = "1.2.3"
 ---
 /* Generated version: {{ version }} */
@@ -958,6 +987,7 @@ const version = "1.2.3"
 Multiple `{{ }}` expressions can appear in a single string.
 
 ```lass
+---
 const firstName = "John"
 const lastName = "Doe"
 ---
@@ -983,6 +1013,7 @@ Expressions containing string literals work inside CSS strings.
 The expression's quotes are evaluated, not parsed as CSS string delimiters.
 
 ```lass
+---
 const quote = "said"
 ---
 .quote::before {
@@ -1006,6 +1037,7 @@ const quote = "said"
 Expressions work in complex url() values with query strings.
 
 ```lass
+---
 const assetId = "abc123"
 ---
 .icon {
@@ -1029,6 +1061,7 @@ const assetId = "abc123"
 Expressions work in multiline block comments.
 
 ```lass
+---
 const author = "Lass Team"
 const date = "2026-02-06"
 ---

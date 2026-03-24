@@ -55,7 +55,6 @@ A few boundaries that `@(prop)` doesn't cross:
 block.
 
 ```lass
----
 .box {
   border: 1px solid black;
   outline: @(border);
@@ -81,7 +80,6 @@ the parent. Here `.child` doesn't declare `border`, so `@(border)`
 finds it on `.parent`.
 
 ```lass
----
 .parent {
   border: solid;
   .child {
@@ -111,7 +109,6 @@ Same idea as variable scoping in block-scoped languages - the inner
 declaration shadows the outer.
 
 ```lass
----
 .parent {
   border: solid;
   .child {
@@ -146,7 +143,6 @@ Within a single block, `@(prop)` picks up the last value declared *before*
 the reference. Declarations after it don't count.
 
 ```lass
----
 .child {
   border: dashed;
   border-left: @(border);
@@ -172,7 +168,6 @@ When the same property is declared more than once before the reference,
 within a single block.
 
 ```lass
----
 .box {
   color: red;
   color: blue;
@@ -200,7 +195,6 @@ string that's embedded in the JS expression, enabling JS operations on
 CSS values.
 
 ```lass
----
 .box {
   padding: 16px;
   margin: {{ parseInt(@(padding)) * 2 }}px;
@@ -225,7 +219,6 @@ CSS values.
 in the lookup pattern.
 
 ```lass
----
 .box {
   --accent-color: blue;
   color: @(--accent-color);
@@ -252,7 +245,6 @@ rule starts a fresh tree - `.sidebar`'s properties can't leak into
 PostCSS plugins and future CSS features to process it.
 
 ```lass
----
 .sidebar {
   border: dotted;
 }
@@ -287,7 +279,6 @@ Unresolved `@(prop)` passes through unchanged.
 > types where cross-boundary resolution is unambiguous.
 
 ```lass
----
 .box {
   padding: 16px;
 }
@@ -323,7 +314,6 @@ selector tree passes through unchanged. This enables PostCSS plugins
 or future CSS features to process it downstream.
 
 ```lass
----
 .box {
   color: @(font-size);
 }
@@ -347,7 +337,6 @@ reference, it doesn't exist yet from the accumulator's point of view.
 The unresolved `@(prop)` passes through unchanged.
 
 ```lass
----
 .box {
   outline: @(border);
   border: solid;
@@ -373,7 +362,6 @@ The unresolved `@(prop)` passes through unchanged.
 recursion naturally. The unresolved `@(prop)` passes through unchanged.
 
 ```lass
----
 .box {
   background: @(background);
 }
@@ -397,7 +385,6 @@ recursion naturally. The unresolved `@(prop)` passes through unchanged.
 Both are useful for different purposes.
 
 ```lass
----
 .card {
   --radius: 8px;
   --color: blue;
@@ -426,7 +413,6 @@ Same as standard properties — if the custom property isn't in the current
 block, resolution walks up to the parent.
 
 ```lass
----
 .card {
   --spacing: 16px;
   .header {

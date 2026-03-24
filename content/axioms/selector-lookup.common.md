@@ -30,7 +30,6 @@ doesn't let you change it.
 At the top level, `@(&)` returns the selector as written.
 
 ```lass
----
 .button {
   content: "@(&)";
 }
@@ -52,7 +51,6 @@ At the top level, `@(&)` returns the selector as written.
 Inside nested blocks, `@(&)` includes the full nesting chain.
 
 ```lass
----
 .card {
   .header {
     content: "@(&)";
@@ -78,7 +76,6 @@ Inside nested blocks, `@(&)` includes the full nesting chain.
 The full chain is included, no matter how deep.
 
 ```lass
----
 .page {
   .sidebar {
     .nav {
@@ -108,7 +105,6 @@ The full chain is included, no matter how deep.
 CSS's `&` nesting selector is reflected in the constructed selector.
 
 ```lass
----
 a {
   &:hover {
     content: "@(&)";
@@ -135,7 +131,6 @@ a {
 transform it, log it, pass it to a function.
 
 ```lass
----
 .my-component {
   --self: "{{ @(&) }}";
 }
@@ -157,7 +152,6 @@ transform it, log it, pass it to a function.
 When a rule has a selector list, `@(&)` returns the full list.
 
 ```lass
----
 .foo, .bar {
   content: "@(&)";
 }
@@ -180,7 +174,6 @@ CSS `&` used in compound selectors is reflected in the constructed
 selector string.
 
 ```lass
----
 .button {
   &.active {
     content: "@(&)";
@@ -207,7 +200,6 @@ selector string.
 to return. This is an error.
 
 ```lass
----
 content: "@(&)";
 ```
 

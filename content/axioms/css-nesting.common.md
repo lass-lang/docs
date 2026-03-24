@@ -30,7 +30,6 @@ doesn't treat nested CSS any differently.
 ## valid: basic nesting
 
 ```lass
----
 .parent {
   color: red;
   .child {
@@ -58,7 +57,6 @@ doesn't treat nested CSS any differently.
 The CSS `&` nesting selector passes through. It's CSS, not Lass.
 
 ```lass
----
 a {
   color: blue;
   &:hover {
@@ -86,7 +84,6 @@ a {
 Multiple levels of nesting pass through unchanged.
 
 ```lass
----
 figure {
   margin: 0;
   > figcaption {
@@ -120,7 +117,6 @@ figure {
 Nested `@media` inside a rule passes through — this is valid CSS nesting.
 
 ```lass
----
 .foo {
   display: grid;
   @media (orientation: landscape) {
@@ -149,6 +145,7 @@ Nested `@media` inside a rule passes through — this is valid CSS nesting.
 The scanner sees CSS zone text — nesting depth doesn't matter.
 
 ```lass
+---
 const $accent = 'coral'
 ---
 .card {
@@ -182,7 +179,6 @@ const $accent = 'coral'
 `//` comments work inside nested blocks — stripped as usual.
 
 ```lass
----
 .parent {
   // this disappears
   .child {
@@ -214,7 +210,6 @@ It passes through as-is — the bundler's CSS pipeline or the browser
 reports the error.
 
 ```lass
----
 .parent {
   .child {
     color: red;

@@ -27,6 +27,7 @@ Code examples use `<test-case>` elements to ensure they stay correct:
 ```markdown
 <test-case type="valid">
 ```lass
+---
 const x = 10;
 ---
 .box { width: {{ x }}px; }

@@ -27,7 +27,6 @@ that complement the main axiom file.
 `@layer` are not visible to another.
 
 ```lass
----
 @layer base {
   .box {
     color: blue;
@@ -69,7 +68,6 @@ that complement the main axiom file.
 `@(prop)` inside `{{ }}` can resolve from parent scope.
 
 ```lass
----
 .parent {
   border: solid;
   .child {
@@ -97,7 +95,6 @@ that complement the main axiom file.
 Multiple `@(prop)` references can appear in a single `{{ }}` expression.
 
 ```lass
----
 .box {
   width: 100;
   height: 50;
@@ -123,7 +120,6 @@ Multiple `@(prop)` references can appear in a single `{{ }}` expression.
 Arithmetic operations can use multiple `@(prop)` values.
 
 ```lass
----
 .box {
   padding: 10px;
   margin: 5px;
@@ -149,7 +145,6 @@ Arithmetic operations can use multiple `@(prop)` values.
 JavaScript string methods work on `@(prop)` values.
 
 ```lass
----
 .box {
   color: blue;
   content: {{ @(color).toUpperCase() }};
@@ -173,7 +168,6 @@ JavaScript string methods work on `@(prop)` values.
 `@(prop)` works inside JavaScript template literals within `{{ }}`.
 
 ```lass
----
 .box {
   color: blue;
   {{ `border-color: ${@(color)};` }}
@@ -197,7 +191,6 @@ JavaScript string methods work on `@(prop)` values.
 Multiple `@(prop)` values can be concatenated with string operators.
 
 ```lass
----
 .box {
   width: 100px;
   height: 50px;
@@ -224,7 +217,6 @@ Same property accessed in CSS context (raw substitution) and JS context
 (as quoted string for expression evaluation).
 
 ```lass
----
 .box {
   color: blue;
   border-color: @(color);
@@ -250,7 +242,6 @@ Same property accessed in CSS context (raw substitution) and JS context
 `@(prop)` inside `{{ }}` resolves from parent scope through nesting.
 
 ```lass
----
 .parent {
   padding: 10px;
   .child {
@@ -282,7 +273,6 @@ Same property accessed in CSS context (raw substitution) and JS context
 Values containing quotes are properly escaped when used in `{{ }}`.
 
 ```lass
----
 .box {
   font-family: "Arial";
   content: {{ @(font-family) }};
@@ -306,7 +296,6 @@ Values containing quotes are properly escaped when used in `{{ }}`.
 Values containing newlines are properly escaped when used in `{{ }}`.
 
 ```lass
----
 .box {
   content: "line1
 line2";
@@ -333,7 +322,6 @@ line2";
 Values with backslashes and quotes are preserved correctly.
 
 ```lass
----
 .box {
   content: "path\\to\"file\"";
   other: {{ @(content) }};
@@ -362,6 +350,7 @@ Values with backslashes and quotes are preserved correctly.
 before `{{ }}` evaluates at runtime (Phase 2).
 
 ```lass
+---
 const color = "green";
 ---
 .box {
@@ -390,7 +379,6 @@ const color = "green";
 still resolves correctly.
 
 ```lass
----
 .box {
   color: blue;
   margin: {{ 10 }}px;
@@ -416,7 +404,6 @@ still resolves correctly.
 `@(prop)` works at root level (no selector block) after `{{ }}`.
 
 ```lass
----
 color: blue;
 {{ 'injected' }}
 border: @(color);
@@ -443,7 +430,6 @@ When `@(prop)` is not found and is inside `{{ }}`, it's preserved as
 `@(prop)` which is invalid JavaScript, causing a runtime error.
 
 ```lass
----
 .box {
   color: {{ @(nonexistent) }};
 }

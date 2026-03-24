@@ -35,7 +35,6 @@ other at-rule boundaries.
 `.main` reads the `height` property from `.header`.
 
 ```lass
----
 .header {
   position: sticky;
   top: 0;
@@ -70,7 +69,6 @@ Cross-rule references work inside any value position, including string
 concatenation via `{{ }}`.
 
 ```lass
----
 .header {
   height: 29px;
 }
@@ -101,7 +99,6 @@ The selector string matches against the fully resolved selector in the
 CSS output.
 
 ```lass
----
 .card {
   .title {
     font-size: 24px;
@@ -135,7 +132,6 @@ CSS output.
 The runtime call returns a string — you can operate on it with JS.
 
 ```lass
----
 .header {
   height: 60px;
 }
@@ -166,7 +162,6 @@ The target rule must already exist in the CSS output. If `.main` comes
 before `.header`, the reference fails.
 
 ```lass
----
 .main {
   min-height: @(.header {height});
 }
@@ -190,7 +185,6 @@ RuntimeError: @(.header {height}) not found — selector .header has not been ou
 If the selector doesn't match any rule in the CSS output, it's an error.
 
 ```lass
----
 .main {
   min-height: @(.nonexistent {height});
 }
@@ -210,7 +204,6 @@ RuntimeError: @(.nonexistent {height}) not found — selector .nonexistent has n
 The selector exists, but the property hasn't been declared on it.
 
 ```lass
----
 .header {
   position: sticky;
 }
@@ -234,7 +227,6 @@ RuntimeError: @(.header {height}) — property height not found on .header at li
 In v0, cross-rule references don't reach across at-rule boundaries.
 
 ```lass
----
 @media (min-width: 768px) {
   .header {
     height: 60px;
