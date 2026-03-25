@@ -43,6 +43,65 @@ Bun.build({
 });
 ```
 
+## Script Language Mode (JavaScript vs TypeScript)
+
+Lass Script Preambles run as **TypeScript by default** (first-class citizen). JavaScript mode requires explicit opt-in.
+
+### Default Behavior: TypeScript First
+
+**TypeScript mode is always the default**, regardless of project configuration:
+
+- ✅ **Has `tsconfig.json`?** → TypeScript mode with type-checking (respects your config)
+- ✅ **No `tsconfig.json`?** → TypeScript mode without type-checking (transpilation only)
+
+### Override to JavaScript Mode
+
+Explicitly opt into JavaScript mode via bundler config:
+
+```javascript
+// vite.config.js
+import lass from '@lass-lang/vite-plugin-lass'
+
+export default {
+  plugins: [
+    lass({ useJS: true })  // Opt into JavaScript mode
+  ]
+}
+```
+
+```javascript
+// bun build.js
+import lass from '@lass-lang/bun-plugin-lass'
+
+Bun.build({
+  entrypoints: ['./src/index.ts'],
+  plugins: [
+    lass({ useJS: true })  // Opt into JavaScript mode
+  ]
+})
+```
+
+### When to Use JavaScript Mode
+
+- Your team prefers JavaScript and doesn't want type-checking overhead
+- You're migrating from a JavaScript-only codebase
+- You have a `tsconfig.json` for other files but want Lass preambles to be JavaScript
+
+### Best Practice
+
+**Don't set `useJS` at all.** Let Lass use the default (TypeScript). If your project has `tsconfig.json`, you'll get type-checking automatically.
+
+### IDE Support
+
+IDE extensions (VS Code, WebStorm, etc.) provide IntelliSense and type-checking for the Script Preamble.
+
+**Detection logic:**
+1. Check bundler config file (`vite.config.*` or `bunfig.toml`)
+2. If `lass()` plugin found: read `useJS` option (default: `false`)
+3. If no `lass()` plugin or no `useJS` option: TypeScript mode (first citizen)
+
+This keeps bundler and IDE behavior synchronized automatically.
+
 ## Your First .lass File
 
 Create a file with the `.lass` extension. Lass files are just CSS - write styles exactly as you would in a `.css` file:
@@ -127,9 +186,9 @@ npm run dev
 
 Your Lass styles are now active. Edit the `.lass` file and see changes reflected instantly via Vite's HMR.
 
-## Adding JavaScript Power
+## Adding TypeScript Power
 
-Want to do more? Add a JavaScript preamble before a `---` separator to unlock the full power of Lass:
+Want to do more? Add a TypeScript preamble before a `---` separator to unlock the full power of Lass:
 
 <test-case type="valid">
 ```lass
@@ -194,11 +253,11 @@ const spacing = (n) => `${n * 0.25}rem`;
 </test-case>
 
 The preamble lets you:
-- **Define variables** - Colors, sizes, breakpoints
-- **Create functions** - Spacing scales, color utilities
+- **Define variables** - Colors, sizes, breakpoints (with optional types)
+- **Create functions** - Spacing scales, color utilities (with type safety)
 - **Import modules** - Share tokens across files
 
-Everything compiles to static CSS at build time - zero runtime overhead.
+Everything compiles to static CSS at build time - zero runtime overhead. TypeScript types are optional (gradual typing).
 
 ## TypeScript Support
 

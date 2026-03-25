@@ -485,7 +485,7 @@ Unexpected token 'if'
 
 
 <!-- ============================================ -->
-<!-- Story 2.4: Array Auto-Join & Null Handling  -->
+<!-- Array Auto-Join & Null Handling  -->
 <!-- ============================================ -->
 
 <test-case type="valid">
@@ -878,7 +878,7 @@ const empty = ''
 
 
 <!-- ============================================ -->
-<!-- Story 2.5: Universal {{ }} Processing       -->
+<!-- Universal {{ }} Processing       -->
 <!-- ============================================ -->
 
 <test-case type="valid">

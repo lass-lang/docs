@@ -300,8 +300,8 @@ const $path = 'images'
 ## valid: {{ }} escape hatch in protected contexts
 
 When you need substitution inside a string, `url()` with quotes, or comment,
-use the `{{ $param }}` expression bridge. `{{ }}` is processed universally
-(Story 2.5), so it works in all contexts.
+use the `{{ $param }}` expression bridge. `{{ }}` is processed universally,
+so it works in all contexts.
 
 ```lass
 ---

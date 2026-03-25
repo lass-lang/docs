@@ -4,15 +4,15 @@ fr: FR-ZONE
 phase: MVP
 status: implemented
 description: >
-  Extra test cases for zone delimiters. Story 2.1 tests zone detection,
-  Story 2.2 tests preamble execution. Variable substitution is Story 2.3.
-tags: [foundational, two-zone, preamble, story-2.1, story-2.2]
+  Extra test cases for zone delimiters, covering zone detection
+  and preamble execution.
+tags: [foundational, two-zone, preamble]
 ---
 
 # Zone Delimiters - Extra Cases
 
-These test cases focus on zone detection (Story 2.1) and preamble execution
-(Story 2.2) without requiring variable substitution (Story 2.3).
+These test cases focus on zone detection and preamble execution
+without requiring variable substitution.
 
 <test-case type="valid">
 
@@ -64,8 +64,8 @@ p {
 
 ## valid: zone detection with preamble execution
 
-Story 2.1: The preamble executes as JS, CSS zone passes through. No variable
-substitution yet (that's Story 2.3).
+The preamble executes as JS, CSS zone passes through. No variable
+substitution in this test.
 
 ```lass
 ---
@@ -89,7 +89,7 @@ p {
 
 ## valid: zone detection preserves CSS exactly
 
-Story 2.1: CSS zone content passes through unchanged.
+CSS zone content passes through unchanged.
 
 ```lass
 ---
@@ -263,18 +263,18 @@ p {
 </test-case>
 
 
-# Story 2.2: Preamble Execution
+# Preamble Execution
 
 These test cases verify that preamble code executes when the transpiled
-module is imported. The CSS output is unchanged - variable substitution
-is Story 2.3. The preamble runs as standard JavaScript.
+module is imported. The CSS output is unchanged — variable substitution
+is tested separately. The preamble runs as standard JavaScript.
 
 <test-case type="valid">
 
 ## valid: preamble with const variable definition
 
-Story 2.2: Preamble code executes. Variables are defined in scope.
-The CSS zone passes through unchanged (substitution is Story 2.3).
+Preamble code executes. Variables are defined in scope.
+The CSS zone passes through unchanged (substitution tested separately).
 
 ```lass
 ---
@@ -298,7 +298,7 @@ p {
 
 ## valid: preamble with let and arithmetic
 
-Story 2.2: Complex preamble expressions execute correctly.
+Complex preamble expressions execute correctly.
 
 ```lass
 ---
@@ -324,7 +324,7 @@ const doubled = size
 
 ## valid: preamble with function definition
 
-Story 2.2: Functions defined in preamble are available in scope.
+Functions defined in preamble are available in scope.
 
 ```lass
 ---
@@ -351,7 +351,7 @@ h1 {
 
 ## valid: preamble with $-prefixed variable substitutes in CSS
 
-Story 4.1: $name in CSS zone is substituted with the variable value.
+$name in CSS zone is substituted with the variable value.
 
 ```lass
 ---
@@ -375,7 +375,7 @@ p {
 
 ## valid: whitespace-only preamble treated as empty
 
-Story 2.2: A preamble with only whitespace is treated as empty.
+A preamble with only whitespace is treated as empty.
 
 ```lass
 ---
@@ -399,7 +399,7 @@ p {
 
 ## valid: preamble with console.log side effect
 
-Story 2.2: Side effects like console.log execute when module is imported.
+Side effects like console.log execute when module is imported.
 The CSS output is unchanged - side effects don't affect output.
 
 ```lass
@@ -425,7 +425,7 @@ const message = "hello"
 
 ## valid: preamble with async function definition
 
-Story 2.2: Async functions can be defined in preamble.
+Async functions can be defined in preamble.
 
 ```lass
 ---
@@ -451,7 +451,7 @@ async function fetchData() {
 
 ## valid: preamble with import statement syntax
 
-Story 2.2: Import statements pass through unchanged in transpiled output.
+Import statements pass through unchanged in transpiled output.
 The bundler (Vite) resolves them via its module graph. This test only
 verifies the import syntax is preserved - actual import resolution
 happens at runtime in bundler context, not in unit tests.
