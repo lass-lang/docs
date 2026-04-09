@@ -261,21 +261,15 @@ pre.shiki span[style*="6A737D" i] {
   border-inline-start-color: oklch(65% 0.15 25);
 }
 
-/* Copy button for code blocks */
-.copy-btn {
-  appearance: none;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  border-radius: 4px;
-  padding: var(--space-xs) var(--space-sm);
-  cursor: pointer;
+/* Language label for code blocks */
+.code-lang {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-  transition: background-color 0.15s, color 0.15s;
-}
-
-.copy-btn:hover {
-  background: var(--color-border);
-  color: var(--color-text);
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
 }
 }

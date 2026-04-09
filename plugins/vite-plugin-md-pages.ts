@@ -17,7 +17,7 @@ function preprocessTestCases(content: string): string {
   return content
     .replace(/<test-case\s+[^>]*>/g, (match) => {
       const type = match.match(/type=["'](valid|invalid)["']/)?.[1] || 'valid'
-      return `<div class="test-case" data-type="${type}">`
+      return `<div class="test-case" data-type="${type}">\n`
     })
     .replace(/<\/test-case>/g, '</div>')
 }

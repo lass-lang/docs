@@ -20,24 +20,19 @@
     {{content}}
   </main>
   <script>
-  // Copy button for code blocks
+  // Language label for code blocks
   (function() {
+    var langNames = { lass: 'Lass', css: 'CSS', html: 'HTML', js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript', bash: 'Bash', json: 'JSON', scss: 'SCSS', toml: 'TOML', yaml: 'YAML', markdown: 'Markdown' };
     document.querySelectorAll('pre.shiki').forEach(function(pre) {
       var code = pre.querySelector('code');
       if (!code) return;
-      var btn = document.createElement('button');
-      btn.className = 'copy-btn';
-      btn.textContent = 'Copy';
-      btn.onclick = function() {
-        navigator.clipboard.writeText(code.textContent.trim());
-        btn.textContent = 'Copied!';
-        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
-      };
+      var match = code.className.match(/language-(\w+)/);
+      if (!match) return;
+      var label = document.createElement('span');
+      label.className = 'code-lang';
+      label.textContent = langNames[match[1]] || match[1];
       pre.style.position = 'relative';
-      btn.style.position = 'absolute';
-      btn.style.top = '0.5rem';
-      btn.style.right = '0.5rem';
-      pre.appendChild(btn);
+      pre.appendChild(label);
     });
   })();
   </script>

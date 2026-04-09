@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lass Documentation</title>
   <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
-  <link rel="stylesheet" href="assets/index-DDfKo5i0.css">
+  <link rel="stylesheet" href="assets/index-CfvIwuqF.css">
 </head>
 <body>
   <nav class="site-nav">
@@ -23,100 +23,100 @@
 <h3>Start with CSS</h3>
 <p>Any valid CSS works as-is:</p>
 <div class="test-case" data-type="valid">
-```lass
-.button {
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-}
-<p>.button-primary {
-background: #6366f1;
-border: 2px solid #6366f1;
-box-shadow: 0 2px 4px #6366f133;
-}</p>
-<p>.button-secondary {
-background: #8b5cf6;
-border: 2px solid #8b5cf6;
-box-shadow: 0 2px 4px #8b5cf633;
-}</p>
-<p>.button-danger {
-background: #ef4444;
-border: 2px solid #ef4444;
-box-shadow: 0 2px 4px #ef444433;
-}</p>
-<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
-<span class="line"><span>```css</span></span>
-<span class="line"><span>.button {</span></span>
-<span class="line"><span>  color: white;</span></span>
-<span class="line"><span>  padding: 0.75rem 1.5rem;</span></span>
-<span class="line"><span>  border-radius: 0.5rem;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button-primary {</span></span>
-<span class="line"><span>  background: #6366f1;</span></span>
-<span class="line"><span>  border: 2px solid #6366f1;</span></span>
-<span class="line"><span>  box-shadow: 0 2px 4px #6366f133;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button-secondary {</span></span>
-<span class="line"><span>  background: #8b5cf6;</span></span>
-<span class="line"><span>  border: 2px solid #8b5cf6;</span></span>
-<span class="line"><span>  box-shadow: 0 2px 4px #8b5cf633;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button-danger {</span></span>
-<span class="line"><span>  background: #ef4444;</span></span>
-<span class="line"><span>  border: 2px solid #ef4444;</span></span>
-<span class="line"><span>  box-shadow: 0 2px 4px #ef444433;</span></span>
-<span class="line"><span>}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.75</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #6366f133</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #8b5cf633</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-danger</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#ef4444</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #ef4444</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #ef444433</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.75</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #6366f133</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #8b5cf633</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-danger</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#ef4444</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #ef4444</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #ef444433</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
 </div>
 <h3>With Lass</h3>
 <p>Generate button variants from a color map:</p>
 <div class="test-case" data-type="valid">
-```lass
----
-const colors = {
-  primary: '#6366f1',
-  secondary: '#8b5cf6',
-  danger: '#ef4444',
-};
-<hr>
-<p>.button {
-color: white;
-padding: 0.75rem 1.5rem;
-border-radius: 0.5rem;
-}</p>
-<p>{{ Object.entries(colors).map(([name, color]) =&gt; @{
-.button-{{ name }} {
-background: {{ color }};
-border: 2px solid {{ color }};
-box-shadow: 0 2px 4px {{ color }}33;
-}
-}) }}</p>
-<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
-<span class="line"><span>```css</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button {</span></span>
-<span class="line"><span>  color: white;</span></span>
-<span class="line"><span>  padding: 0.75rem 1.5rem;</span></span>
-<span class="line"><span>  border-radius: 0.5rem;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button-primary {</span></span>
-<span class="line"><span>  background: #6366f1;</span></span>
-<span class="line"><span>  border: 2px solid #6366f1;</span></span>
-<span class="line"><span>  box-shadow: 0 2px 4px #6366f133;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span>.button-secondary {</span></span>
-<span class="line"><span>  background: #8b5cf6;</span></span>
-<span class="line"><span>  border: 2px solid #8b5cf6;</span></span>
-<span class="line"><span>  box-shadow: 0 2px 4px #8b5cf633;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span>.button-danger {</span></span>
-<span class="line"><span>  background: #ef4444;</span></span>
-<span class="line"><span>  border: 2px solid #ef4444;</span></span>
-<span class="line"><span>  box-shadow: 0 2px 4px #ef444433;</span></span>
-<span class="line"><span>}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> colors</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  primary: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'#6366f1'</span><span style="color:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  secondary: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'#8b5cf6'</span><span style="color:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  danger: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'#ef4444'</span><span style="color:#E1E4E8;--shiki-light:#24292E">,</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.75</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{ Object.</span><span style="color:#B392F0;--shiki-light:#6F42C1">entries</span><span style="color:#E1E4E8;--shiki-light:#24292E">(colors).</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(([</span><span style="color:#FFAB70;--shiki-light:#E36209">name</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">]) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">  .button-</span><span style="color:#E1E4E8;--shiki-light:#24292E">{{ name }} {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ color }};</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {{ color }};</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {{ color }}</span><span style="color:#79B8FF;--shiki-light:#005CC5">33</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}) }}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.75</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #6366f133</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #8b5cf633</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button-danger</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#ef4444</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> solid</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #ef4444</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> #ef444433</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
 </div>
 <p>Add a variant? One line in <code>colors</code>.</p>
 <h2>Documentation</h2>
@@ -154,24 +154,19 @@ box-shadow: 0 2px 4px {{ color }}33;
 
   </main>
   <script>
-  // Copy button for code blocks
+  // Language label for code blocks
   (function() {
+    var langNames = { lass: 'Lass', css: 'CSS', html: 'HTML', js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript', bash: 'Bash', json: 'JSON', scss: 'SCSS', toml: 'TOML', yaml: 'YAML', markdown: 'Markdown' };
     document.querySelectorAll('pre.shiki').forEach(function(pre) {
       var code = pre.querySelector('code');
       if (!code) return;
-      var btn = document.createElement('button');
-      btn.className = 'copy-btn';
-      btn.textContent = 'Copy';
-      btn.onclick = function() {
-        navigator.clipboard.writeText(code.textContent.trim());
-        btn.textContent = 'Copied!';
-        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
-      };
+      var match = code.className.match(/language-(\w+)/);
+      if (!match) return;
+      var label = document.createElement('span');
+      label.className = 'code-lang';
+      label.textContent = langNames[match[1]] || match[1];
       pre.style.position = 'relative';
-      btn.style.position = 'absolute';
-      btn.style.top = '0.5rem';
-      btn.style.right = '0.5rem';
-      pre.appendChild(btn);
+      pre.appendChild(label);
     });
   })();
   </script>

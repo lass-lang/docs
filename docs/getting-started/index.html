@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lass Documentation</title>
   <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
-  <link rel="stylesheet" href="../assets/index-DDfKo5i0.css">
+  <link rel="stylesheet" href="../assets/index-CfvIwuqF.css">
 </head>
 <body>
   <nav class="site-nav">
@@ -87,52 +87,52 @@
 <h2>Your First .lass File</h2>
 <p>Create a file with the <code>.lass</code> extension. Lass files are just CSS - write styles exactly as you would in a <code>.css</code> file:</p>
 <div class="test-case" data-type="valid">
-```lass
-:root {
-  --color-primary: #6366f1;
-  --color-secondary: #8b5cf6;
-}
-<p>.container {
-max-width: 1200px;
-margin: 0 auto;
-padding: 1rem 1.5rem;
-}</p>
-<p>.button {
-background: var(--color-primary);
-color: white;
-padding: 0.75rem 1.25rem;
-border: none;
-border-radius: 0.5rem;
-cursor: pointer;
-}</p>
-<p>.button:hover {
-background: var(--color-secondary);
-}</p>
-<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
-<span class="line"><span>```css</span></span>
-<span class="line"><span>:root {</span></span>
-<span class="line"><span>  --color-primary: #6366f1;</span></span>
-<span class="line"><span>  --color-secondary: #8b5cf6;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.container {</span></span>
-<span class="line"><span>  max-width: 1200px;</span></span>
-<span class="line"><span>  margin: 0 auto;</span></span>
-<span class="line"><span>  padding: 1rem 1.5rem;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button {</span></span>
-<span class="line"><span>  background: var(--color-primary);</span></span>
-<span class="line"><span>  color: white;</span></span>
-<span class="line"><span>  padding: 0.75rem 1.25rem;</span></span>
-<span class="line"><span>  border: none;</span></span>
-<span class="line"><span>  border-radius: 0.5rem;</span></span>
-<span class="line"><span>  cursor: pointer;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button:hover {</span></span>
-<span class="line"><span>  background: var(--color-secondary);</span></span>
-<span class="line"><span>}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --color-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --color-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  max-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1200</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> auto</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">var</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">--color-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.75</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.25</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">none</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  cursor</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">pointer</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button:hover</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">var</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">--color-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --color-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --color-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  max-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1200</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> auto</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">var</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">--color-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.75</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.25</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">none</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  cursor</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">pointer</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button:hover</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">var</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">--color-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
 </div>
 <p>That's it! Any valid CSS works in a <code>.lass</code> file.</p>
 <h2>Importing in Your App</h2>
@@ -152,58 +152,60 @@ background: var(--color-secondary);
 <h2>Adding TypeScript Power</h2>
 <p>Want to do more? Add a TypeScript preamble before a <code>---</code> separator to unlock the full power of Lass:</p>
 <div class="test-case" data-type="valid">
-```lass
----
-const primary = '#6366f1';
-const secondary = '#8b5cf6';
-const spacing = (n) => `${n * 0.25}rem`;
-<hr>
-<p>:root {
---color-primary: {{ primary }};
---color-secondary: {{ secondary }};
-}</p>
-<p>.container {
-max-width: 1200px;
-margin: 0 auto;
-padding: {{ spacing(4) }} {{ spacing(6) }};
-}</p>
-<p>.button {
-background: {{ primary }};
-color: white;
-padding: {{ spacing(3) }} {{ spacing(5) }};
-border: none;
-border-radius: {{ spacing(2) }};
-cursor: pointer;
-}</p>
-<p>.button:hover {
-background: {{ secondary }};
-}</p>
-<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
-<span class="line"><span>```css</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>:root {</span></span>
-<span class="line"><span>  --color-primary: #6366f1;</span></span>
-<span class="line"><span>  --color-secondary: #8b5cf6;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.container {</span></span>
-<span class="line"><span>  max-width: 1200px;</span></span>
-<span class="line"><span>  margin: 0 auto;</span></span>
-<span class="line"><span>  padding: 1rem 1.5rem;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button {</span></span>
-<span class="line"><span>  background: #6366f1;</span></span>
-<span class="line"><span>  color: white;</span></span>
-<span class="line"><span>  padding: 0.75rem 1.25rem;</span></span>
-<span class="line"><span>  border: none;</span></span>
-<span class="line"><span>  border-radius: 0.5rem;</span></span>
-<span class="line"><span>  cursor: pointer;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.button:hover {</span></span>
-<span class="line"><span>  background: #8b5cf6;</span></span>
-<span class="line"><span>}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> primary</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '#6366f1'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> secondary</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '#8b5cf6'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> spacing</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#FFAB70;--shiki-light:#E36209">n</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#9ECBFF;--shiki-light:#032F62"> `${</span><span style="color:#E1E4E8;--shiki-light:#24292E">n</span><span style="color:#F97583;--shiki-light:#D73A49"> *</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 0.25</span><span style="color:#9ECBFF;--shiki-light:#032F62">}rem`</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --color-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ primary }};</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --color-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ secondary }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  max-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1200</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> auto</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">spacing</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">4</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }} {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">spacing</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">6</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ primary }};</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">spacing</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">3</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }} {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">spacing</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">5</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">none</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">spacing</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  cursor</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">pointer</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button:hover</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ secondary }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --color-primary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --color-secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  max-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1200</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> auto</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#6366f1</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.75</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1.25</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">none</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  cursor</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">pointer</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button:hover</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#8b5cf6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
 </div>
 <p>The preamble lets you:</p>
 <ul>
@@ -232,36 +234,36 @@ background: {{ secondary }};
 <h3>CSS Modules</h3>
 <p>Use <code>.module.lass</code> for scoped class names:</p>
 <div class="test-case" data-type="valid">
-```lass
----
-const shadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)';
-<hr>
-<p>.card {
-background: white;
-border-radius: 8px;
-box-shadow: {{ shadow }};
-padding: 1.5rem;
-}</p>
-<p>.title {
-font-size: 1.25rem;
-font-weight: 600;
-margin-bottom: 0.5rem;
-}</p>
-<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
-<span class="line"><span>```css</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.card {</span></span>
-<span class="line"><span>  background: white;</span></span>
-<span class="line"><span>  border-radius: 8px;</span></span>
-<span class="line"><span>  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);</span></span>
-<span class="line"><span>  padding: 1.5rem;</span></span>
-<span class="line"><span>}</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.title {</span></span>
-<span class="line"><span>  font-size: 1.25rem;</span></span>
-<span class="line"><span>  font-weight: 600;</span></span>
-<span class="line"><span>  margin-bottom: 0.5rem;</span></span>
-<span class="line"><span>}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> shadow</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '0 4px 6px -1px rgb(0 0 0 / 0.1)'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.card</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">8</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ shadow }};</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.title</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1.25</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-weight</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">600</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin-bottom</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.card</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-radius</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">8</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  box-shadow</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 6</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> -1</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> rgb</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 0</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 0</span><span style="color:#E1E4E8;--shiki-light:#24292E"> / </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.1</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.title</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1.25</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-weight</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">600</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin-bottom</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
 </div>
 <p>Import with a default import to get scoped class names:</p>
 <pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-typescript"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// src/components/Card.ts</span></span>
@@ -296,50 +298,47 @@ margin-bottom: 0.5rem;
 <h3>Expression vs Substitution</h3>
 <p>Use <code>{{ }}</code> for expressions (computed at build time):</p>
 <div class="test-case" data-type="valid">
-```lass
----
-const size = 16;
-<hr>
-<p>.text {
-font-size: {{ size }}px;
-line-height: {{ size * 2 }}px;
-}</p>
-<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
-<span class="line"><span>```css</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.text {</span></span>
-<span class="line"><span>  font-size: 16px;</span></span>
-<span class="line"><span>  line-height: 32px;</span></span>
-<span class="line"><span>}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> size</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 16</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.text</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ size }}px;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  line-height</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ size </span><span style="color:#F97583;--shiki-light:#D73A49">*</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }}px;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.text</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">16</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  line-height</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">32</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
 </div>
 <p>Use <code>$name</code> for simple text substitution (no computation). Variables must be <code>$</code>-prefixed:</p>
 <div class="test-case" data-type="valid">
-```lass
----
-const $unit = 'rem';
-<hr>
-<p>.box {
-margin: 1$unit;
-}</p>
-<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
-<span class="line"><span>```css</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.box {</span></span>
-<span class="line"><span>  margin: 1rem;</span></span>
-<span class="line"><span>}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> $unit</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'rem'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#E1E4E8;--shiki-light:#24292E">$unit;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
 </div>
 <h3>Preamble Must Come First</h3>
 <p>When using JavaScript, the preamble must come <strong>before</strong> the <code>---</code> separator:</p>
 <div class="test-case" data-type="valid">
-```lass
----
-const color = 'blue';
-<hr>
-<p>.box { color: {{ color }}; }</p>
-<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
-<span class="line"><span>```css</span></span>
-<span class="line"><span></span></span>
-<span class="line"><span>.box { color: blue; }</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> color</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'blue'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#79B8FF;--shiki-light:#005CC5">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ color }}; }</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#79B8FF;--shiki-light:#005CC5">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">; }</span></span></code></pre>
 </div>
 <p>Without a preamble, you don't need a separator at all - just write CSS directly.</p>
 <h2>What's Next</h2>
@@ -353,24 +352,19 @@ const color = 'blue';
 
   </main>
   <script>
-  // Copy button for code blocks
+  // Language label for code blocks
   (function() {
+    var langNames = { lass: 'Lass', css: 'CSS', html: 'HTML', js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript', bash: 'Bash', json: 'JSON', scss: 'SCSS', toml: 'TOML', yaml: 'YAML', markdown: 'Markdown' };
     document.querySelectorAll('pre.shiki').forEach(function(pre) {
       var code = pre.querySelector('code');
       if (!code) return;
-      var btn = document.createElement('button');
-      btn.className = 'copy-btn';
-      btn.textContent = 'Copy';
-      btn.onclick = function() {
-        navigator.clipboard.writeText(code.textContent.trim());
-        btn.textContent = 'Copied!';
-        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
-      };
+      var match = code.className.match(/language-(\w+)/);
+      if (!match) return;
+      var label = document.createElement('span');
+      label.className = 'code-lang';
+      label.textContent = langNames[match[1]] || match[1];
       pre.style.position = 'relative';
-      btn.style.position = 'absolute';
-      btn.style.top = '0.5rem';
-      btn.style.right = '0.5rem';
-      pre.appendChild(btn);
+      pre.appendChild(label);
     });
   })();
   </script>
