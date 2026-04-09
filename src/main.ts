@@ -1,5 +1,2 @@
-// Entry point — imports .lass stylesheets so Vite processes them
-import '../styles/tokens.lass'
-import '../styles/base.lass'
-import '../styles/layout.lass'
+// Entry point — site-specific styles only (shared styles loaded from assets.lass-lang.dev)
 import '../styles/components.lass'
