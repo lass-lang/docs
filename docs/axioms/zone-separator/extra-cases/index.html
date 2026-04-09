@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lass Documentation</title>
+  <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
+  <link rel="stylesheet" href="../../../assets/index-DDfKo5i0.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="https://lass-lang.dev/">Lass</a>
+    <a href="../../../">Docs</a>
+    <a href="../../../getting-started/">Get Started</a>
+    <a href="../../../syntax/">Syntax</a>
+    <a href="../../../axioms/style-lookup/">Axioms</a>
+    <a href="../../../llms.txt">llms.txt</a>
+  </nav>
+  <main class="page">
+    <h1>Zone Delimiters - Extra Cases</h1>
+<p>These test cases focus on zone detection and preamble execution
+without requiring variable substitution.</p>
+<div class="test-case" data-type="valid">
+<h2>valid: no delimiter — pure CSS zone</h2>
+<p>Without <code>---</code> on line 1, the entire file is CSS zone. This is backward compatible
+with plain CSS files.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: empty preamble</h2>
+<p>Opening and closing <code>---</code> with nothing between them is valid. The preamble
+is empty, the CSS zone starts immediately after the closing delimiter.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: zone detection with preamble execution</h2>
+<p>The preamble executes as JS, CSS zone passes through. No variable
+substitution in this test.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> x</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'defined but not used'</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: zone detection preserves CSS exactly</h2>
+<p>CSS zone content passes through unchanged.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> unused</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 42</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">5</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">5</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: multiline preamble executes without error</h2>
+<p>Multiple JS statements in preamble all execute. CSS passes through.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> a</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> b</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> c</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> a </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#E1E4E8;--shiki-light:#24292E"> b</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.test</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.test</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: preamble with comments</h2>
+<p>JS comments in preamble work correctly.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// This is a comment</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> x</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1</span><span style="color:#6A737D;--shiki-light:#6A737D"> // inline comment</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">/* block comment */</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">div</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  display</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">block</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">div</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  display</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">block</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: extra --- in CSS zone</h2>
+<p>The second <code>---</code> closes the preamble. Extra <code>---</code> in the CSS zone is treated
+as CSS text (which CSS parsers will error on naturally).</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> a</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 1</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#79B8FF;--shiki-light:#005CC5">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">; }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#79B8FF;--shiki-light:#005CC5">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">; }</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#79B8FF;--shiki-light:#005CC5">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">; }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#79B8FF;--shiki-light:#005CC5">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">; }</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: delimiter with tab after dashes</h2>
+<p>A <code>---</code> followed by a tab and then comment text is recognized as
+a delimiter. Any whitespace character after <code>---</code> starts the comment.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> $x</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'blue'</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---	comment with tab</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: $x;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: delimiter with long comment</h2>
+<p>A <code>---</code> can be followed by a long descriptive comment. The entire
+comment text is stripped and has no effect on output.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> $bg</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '#f0f0f0'</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">--- this is a very long comment explaining that the CSS zone below defines the page background</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">body</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: $bg;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">body</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#f0f0f0</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: no space after dashes is not delimiter</h2>
+<p><code>---nospace</code> (no whitespace after the three dashes) is NOT recognized
+as a delimiter. Since it's on line 1, the file has no preamble and is
+treated as pure CSS zone, passing through as-is.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">---nospace</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">---nospace</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<h1>Preamble Execution</h1>
+<p>These test cases verify that preamble code executes when the transpiled
+module is imported. The CSS output is unchanged — variable substitution
+is tested separately. The preamble runs as standard JavaScript.</p>
+<div class="test-case" data-type="valid">
+<h2>valid: preamble with const variable definition</h2>
+<p>Preamble code executes. Variables are defined in scope.
+The CSS zone passes through unchanged (substitution tested separately).</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> color</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "blue"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: preamble with let and arithmetic</h2>
+<p>Complex preamble expressions execute correctly.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">let</span><span style="color:#E1E4E8;--shiki-light:#24292E"> size </span><span style="color:#F97583;--shiki-light:#D73A49">=</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 10</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">size </span><span style="color:#F97583;--shiki-light:#D73A49">=</span><span style="color:#E1E4E8;--shiki-light:#24292E"> size </span><span style="color:#F97583;--shiki-light:#D73A49">*</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> doubled</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> size</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: preamble with function definition</h2>
+<p>Functions defined in preamble are available in scope.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">function</span><span style="color:#B392F0;--shiki-light:#6F42C1"> rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">) {</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">  return</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (px </span><span style="color:#F97583;--shiki-light:#D73A49">/</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 16</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'rem'</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> fontSize</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#B392F0;--shiki-light:#6F42C1"> rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">32</span><span style="color:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">h1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">h1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: preamble with $-prefixed variable substitutes in CSS</h2>
+<p>$name in CSS zone is substituted with the variable value.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> $color</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "blue"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: $color;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: whitespace-only preamble treated as empty</h2>
+<p>A preamble with only whitespace is treated as empty.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">   </span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: preamble with console.log side effect</h2>
+<p>Side effects like console.log execute when module is imported.
+The CSS output is unchanged - side effects don't affect output.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">console.</span><span style="color:#B392F0;--shiki-light:#6F42C1">log</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">"Preamble executed!"</span><span style="color:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> message</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "hello"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.status</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  display</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">inline</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.status</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  display</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">inline</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: preamble with async function definition</h2>
+<p>Async functions can be defined in preamble.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">async</span><span style="color:#F97583;--shiki-light:#D73A49"> function</span><span style="color:#B392F0;--shiki-light:#6F42C1"> fetchData</span><span style="color:#E1E4E8;--shiki-light:#24292E">() {</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">  return</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "data"</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  display</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">block</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  display</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">block</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: preamble with import statement syntax</h2>
+<p>Import statements pass through unchanged in transpiled output.
+The bundler (Vite) resolves them via its module graph. This test only
+verifies the import syntax is preserved - actual import resolution
+happens at runtime in bundler context, not in unit tests.</p>
+<p>Note: The CSS output below does NOT depend on the import - it just proves
+the import syntax passes through without errors during transpilation.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> imported</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> true</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#3b82f6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#3b82f6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+
+  </main>
+  <script>
+  // Copy button for code blocks
+  (function() {
+    document.querySelectorAll('pre.shiki').forEach(function(pre) {
+      var code = pre.querySelector('code');
+      if (!code) return;
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.onclick = function() {
+        navigator.clipboard.writeText(code.textContent.trim());
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+      };
+      pre.style.position = 'relative';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.5rem';
+      btn.style.right = '0.5rem';
+      pre.appendChild(btn);
+    });
+  })();
+  </script>
+</body>
+</html>

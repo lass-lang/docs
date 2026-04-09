@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lass Documentation</title>
+  <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
+  <link rel="stylesheet" href="../assets/index-DDfKo5i0.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="https://lass-lang.dev/">Lass</a>
+    <a href="../">Docs</a>
+    <a href="../getting-started/">Get Started</a>
+    <a href="../syntax/">Syntax</a>
+    <a href="../axioms/style-lookup/">Axioms</a>
+    <a href="../llms.txt">llms.txt</a>
+  </nav>
+  <main class="page">
+    <h1>Getting Started</h1>
+<h2>CLI</h2>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-bash"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npm</span><span style="color:#9ECBFF;--shiki-light:#032F62"> install</span><span style="color:#9ECBFF;--shiki-light:#032F62"> @lass-lang/cli</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-bash"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npx</span><span style="color:#9ECBFF;--shiki-light:#032F62"> lass</span><span style="color:#9ECBFF;--shiki-light:#032F62"> input.lass</span><span style="color:#79B8FF;--shiki-light:#005CC5"> -o</span><span style="color:#9ECBFF;--shiki-light:#032F62"> output.css</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npx</span><span style="color:#9ECBFF;--shiki-light:#032F62"> lass</span><span style="color:#9ECBFF;--shiki-light:#032F62"> src/styles</span><span style="color:#79B8FF;--shiki-light:#005CC5"> --outdir</span><span style="color:#9ECBFF;--shiki-light:#032F62"> dist/css</span></span></code></pre>
+<h2>Vite</h2>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-bash"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npm</span><span style="color:#9ECBFF;--shiki-light:#032F62"> install</span><span style="color:#9ECBFF;--shiki-light:#032F62"> @lass-lang/vite-plugin-lass</span><span style="color:#79B8FF;--shiki-light:#005CC5"> --save-dev</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-js"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// vite.config.js</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { defineConfig } </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'vite'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> lass </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '@lass-lang/vite-plugin-lass'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">export</span><span style="color:#F97583;--shiki-light:#D73A49"> default</span><span style="color:#B392F0;--shiki-light:#6F42C1"> defineConfig</span><span style="color:#E1E4E8;--shiki-light:#24292E">({</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  plugins: [</span><span style="color:#B392F0;--shiki-light:#6F42C1">lass</span><span style="color:#E1E4E8;--shiki-light:#24292E">()],</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">});</span></span></code></pre>
+<h2>Bun</h2>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-bash"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">bun</span><span style="color:#9ECBFF;--shiki-light:#032F62"> add</span><span style="color:#9ECBFF;--shiki-light:#032F62"> @lass-lang/bun-plugin-lass</span><span style="color:#79B8FF;--shiki-light:#005CC5"> --dev</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-js"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// build.js</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> lass </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '@lass-lang/bun-plugin-lass'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">Bun.</span><span style="color:#B392F0;--shiki-light:#6F42C1">build</span><span style="color:#E1E4E8;--shiki-light:#24292E">({</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  entrypoints: [</span><span style="color:#9ECBFF;--shiki-light:#032F62">'./src/index.ts'</span><span style="color:#E1E4E8;--shiki-light:#24292E">],</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  plugins: [</span><span style="color:#B392F0;--shiki-light:#6F42C1">lass</span><span style="color:#E1E4E8;--shiki-light:#24292E">()],</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">});</span></span></code></pre>
+<h2>Script Language Mode (JavaScript vs TypeScript)</h2>
+<p>Lass Script Preambles run as <strong>TypeScript by default</strong> (first-class citizen). JavaScript mode requires explicit opt-in.</p>
+<h3>Default Behavior: TypeScript First</h3>
+<p><strong>TypeScript mode is always the default</strong>, regardless of project configuration:</p>
+<ul>
+<li>✅ <strong>Has <code>tsconfig.json</code>?</strong> → TypeScript mode with type-checking (respects your config)</li>
+<li>✅ <strong>No <code>tsconfig.json</code>?</strong> → TypeScript mode without type-checking (transpilation only)</li>
+</ul>
+<h3>Override to JavaScript Mode</h3>
+<p>Explicitly opt into JavaScript mode via bundler config:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-javascript"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// vite.config.js</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> lass </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '@lass-lang/vite-plugin-lass'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">export</span><span style="color:#F97583;--shiki-light:#D73A49"> default</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  plugins: [</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">    lass</span><span style="color:#E1E4E8;--shiki-light:#24292E">({ useJS: </span><span style="color:#79B8FF;--shiki-light:#005CC5">true</span><span style="color:#E1E4E8;--shiki-light:#24292E"> })  </span><span style="color:#6A737D;--shiki-light:#6A737D">// Opt into JavaScript mode</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-javascript"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// bun build.js</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> lass </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '@lass-lang/bun-plugin-lass'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">Bun.</span><span style="color:#B392F0;--shiki-light:#6F42C1">build</span><span style="color:#E1E4E8;--shiki-light:#24292E">({</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  entrypoints: [</span><span style="color:#9ECBFF;--shiki-light:#032F62">'./src/index.ts'</span><span style="color:#E1E4E8;--shiki-light:#24292E">],</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  plugins: [</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">    lass</span><span style="color:#E1E4E8;--shiki-light:#24292E">({ useJS: </span><span style="color:#79B8FF;--shiki-light:#005CC5">true</span><span style="color:#E1E4E8;--shiki-light:#24292E"> })  </span><span style="color:#6A737D;--shiki-light:#6A737D">// Opt into JavaScript mode</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})</span></span></code></pre>
+<h3>When to Use JavaScript Mode</h3>
+<ul>
+<li>Your team prefers JavaScript and doesn't want type-checking overhead</li>
+<li>You're migrating from a JavaScript-only codebase</li>
+<li>You have a <code>tsconfig.json</code> for other files but want Lass preambles to be JavaScript</li>
+</ul>
+<h3>Best Practice</h3>
+<p><strong>Don't set <code>useJS</code> at all.</strong> Let Lass use the default (TypeScript). If your project has <code>tsconfig.json</code>, you'll get type-checking automatically.</p>
+<h3>IDE Support</h3>
+<p>IDE extensions (VS Code, WebStorm, etc.) provide IntelliSense and type-checking for the Script Preamble.</p>
+<p><strong>Detection logic:</strong></p>
+<ol>
+<li>Check bundler config file (<code>vite.config.*</code> or <code>bunfig.toml</code>)</li>
+<li>If <code>lass()</code> plugin found: read <code>useJS</code> option (default: <code>false</code>)</li>
+<li>If no <code>lass()</code> plugin or no <code>useJS</code> option: TypeScript mode (first citizen)</li>
+</ol>
+<p>This keeps bundler and IDE behavior synchronized automatically.</p>
+<h2>Your First .lass File</h2>
+<p>Create a file with the <code>.lass</code> extension. Lass files are just CSS - write styles exactly as you would in a <code>.css</code> file:</p>
+<div class="test-case" data-type="valid">
+```lass
+:root {
+  --color-primary: #6366f1;
+  --color-secondary: #8b5cf6;
+}
+<p>.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 1rem 1.5rem;
+}</p>
+<p>.button {
+background: var(--color-primary);
+color: white;
+padding: 0.75rem 1.25rem;
+border: none;
+border-radius: 0.5rem;
+cursor: pointer;
+}</p>
+<p>.button:hover {
+background: var(--color-secondary);
+}</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
+<span class="line"><span>```css</span></span>
+<span class="line"><span>:root {</span></span>
+<span class="line"><span>  --color-primary: #6366f1;</span></span>
+<span class="line"><span>  --color-secondary: #8b5cf6;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.container {</span></span>
+<span class="line"><span>  max-width: 1200px;</span></span>
+<span class="line"><span>  margin: 0 auto;</span></span>
+<span class="line"><span>  padding: 1rem 1.5rem;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button {</span></span>
+<span class="line"><span>  background: var(--color-primary);</span></span>
+<span class="line"><span>  color: white;</span></span>
+<span class="line"><span>  padding: 0.75rem 1.25rem;</span></span>
+<span class="line"><span>  border: none;</span></span>
+<span class="line"><span>  border-radius: 0.5rem;</span></span>
+<span class="line"><span>  cursor: pointer;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button:hover {</span></span>
+<span class="line"><span>  background: var(--color-secondary);</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</div>
+<p>That's it! Any valid CSS works in a <code>.lass</code> file.</p>
+<h2>Importing in Your App</h2>
+<p>Import <code>.lass</code> files just like CSS:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-js"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// src/main.js</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#9ECBFF;--shiki-light:#032F62"> './styles/theme.lass'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// Your app code...</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">document.</span><span style="color:#B392F0;--shiki-light:#6F42C1">querySelector</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'#app'</span><span style="color:#E1E4E8;--shiki-light:#24292E">).innerHTML </span><span style="color:#F97583;--shiki-light:#D73A49">=</span><span style="color:#9ECBFF;--shiki-light:#032F62"> `</span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">  &#x3C;div class="container"></span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">    &#x3C;button class="button">Click me&#x3C;/button></span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">  &#x3C;/div></span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">`</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span></code></pre>
+<p>Start the dev server:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-bash"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npm</span><span style="color:#9ECBFF;--shiki-light:#032F62"> run</span><span style="color:#9ECBFF;--shiki-light:#032F62"> dev</span></span></code></pre>
+<p>Your Lass styles are now active. Edit the <code>.lass</code> file and see changes reflected instantly via Vite's HMR.</p>
+<h2>Adding TypeScript Power</h2>
+<p>Want to do more? Add a TypeScript preamble before a <code>---</code> separator to unlock the full power of Lass:</p>
+<div class="test-case" data-type="valid">
+```lass
+---
+const primary = '#6366f1';
+const secondary = '#8b5cf6';
+const spacing = (n) => `${n * 0.25}rem`;
+<hr>
+<p>:root {
+--color-primary: {{ primary }};
+--color-secondary: {{ secondary }};
+}</p>
+<p>.container {
+max-width: 1200px;
+margin: 0 auto;
+padding: {{ spacing(4) }} {{ spacing(6) }};
+}</p>
+<p>.button {
+background: {{ primary }};
+color: white;
+padding: {{ spacing(3) }} {{ spacing(5) }};
+border: none;
+border-radius: {{ spacing(2) }};
+cursor: pointer;
+}</p>
+<p>.button:hover {
+background: {{ secondary }};
+}</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
+<span class="line"><span>```css</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>:root {</span></span>
+<span class="line"><span>  --color-primary: #6366f1;</span></span>
+<span class="line"><span>  --color-secondary: #8b5cf6;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.container {</span></span>
+<span class="line"><span>  max-width: 1200px;</span></span>
+<span class="line"><span>  margin: 0 auto;</span></span>
+<span class="line"><span>  padding: 1rem 1.5rem;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button {</span></span>
+<span class="line"><span>  background: #6366f1;</span></span>
+<span class="line"><span>  color: white;</span></span>
+<span class="line"><span>  padding: 0.75rem 1.25rem;</span></span>
+<span class="line"><span>  border: none;</span></span>
+<span class="line"><span>  border-radius: 0.5rem;</span></span>
+<span class="line"><span>  cursor: pointer;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button:hover {</span></span>
+<span class="line"><span>  background: #8b5cf6;</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</div>
+<p>The preamble lets you:</p>
+<ul>
+<li><strong>Define variables</strong> - Colors, sizes, breakpoints (with optional types)</li>
+<li><strong>Create functions</strong> - Spacing scales, color utilities (with type safety)</li>
+<li><strong>Import modules</strong> - Share tokens across files</li>
+</ul>
+<p>Everything compiles to static CSS at build time - zero runtime overhead. TypeScript types are optional (gradual typing).</p>
+<h2>TypeScript Support</h2>
+<p>For TypeScript projects, add type declarations so the compiler recognizes <code>.lass</code> imports.</p>
+<p>Create <code>src/lass.d.ts</code>:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-typescript"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// src/lass.d.ts</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// Side-effect imports (import './styles.lass')</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">declare</span><span style="color:#F97583;--shiki-light:#D73A49"> module</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '*.lass'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// CSS Modules (import styles from './component.module.lass')</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">declare</span><span style="color:#F97583;--shiki-light:#D73A49"> module</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '*.module.lass'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">  const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> classes</span><span style="color:#F97583;--shiki-light:#D73A49">:</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#F97583;--shiki-light:#D73A49">readonly</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#FFAB70;--shiki-light:#E36209">key</span><span style="color:#F97583;--shiki-light:#D73A49">:</span><span style="color:#79B8FF;--shiki-light:#005CC5"> string</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span><span style="color:#F97583;--shiki-light:#D73A49">:</span><span style="color:#79B8FF;--shiki-light:#005CC5"> string</span><span style="color:#E1E4E8;--shiki-light:#24292E"> };</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">  export</span><span style="color:#F97583;--shiki-light:#D73A49"> default</span><span style="color:#E1E4E8;--shiki-light:#24292E"> classes;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<p>Ensure this file is included in your <code>tsconfig.json</code>:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-json"><span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  "include"</span><span style="color:#E1E4E8;--shiki-light:#24292E">: [</span><span style="color:#9ECBFF;--shiki-light:#032F62">"src/**/*.ts"</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">"src/**/*.d.ts"</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<h3>CSS Modules</h3>
+<p>Use <code>.module.lass</code> for scoped class names:</p>
+<div class="test-case" data-type="valid">
+```lass
+---
+const shadow = '0 4px 6px -1px rgb(0 0 0 / 0.1)';
+<hr>
+<p>.card {
+background: white;
+border-radius: 8px;
+box-shadow: {{ shadow }};
+padding: 1.5rem;
+}</p>
+<p>.title {
+font-size: 1.25rem;
+font-weight: 600;
+margin-bottom: 0.5rem;
+}</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
+<span class="line"><span>```css</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.card {</span></span>
+<span class="line"><span>  background: white;</span></span>
+<span class="line"><span>  border-radius: 8px;</span></span>
+<span class="line"><span>  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);</span></span>
+<span class="line"><span>  padding: 1.5rem;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.title {</span></span>
+<span class="line"><span>  font-size: 1.25rem;</span></span>
+<span class="line"><span>  font-weight: 600;</span></span>
+<span class="line"><span>  margin-bottom: 0.5rem;</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</div>
+<p>Import with a default import to get scoped class names:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-typescript"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// src/components/Card.ts</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> styles </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> './Card.module.lass'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> card</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> document.</span><span style="color:#B392F0;--shiki-light:#6F42C1">createElement</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'div'</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">card.className </span><span style="color:#F97583;--shiki-light:#D73A49">=</span><span style="color:#E1E4E8;--shiki-light:#24292E"> styles.card;  </span><span style="color:#6A737D;--shiki-light:#6A737D">// Scoped class name</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> title</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> document.</span><span style="color:#B392F0;--shiki-light:#6F42C1">createElement</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'h2'</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">title.className </span><span style="color:#F97583;--shiki-light:#D73A49">=</span><span style="color:#E1E4E8;--shiki-light:#24292E"> styles.title;</span></span></code></pre>
+<h2>Common Pitfalls</h2>
+<h3>Wrong Package Name</h3>
+<p>Use the scoped package name:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-bash"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D"># Correct</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npm</span><span style="color:#9ECBFF;--shiki-light:#032F62"> install</span><span style="color:#9ECBFF;--shiki-light:#032F62"> @lass-lang/vite-plugin-lass</span><span style="color:#79B8FF;--shiki-light:#005CC5"> --save-dev</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D"># Wrong - these packages don't exist</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npm</span><span style="color:#9ECBFF;--shiki-light:#032F62"> install</span><span style="color:#9ECBFF;--shiki-light:#032F62"> vite-plugin-lass</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npm</span><span style="color:#9ECBFF;--shiki-light:#032F62"> install</span><span style="color:#9ECBFF;--shiki-light:#032F62"> lass</span></span></code></pre>
+<h3>Forgot to Add Plugin</h3>
+<p>If <code>.lass</code> files aren't being processed, check that the plugin is added to your Vite config:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-js"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// vite.config.js</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> lass </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '@lass-lang/vite-plugin-lass'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">export</span><span style="color:#F97583;--shiki-light:#D73A49"> default</span><span style="color:#B392F0;--shiki-light:#6F42C1"> defineConfig</span><span style="color:#E1E4E8;--shiki-light:#24292E">({</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  plugins: [</span><span style="color:#B392F0;--shiki-light:#6F42C1">lass</span><span style="color:#E1E4E8;--shiki-light:#24292E">()],  </span><span style="color:#6A737D;--shiki-light:#6A737D">// Don't forget this!</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">});</span></span></code></pre>
+<h3>Missing TypeScript Declarations</h3>
+<p>If TypeScript complains about <code>.lass</code> imports:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>Cannot find module './styles.lass' or its corresponding type declarations.</span></span></code></pre>
+<p>Create <code>src/lass.d.ts</code> with the declarations shown in the <a href="#typescript-support">TypeScript Support</a> section.</p>
+<h3>Expression vs Substitution</h3>
+<p>Use <code>{{ }}</code> for expressions (computed at build time):</p>
+<div class="test-case" data-type="valid">
+```lass
+---
+const size = 16;
+<hr>
+<p>.text {
+font-size: {{ size }}px;
+line-height: {{ size * 2 }}px;
+}</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
+<span class="line"><span>```css</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.text {</span></span>
+<span class="line"><span>  font-size: 16px;</span></span>
+<span class="line"><span>  line-height: 32px;</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</div>
+<p>Use <code>$name</code> for simple text substitution (no computation). Variables must be <code>$</code>-prefixed:</p>
+<div class="test-case" data-type="valid">
+```lass
+---
+const $unit = 'rem';
+<hr>
+<p>.box {
+margin: 1$unit;
+}</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
+<span class="line"><span>```css</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.box {</span></span>
+<span class="line"><span>  margin: 1rem;</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</div>
+<h3>Preamble Must Come First</h3>
+<p>When using JavaScript, the preamble must come <strong>before</strong> the <code>---</code> separator:</p>
+<div class="test-case" data-type="valid">
+```lass
+---
+const color = 'blue';
+<hr>
+<p>.box { color: {{ color }}; }</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
+<span class="line"><span>```css</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.box { color: blue; }</span></span></code></pre>
+</div>
+<p>Without a preamble, you don't need a separator at all - just write CSS directly.</p>
+<h2>What's Next</h2>
+<p>You now have Lass running in your project. Explore more:</p>
+<ul>
+<li><a href="../syntax/index.md">Syntax Reference</a> - Full language reference</li>
+<li><a href="../llms.txt">llms.txt</a> - Quick syntax cheatsheet</li>
+</ul>
+<hr>
+<p><a href="../index.md">Back to Home</a> | <a href="../syntax/index.md">Next: Syntax Reference</a></p>
+
+  </main>
+  <script>
+  // Copy button for code blocks
+  (function() {
+    document.querySelectorAll('pre.shiki').forEach(function(pre) {
+      var code = pre.querySelector('code');
+      if (!code) return;
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.onclick = function() {
+        navigator.clipboard.writeText(code.textContent.trim());
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+      };
+      pre.style.position = 'relative';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.5rem';
+      btn.style.right = '0.5rem';
+      pre.appendChild(btn);
+    });
+  })();
+  </script>
+</body>
+</html>

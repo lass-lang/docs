@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lass Documentation</title>
+  <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
+  <link rel="stylesheet" href="../../assets/index-DDfKo5i0.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="https://lass-lang.dev/">Lass</a>
+    <a href="../../">Docs</a>
+    <a href="../../getting-started/">Get Started</a>
+    <a href="../../syntax/">Syntax</a>
+    <a href="../../axioms/style-lookup/">Axioms</a>
+    <a href="../../llms.txt">llms.txt</a>
+  </nav>
+  <main class="page">
+    <h1>Advanced Composition Patterns</h1>
+<p>Lass doesn't need special mixin syntax because JavaScript already has functions.
+These patterns demonstrate how to create reusable, composable CSS generation
+using standard JS features combined with Lass's <code>@{ }</code> and <code>{{ }}</code> syntax.</p>
+<p>The key insight: <strong>a function returning <code>@{ }</code> is a mixin.</strong></p>
+<h2>Why This Matters</h2>
+<p>Compare to Sass:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-scss"><span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@mixin</span><span style="color:#B392F0;--shiki-light:#6F42C1"> media</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">$types</span><span style="color:#E1E4E8;--shiki-light:#24292E">...) {</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">  @each</span><span style="color:#FFAB70;--shiki-light:#E36209"> $type</span><span style="color:#F97583;--shiki-light:#D73A49"> in</span><span style="color:#FFAB70;--shiki-light:#E36209"> $types</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">    @media</span><span style="color:#FFAB70;--shiki-light:#E36209"> #{$type}</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#F97583;--shiki-light:#D73A49">@content</span><span style="color:#E1E4E8;--shiki-light:#24292E">; }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<p>In Lass, it's just JavaScript:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> media</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#F97583;--shiki-light:#D73A49">...</span><span style="color:#FFAB70;--shiki-light:#E36209">types</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#FFAB70;--shiki-light:#E36209"> content</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> types.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    @media $type { {{</span><span style="color:#B392F0;--shiki-light:#6F42C1">content</span><span style="color:#E1E4E8;--shiki-light:#24292E">($type)}} }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})</span></span></code></pre>
+<p>Benefits:</p>
+<ul>
+<li>No new syntax to learn - it's JavaScript</li>
+<li>Full IDE support (autocomplete, types, refactoring)</li>
+<li>Mixins can be shared via npm</li>
+<li>Tree-shaking removes unused mixins</li>
+<li>TypeScript for type-safe mixins</li>
+</ul>
+<div class="test-case" data-type="valid">
+<h2>valid: curried mixin with callback</h2>
+<p>A media query mixin using curried functions. The outer function takes
+configuration (media types), the inner function takes content callback.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> media</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#F97583;--shiki-light:#D73A49">...</span><span style="color:#FFAB70;--shiki-light:#E36209">types</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#FFAB70;--shiki-light:#E36209"> content</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> types.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    @media $type {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        {{</span><span style="color:#B392F0;--shiki-light:#6F42C1">content</span><span style="color:#E1E4E8;--shiki-light:#24292E">($type)}}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{</span><span style="color:#B392F0;--shiki-light:#6F42C1">media</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'screen'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'print'</span><span style="color:#E1E4E8;--shiki-light:#24292E">)(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">    h1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">40</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})}}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@media</span><span style="color:#79B8FF;--shiki-light:#005CC5"> screen</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">    h1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">40</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@media</span><span style="color:#79B8FF;--shiki-light:#005CC5"> print</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">    h1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">40</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: conditional content in mixin callback</h2>
+<p>The callback receives the current iteration value, enabling conditional logic.
+Note: Use ternary with <code>''</code> or <code>null</code> for conditional content (falsy values are suppressed).</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> media</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#F97583;--shiki-light:#D73A49">...</span><span style="color:#FFAB70;--shiki-light:#E36209">types</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#FFAB70;--shiki-light:#E36209"> content</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> types.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    @media $type {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        {{</span><span style="color:#B392F0;--shiki-light:#6F42C1">content</span><span style="color:#E1E4E8;--shiki-light:#24292E">($type)}}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{</span><span style="color:#B392F0;--shiki-light:#6F42C1">media</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'screen'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'print'</span><span style="color:#E1E4E8;--shiki-light:#24292E">)(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">    h1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">40</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        {{$type </span><span style="color:#F97583;--shiki-light:#D73A49">==</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'print'</span><span style="color:#F97583;--shiki-light:#D73A49"> ?</span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">            font-family</span><span style="color:#E1E4E8;--shiki-light:#24292E">: Calluna;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        } : '' }}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})}}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@media</span><span style="color:#79B8FF;--shiki-light:#005CC5"> screen</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">    h1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">40</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        </span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@media</span><span style="color:#79B8FF;--shiki-light:#005CC5"> print</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">    h1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        font-size</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">40</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        font-family</span><span style="color:#E1E4E8;--shiki-light:#24292E">: Calluna;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: imported mixin pattern</h2>
+<p>Mixins can be plain JavaScript files, imported via standard ES modules.
+This is the recommended pattern for sharing reusable Lass utilities.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// Simulating: import { media } from './mixins.js'</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> media</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#F97583;--shiki-light:#D73A49">...</span><span style="color:#FFAB70;--shiki-light:#E36209">types</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#FFAB70;--shiki-light:#E36209"> content</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> types.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    @media $type {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        {{</span><span style="color:#B392F0;--shiki-light:#6F42C1">content</span><span style="color:#E1E4E8;--shiki-light:#24292E">($type)}}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{</span><span style="color:#B392F0;--shiki-light:#6F42C1">media</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'screen'</span><span style="color:#E1E4E8;--shiki-light:#24292E">)(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">    body</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        max-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1200</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})}}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@media</span><span style="color:#79B8FF;--shiki-light:#005CC5"> screen</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">    body</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        max-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1200</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: responsive breakpoints mixin</h2>
+<p>A more practical example: responsive breakpoints using an object configuration.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> breakpoints</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { sm: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'640px'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, md: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'768px'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, lg: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'1024px'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> responsive</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#FFAB70;--shiki-light:#E36209">config</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#FFAB70;--shiki-light:#E36209"> content</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> </span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    Object.</span><span style="color:#B392F0;--shiki-light:#6F42C1">entries</span><span style="color:#E1E4E8;--shiki-light:#24292E">(config).</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(([</span><span style="color:#FFAB70;--shiki-light:#E36209">name</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">width</span><span style="color:#E1E4E8;--shiki-light:#24292E">]) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        @</span><span style="color:#B392F0;--shiki-light:#6F42C1">media</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#FFAB70;--shiki-light:#E36209">min</span><span style="color:#E1E4E8;--shiki-light:#24292E">-</span><span style="color:#FFAB70;--shiki-light:#E36209">width</span><span style="color:#F97583;--shiki-light:#D73A49">:</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {{</span><span style="color:#FFAB70;--shiki-light:#E36209">width</span><span style="color:#E1E4E8;--shiki-light:#24292E">}}) {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">            {{</span><span style="color:#B392F0;--shiki-light:#6F42C1">content</span><span style="color:#E1E4E8;--shiki-light:#24292E">(name, width)}}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    })</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{</span><span style="color:#B392F0;--shiki-light:#6F42C1">responsive</span><span style="color:#E1E4E8;--shiki-light:#24292E">(breakpoints)((</span><span style="color:#FFAB70;--shiki-light:#E36209">name</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">width</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">    .container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{name </span><span style="color:#F97583;--shiki-light:#D73A49">===</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'sm'</span><span style="color:#F97583;--shiki-light:#D73A49"> ?</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '1rem'</span><span style="color:#F97583;--shiki-light:#D73A49"> :</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '2rem'</span><span style="color:#E1E4E8;--shiki-light:#24292E">}};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">})}}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@media</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#79B8FF;--shiki-light:#005CC5">min-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">640</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">) {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">    .container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@media</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#79B8FF;--shiki-light:#005CC5">min-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">768</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">) {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">    .container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@media</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#79B8FF;--shiki-light:#005CC5">min-width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1024</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">) {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">    .container</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">        padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: nested style block composition</h2>
+<p>Style blocks can return style blocks - enabling deep composition.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> withHover</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#FFAB70;--shiki-light:#E36209">base</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">hover</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    {{base}}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    &#x26;:hover {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        {{hover}}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.btn</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    {{</span><span style="color:#B392F0;--shiki-light:#6F42C1">withHover</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        @{ background: blue; color: white; },</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        @{ background: darkblue; }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    )}}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.btn</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">; </span><span style="color:#79B8FF;--shiki-light:#005CC5">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">white</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    &#x26;:hover {</span></span>
+<span class="line"><span style="color:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">        background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">darkblue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: utility generator pattern</h2>
+<p>Generate utility classes from configuration objects - similar to Tailwind's approach.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> sizes</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { sm: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'0.5rem'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, md: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'1rem'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, lg: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'2rem'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> spacingUtils</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#FFAB70;--shiki-light:#E36209">prop</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">prefix</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> </span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    Object.</span><span style="color:#B392F0;--shiki-light:#6F42C1">entries</span><span style="color:#E1E4E8;--shiki-light:#24292E">(sizes).</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(([</span><span style="color:#FFAB70;--shiki-light:#E36209">name</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">value</span><span style="color:#E1E4E8;--shiki-light:#24292E">]) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        .{{prefix}}-{{name}} {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">            {{prop}}: {{value}};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">        }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    })</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{</span><span style="color:#B392F0;--shiki-light:#6F42C1">spacingUtils</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'padding'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'p'</span><span style="color:#E1E4E8;--shiki-light:#24292E">)}}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{</span><span style="color:#B392F0;--shiki-light:#6F42C1">spacingUtils</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'margin'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'m'</span><span style="color:#E1E4E8;--shiki-light:#24292E">)}}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.p-sm</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.p-md</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.p-lg</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.m-sm</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0.5</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.m-md</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.m-lg</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#F97583;--shiki-light:#D73A49">rem</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<h2>Pattern: Mixin Library Structure</h2>
+<p>Recommended structure for a Lass mixin library:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-javascript"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// mixins.js - can be npm published!</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">export</span><span style="color:#F97583;--shiki-light:#D73A49"> const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> media</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#F97583;--shiki-light:#D73A49">...</span><span style="color:#FFAB70;--shiki-light:#E36209">types</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#FFAB70;--shiki-light:#E36209"> content</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> </span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    types.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#9ECBFF;--shiki-light:#032F62"> `@media ${</span><span style="color:#E1E4E8;--shiki-light:#24292E">$type</span><span style="color:#9ECBFF;--shiki-light:#032F62">} { ${</span><span style="color:#B392F0;--shiki-light:#6F42C1">content</span><span style="color:#9ECBFF;--shiki-light:#032F62">(</span><span style="color:#E1E4E8;--shiki-light:#24292E">$type</span><span style="color:#9ECBFF;--shiki-light:#032F62">)</span><span style="color:#9ECBFF;--shiki-light:#032F62">} }`</span><span style="color:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">export</span><span style="color:#F97583;--shiki-light:#D73A49"> const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> responsive</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#FFAB70;--shiki-light:#E36209">breakpoints</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#FFAB70;--shiki-light:#E36209"> content</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    Object.</span><span style="color:#B392F0;--shiki-light:#6F42C1">entries</span><span style="color:#E1E4E8;--shiki-light:#24292E">(breakpoints).</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(([</span><span style="color:#FFAB70;--shiki-light:#E36209">name</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">width</span><span style="color:#E1E4E8;--shiki-light:#24292E">]) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> </span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">        `@media (min-width: ${</span><span style="color:#E1E4E8;--shiki-light:#24292E">width</span><span style="color:#9ECBFF;--shiki-light:#032F62">}) { ${</span><span style="color:#B392F0;--shiki-light:#6F42C1">content</span><span style="color:#9ECBFF;--shiki-light:#032F62">(</span><span style="color:#E1E4E8;--shiki-light:#24292E">name</span><span style="color:#9ECBFF;--shiki-light:#032F62">, </span><span style="color:#E1E4E8;--shiki-light:#24292E">width</span><span style="color:#9ECBFF;--shiki-light:#032F62">)</span><span style="color:#9ECBFF;--shiki-light:#032F62">} }`</span><span style="color:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">export</span><span style="color:#F97583;--shiki-light:#D73A49"> const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> withStates</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#FFAB70;--shiki-light:#E36209">base</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">states</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#9ECBFF;--shiki-light:#032F62"> `</span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">    ${</span><span style="color:#E1E4E8;--shiki-light:#24292E">base</span><span style="color:#9ECBFF;--shiki-light:#032F62">}</span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">    ${</span><span style="color:#E1E4E8;--shiki-light:#24292E">Object</span><span style="color:#9ECBFF;--shiki-light:#032F62">.</span><span style="color:#B392F0;--shiki-light:#6F42C1">entries</span><span style="color:#9ECBFF;--shiki-light:#032F62">(</span><span style="color:#E1E4E8;--shiki-light:#24292E">states</span><span style="color:#9ECBFF;--shiki-light:#032F62">).</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#9ECBFF;--shiki-light:#032F62">(([</span><span style="color:#79B8FF;--shiki-light:#005CC5">state</span><span style="color:#9ECBFF;--shiki-light:#032F62">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">styles</span><span style="color:#9ECBFF;--shiki-light:#032F62">]) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#9ECBFF;--shiki-light:#032F62"> </span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">        `&#x26;:${</span><span style="color:#E1E4E8;--shiki-light:#24292E">state</span><span style="color:#9ECBFF;--shiki-light:#032F62">} { ${</span><span style="color:#E1E4E8;--shiki-light:#24292E">styles</span><span style="color:#9ECBFF;--shiki-light:#032F62">} }`</span><span style="color:#9ECBFF;--shiki-light:#032F62">).</span><span style="color:#B392F0;--shiki-light:#6F42C1">join</span><span style="color:#9ECBFF;--shiki-light:#032F62">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'</span><span style="color:#79B8FF;--shiki-light:#005CC5">\n</span><span style="color:#9ECBFF;--shiki-light:#032F62">'</span><span style="color:#9ECBFF;--shiki-light:#032F62">)</span><span style="color:#9ECBFF;--shiki-light:#032F62">}</span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">`</span></span></code></pre>
+<p>Then in your <code>.lass</code> file:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { media, responsive } </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '@my-org/lass-mixins'</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{</span><span style="color:#B392F0;--shiki-light:#6F42C1">media</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'screen'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'print'</span><span style="color:#E1E4E8;--shiki-light:#24292E">)(</span><span style="color:#FFAB70;--shiki-light:#E36209">$type</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> @{ ... })}}</span></span></code></pre>
+<p>This is the power of Lass: <strong>your mixin library is just JavaScript.</strong></p>
+
+  </main>
+  <script>
+  // Copy button for code blocks
+  (function() {
+    document.querySelectorAll('pre.shiki').forEach(function(pre) {
+      var code = pre.querySelector('code');
+      if (!code) return;
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.onclick = function() {
+        navigator.clipboard.writeText(code.textContent.trim());
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+      };
+      pre.style.position = 'relative';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.5rem';
+      btn.style.right = '0.5rem';
+      pre.appendChild(btn);
+    });
+  })();
+  </script>
+</body>
+</html>

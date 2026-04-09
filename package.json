@@ -1,6 +1,7 @@
 {
   "name": "@lass-lang/docs",
   "version": "0.0.1",
+  "private": true,
   "type": "module",
   "description": "Lass language documentation with tested code examples",
   "exports": {
@@ -14,6 +15,8 @@
     }
   },
   "scripts": {
+    "build": "vite build",
+    "preview": "vite preview",
     "lint:docs": "tsx scripts/lint-docs.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -22,9 +25,14 @@
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
     "@lass-lang/core": "workspace:*",
+    "@lass-lang/vite-plugin-lass": "workspace:*",
+    "@shikijs/markdown-it": "^3.0.0",
     "@vitest/coverage-v8": "^4.0.18",
     "husky": "^9.1.7",
+    "markdown-it": "^14.0.0",
+    "shiki": "^3.0.0",
     "tsx": "^4.19.4",
+    "vite": "^6.0.0",
     "vitest": "^4.0.18"
   }
 }

@@ -1,0 +1,85 @@
+@layer components {
+/* Site navigation */
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+  justify-content: center;
+  padding: var(--space-md) var(--content-padding);
+  max-width: var(--content-width);
+  margin-inline: auto;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+}
+
+.site-nav a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.site-nav a:first-child {
+  font-weight: 700;
+  color: var(--color-text);
+  margin-inline-end: auto;
+}
+
+.site-nav a:hover {
+  color: var(--color-text);
+}
+
+/* Code blocks — Shiki-rendered with dual-theme support */
+pre.shiki {
+  background-color: var(--color-code-bg) !important;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  border: 1px solid var(--color-code-border);
+}
+
+/* Shiki dual-theme: light mode activates --shiki-light CSS custom properties */
+@media (prefers-color-scheme: light) {
+  pre.shiki span {
+    color: var(--shiki-light) !important;
+  }
+}
+
+/* WCAG AA comment color overrides */
+pre.shiki span[style*="6A737D" i] {
+  color: #57ab5a !important;
+  --shiki-light: #1a7f37;
+}
+
+/* Test case examples — styled sections for valid/invalid code examples */
+.test-case {
+  margin-block-start: var(--space-lg);
+  padding-inline-start: var(--space-md);
+  border-inline-start: 3px solid var(--color-border);
+}
+
+.test-case[data-type="valid"] {
+  border-inline-start-color: oklch(65% 0.15 145);
+}
+
+.test-case[data-type="invalid"] {
+  border-inline-start-color: oklch(65% 0.15 25);
+}
+
+/* Copy button for code blocks */
+.copy-btn {
+  appearance: none;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 4px;
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.copy-btn:hover {
+  background: var(--color-border);
+  color: var(--color-text);
+}
+}

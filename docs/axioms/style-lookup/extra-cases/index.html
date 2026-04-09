@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lass Documentation</title>
+  <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
+  <link rel="stylesheet" href="../../../assets/index-DDfKo5i0.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="https://lass-lang.dev/">Lass</a>
+    <a href="../../../">Docs</a>
+    <a href="../../../getting-started/">Get Started</a>
+    <a href="../../../syntax/">Syntax</a>
+    <a href="../../../axioms/style-lookup/">Axioms</a>
+    <a href="../../../llms.txt">llms.txt</a>
+  </nav>
+  <main class="page">
+    <h1>@(prop) Property Accessor - Extra Cases</h1>
+<p>These test cases cover edge cases and implementation details for <code>@(prop)</code>
+that complement the main axiom file.</p>
+<!-- ============================================ -->
+<!-- At-Rule Boundaries                           -->
+<!-- ============================================ -->
+<div class="test-case" data-type="valid">
+<h2>valid: doesn't cross @layer boundaries - preserved</h2>
+<p><code>@(prop)</code> stops at at-rule boundaries. Properties declared in one
+<code>@layer</code> are not visible to another.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@layer</span><span style="color:#E1E4E8;--shiki-light:#24292E"> base {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">  .box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@layer</span><span style="color:#E1E4E8;--shiki-light:#24292E"> utilities {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">  .box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(color</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@layer</span><span style="color:#E1E4E8;--shiki-light:#24292E"> base {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">  .box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">@layer</span><span style="color:#E1E4E8;--shiki-light:#24292E"> utilities {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">  .box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: @(</span><span style="color:#79B8FF;--shiki-light:#005CC5">color</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<!-- ============================================ -->
+<!-- @(prop) Inside {{ }} Expressions             -->
+<!-- ============================================ -->
+<div class="test-case" data-type="valid">
+<h2>valid: parent scope lookup inside {{ }}</h2>
+<p><code>@(prop)</code> inside <code>{{ }}</code> can resolve from parent scope.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.parent</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">solid</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  .</span><span style="color:#79B8FF;--shiki-light:#005CC5">child</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    outline</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(border</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.parent</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">solid</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  .</span><span style="color:#79B8FF;--shiki-light:#005CC5">child</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    outline</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">solid</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: multiple @(prop) in one {{ }} expression</h2>
+<p>Multiple <code>@(prop)</code> references can appear in a single <code>{{ }}</code> expression.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  height</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">50</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(width</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> " x "</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#79B8FF;--shiki-light:#005CC5"> @(height</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  height</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">50</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#79B8FF;--shiki-light:#005CC5"> x</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 50</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: math with multiple @(prop) references</h2>
+<p>Arithmetic operations can use multiple <code>@(prop)</code> values.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">5</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  total</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">parseInt</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">@(padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">)) </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#B392F0;--shiki-light:#6F42C1"> parseInt</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">@(margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">)) }}px;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">5</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  total</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">15</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: string operations with @(prop)</h2>
+<p>JavaScript string methods work on <code>@(prop)</code> values.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(color</span><span style="color:#E1E4E8;--shiki-light:#24292E">).</span><span style="color:#B392F0;--shiki-light:#6F42C1">toUpperCase</span><span style="color:#E1E4E8;--shiki-light:#24292E">() }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">BLUE</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: template literal with @(prop)</h2>
+<p><code>@(prop)</code> works inside JavaScript template literals within <code>{{ }}</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  {{ </span><span style="color:#9ECBFF;--shiki-light:#032F62">`border-color: ${</span><span style="color:#9ECBFF;--shiki-light:#032F62">@(</span><span style="color:#E1E4E8;--shiki-light:#24292E">color</span><span style="color:#9ECBFF;--shiki-light:#032F62">)</span><span style="color:#9ECBFF;--shiki-light:#032F62">};`</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: multiple @(prop) concatenated</h2>
+<p>Multiple <code>@(prop)</code> values can be concatenated with string operators.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  height</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">50</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#9ECBFF;--shiki-light:#032F62">"Size: "</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#79B8FF;--shiki-light:#005CC5"> @(width</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> " x "</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#79B8FF;--shiki-light:#005CC5"> @(height</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  height</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">50</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: Size: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> x</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 50</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: @(prop) in CSS context and JS context</h2>
+<p>Same property accessed in CSS context (raw substitution) and JS context
+(as quoted string for expression evaluation).</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(color</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(color</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: nested scope @(prop) inside {{ }}</h2>
+<p><code>@(prop)</code> inside <code>{{ }}</code> resolves from parent scope through nesting.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.parent</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  .</span><span style="color:#79B8FF;--shiki-light:#005CC5">child</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">parseInt</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">@(padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">)) </span><span style="color:#F97583;--shiki-light:#D73A49">*</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }}px;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.parent</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  .</span><span style="color:#79B8FF;--shiki-light:#005CC5">child</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">    margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">20</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<!-- ============================================ -->
+<!-- Escaping Behavior                            -->
+<!-- ============================================ -->
+<div class="test-case" data-type="valid">
+<h2>valid: quoted value escaping</h2>
+<p>Values containing quotes are properly escaped when used in <code>{{ }}</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-family</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"Arial"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(font-family</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  font-family</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"Arial"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"Arial"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: newline in value escaping</h2>
+<p>Values containing newlines are properly escaped when used in <code>{{ }}</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">line1</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">line2</span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  other: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(content</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">line1</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">line2</span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  other: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">line1</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">line2</span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#FDAEB7;--shiki-dark-font-style:italic;--shiki-light:#B31D28;--shiki-light-font-style:italic">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: backslash and quote escaping</h2>
+<p>Values with backslashes and quotes are preserved correctly.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"path</span><span style="color:#79B8FF;--shiki-light:#005CC5">\\</span><span style="color:#9ECBFF;--shiki-light:#032F62">to</span><span style="color:#79B8FF;--shiki-light:#005CC5">\"</span><span style="color:#9ECBFF;--shiki-light:#032F62">file</span><span style="color:#79B8FF;--shiki-light:#005CC5">\"</span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  other</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(content</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"path</span><span style="color:#79B8FF;--shiki-light:#005CC5">\\</span><span style="color:#9ECBFF;--shiki-light:#032F62">to</span><span style="color:#79B8FF;--shiki-light:#005CC5">\"</span><span style="color:#9ECBFF;--shiki-light:#032F62">file</span><span style="color:#79B8FF;--shiki-light:#005CC5">\"</span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  other</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"path</span><span style="color:#79B8FF;--shiki-light:#005CC5">\\</span><span style="color:#9ECBFF;--shiki-light:#032F62">to</span><span style="color:#79B8FF;--shiki-light:#005CC5">\"</span><span style="color:#9ECBFF;--shiki-light:#032F62">file</span><span style="color:#79B8FF;--shiki-light:#005CC5">\"</span><span style="color:#9ECBFF;--shiki-light:#032F62">"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<!-- ============================================ -->
+<!-- Pipeline Integration                         -->
+<!-- ============================================ -->
+<div class="test-case" data-type="valid">
+<h2>valid: @(prop) resolves before {{ }}</h2>
+<p><code>@(prop)</code> in CSS context resolves at compile time (Phase 1),
+before <code>{{ }}</code> evaluates at runtime (Phase 2).</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> color</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "green"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">solid</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  outline</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(border</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ color }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">solid</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  outline</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">solid</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">green</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: @(prop) after {{ }} in same block</h2>
+<p><code>@(prop)</code> appearing after a <code>{{ }}</code> expression in the same block
+still resolves correctly.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }}px;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(color</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  border-color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: @(prop) at root level after {{ }}</h2>
+<p><code>@(prop)</code> works at root level (no selector block) after <code>{{ }}</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">color: blue;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{ </span><span style="color:#9ECBFF;--shiki-light:#032F62">'injected'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">border: </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(color</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">color: blue;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">injected</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">border: blue;</span></span></code></pre>
+</div>
+<!-- ============================================ -->
+<!-- Error Cases                                  -->
+<!-- ============================================ -->
+<div class="test-case" data-type="invalid">
+<h2>invalid: @(prop) not found inside {{ }} causes runtime error</h2>
+<p>When <code>@(prop)</code> is not found and is inside <code>{{ }}</code>, it's preserved as
+<code>@(prop)</code> which is invalid JavaScript, causing a runtime error.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#79B8FF;--shiki-light:#005CC5">@(nonexistent</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>Invalid or unexpected token</span></span></code></pre>
+</div>
+
+  </main>
+  <script>
+  // Copy button for code blocks
+  (function() {
+    document.querySelectorAll('pre.shiki').forEach(function(pre) {
+      var code = pre.querySelector('code');
+      if (!code) return;
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.onclick = function() {
+        navigator.clipboard.writeText(code.textContent.trim());
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+      };
+      pre.style.position = 'relative';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.5rem';
+      btn.style.right = '0.5rem';
+      pre.appendChild(btn);
+    });
+  })();
+  </script>
+</body>
+</html>

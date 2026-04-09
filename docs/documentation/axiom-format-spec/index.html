@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lass Documentation</title>
+  <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
+  <link rel="stylesheet" href="../../assets/index-DDfKo5i0.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="https://lass-lang.dev/">Lass</a>
+    <a href="../../">Docs</a>
+    <a href="../../getting-started/">Get Started</a>
+    <a href="../../syntax/">Syntax</a>
+    <a href="../../axioms/style-lookup/">Axioms</a>
+    <a href="../../llms.txt">llms.txt</a>
+  </nav>
+  <main class="page">
+    <h1>Lass Axiom Format Specification</h1>
+<blockquote>
+<p><strong>Document Type:</strong> Specification (not an axiom file)<br>
+<strong>FR:</strong> FR-AXIOM<br>
+<strong>Last Updated:</strong> 2026-02-06</p>
+</blockquote>
+<h2>Overview</h2>
+<p>A Lass axiom file is a <strong>Markdown document</strong> with <strong>YAML frontmatter</strong> that contains multiple <strong>test cases</strong> for a single language feature. Axioms are foundational truths that define language behavior - they serve as the single source of truth for:</p>
+<ol>
+<li><strong>Specification</strong> — what the language does</li>
+<li><strong>Test generation</strong> (MVP) — a parser reads axiom files and generates test cases</li>
+<li><strong>Human documentation</strong> (Growth) — axiom files render as readable docs (GitHub, docs site)</li>
+<li><strong>AI reference</strong> (Growth) — a generator extracts the structured content into a dense single-page spec</li>
+</ol>
+<h2>File Convention</h2>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>packages/axioms/                       ← axiom package root</span></span>
+<span class="line"><span>  AXIOM-FORMAT-SPEC.md                 ← this file</span></span>
+<span class="line"><span>  src/</span></span>
+<span class="line"><span>    index.ts                           ← loader exports</span></span>
+<span class="line"><span>    loader.ts                          ← axiom parser</span></span>
+<span class="line"><span>  css-passthrough.common.md            ← main docs + primary examples</span></span>
+<span class="line"><span>  css-passthrough.extra-cases.md       ← edge cases, regressions (optional)</span></span>
+<span class="line"><span>  two-zone-model.common.md</span></span>
+<span class="line"><span>  dollar-substitution.common.md</span></span>
+<span class="line"><span>  dollar-substitution.extra-cases.md</span></span>
+<span class="line"><span>  dollar-explicit.common.md</span></span>
+<span class="line"><span>  mustache-expression.common.md</span></span>
+<span class="line"><span>  fragment-syntax.common.md</span></span>
+<span class="line"><span>  single-line-comments.common.md</span></span>
+<span class="line"><span>  css-nesting.common.md</span></span>
+<span class="line"><span>  prop-accessor.common.md</span></span>
+<span class="line"><span>  custom-prop-accessor.common.md</span></span>
+<span class="line"><span>  cross-rule-accessor.common.md</span></span>
+<span class="line"><span>  self-accessor.common.md</span></span>
+<span class="line"><span>  design-token-import.common.md</span></span>
+<span class="line"><span>  bundler-integration.common.md</span></span></code></pre>
+<ul>
+<li><strong>One file per feature.</strong> Each file maps to one FR.</li>
+<li><strong>Extensions:</strong>
+<ul>
+<li><code>.common.md</code> — Main documentation + primary examples (linked in docs index)</li>
+<li><code>.extra-cases.md</code> — Edge cases, regressions, error cases (optional)</li>
+</ul>
+</li>
+<li><strong>Location:</strong> <code>packages/axioms/</code> (the <code>@lass-lang/axioms</code> package)</li>
+<li><strong>Naming:</strong> kebab-case feature name</li>
+<li><strong>Alphabetical sort order:</strong> <code>.common.md</code> → <code>.extra-cases.md</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Purpose</th>
+<th>Linked in docs?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;feature&gt;.common.md</code></td>
+<td>Main documentation + primary examples</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>&lt;feature&gt;.extra-cases.md</code></td>
+<td>Edge cases, regressions, error cases</td>
+<td>Optional</td>
+</tr>
+</tbody>
+</table>
+<h2>File Structure</h2>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>┌─ YAML frontmatter (optional) ───────────┐</span></span>
+<span class="line"><span>│  feature, fr, phase, description, tags  │</span></span>
+<span class="line"><span>├─ Markdown body ─────────────────────────┤</span></span>
+<span class="line"><span>│  # Feature Title                        │</span></span>
+<span class="line"><span>│                                         │</span></span>
+<span class="line"><span>│  ## valid: test case name               │</span></span>
+<span class="line"><span>│  (optional prose)                       │</span></span>
+<span class="line"><span>│  ```lass ... ```                        │</span></span>
+<span class="line"><span>│  (optional companion files)             │</span></span>
+<span class="line"><span>│  ```css ... ```                         │</span></span>
+<span class="line"><span>│                                         │</span></span>
+<span class="line"><span>│  ## valid: another test case            │</span></span>
+<span class="line"><span>│  ...                                    │</span></span>
+<span class="line"><span>│                                         │</span></span>
+<span class="line"><span>│  ## invalid: error case name            │</span></span>
+<span class="line"><span>│  (optional prose)                       │</span></span>
+<span class="line"><span>│  ```lass ... ```                        │</span></span>
+<span class="line"><span>│  ```error ... ```                       │</span></span>
+<span class="line"><span>└─────────────────────────────────────────┘</span></span></code></pre>
+<h2>YAML Frontmatter</h2>
+<p>Required fields:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-yaml"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">feature</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">dollar-substitution</span><span style="color:#6A737D;--shiki-light:#6A737D">    # kebab-case identifier (unique across all axioms)</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">fr</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">FR-DOLLAR</span><span style="color:#6A737D;--shiki-light:#6A737D">                   # FR reference from PRD</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">phase</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">MVP</span><span style="color:#6A737D;--shiki-light:#6A737D">                      # MVP | Growth | Vision</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">description</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#F97583;--shiki-light:#D73A49">></span><span style="color:#6A737D;--shiki-light:#6A737D">                  # 1-3 sentence description of the feature</span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">  In the CSS zone, $name performs text substitution from JS preamble</span></span>
+<span class="line"><span style="color:#9ECBFF;--shiki-light:#032F62">  variables. No expression evaluation.</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">tags</span><span style="color:#E1E4E8;--shiki-light:#24292E">: [</span><span style="color:#9ECBFF;--shiki-light:#032F62">symbol-system</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">substitution</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">two-zone</span><span style="color:#E1E4E8;--shiki-light:#24292E">]   </span><span style="color:#6A737D;--shiki-light:#6A737D"># freeform tags for filtering</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">---</span></span></code></pre>
+<p>Optional fields:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-yaml"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">depends</span><span style="color:#E1E4E8;--shiki-light:#24292E">: [</span><span style="color:#9ECBFF;--shiki-light:#032F62">two-zone-model</span><span style="color:#E1E4E8;--shiki-light:#24292E">]              </span><span style="color:#6A737D;--shiki-light:#6A737D"># features this one requires</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">see-also</span><span style="color:#E1E4E8;--shiki-light:#24292E">: [</span><span style="color:#9ECBFF;--shiki-light:#032F62">mustache-expression</span><span style="color:#E1E4E8;--shiki-light:#24292E">]        </span><span style="color:#6A737D;--shiki-light:#6A737D"># related features (cross-referenced in prose)</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">companions</span><span style="color:#E1E4E8;--shiki-light:#24292E">: [</span><span style="color:#9ECBFF;--shiki-light:#032F62">tokens.json</span><span style="color:#E1E4E8;--shiki-light:#24292E">]              </span><span style="color:#6A737D;--shiki-light:#6A737D"># companion files needed by test cases</span></span></code></pre>
+<h2>Test Case Format</h2>
+<h3>Heading Convention</h3>
+<p>Each <code>## </code> heading defines one test case. The heading format is:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>## {outcome}: {name}</span></span>
+<span class="line"><span>## {outcome}: {name} [test]</span></span></code></pre>
+<p>Where <code>{outcome}</code> is one of:</p>
+<ul>
+<li><strong><code>valid</code></strong> — this input MUST compile and produce the expected CSS output</li>
+<li><strong><code>invalid</code></strong> — this input MUST produce the expected error</li>
+</ul>
+<p>The <code>{name}</code> is a descriptive, human-readable label for the test case.</p>
+<h3>Documentation Visibility</h3>
+<p>Test cases are visible in documentation by default. To mark a test case
+as test-only (hidden from the docs site and AI reference), append <code>[test]</code>
+to the heading:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>## valid: basic substitution              ← shown in docs (default)</span></span>
+<span class="line"><span>## valid: $name adjacent to hyphen [test] ← test runner only</span></span></code></pre>
+<p>The <code>[test]</code> tag is used for:</p>
+<ul>
+<li><strong>Cross-feature interaction tests</strong> that belong to the test suite but
+not to a single feature's documentation page</li>
+<li><strong>Exhaustive edge cases</strong> that are important for correctness but would
+clutter the human-readable docs</li>
+<li><strong>Regression tests</strong> added after bug fixes</li>
+</ul>
+<p>The docs generator strips <code>[test]</code>-tagged cases. The test generator
+includes all cases regardless of tag.</p>
+<h3>Valid Test Cases</h3>
+<p>A valid test case has:</p>
+<ol>
+<li><code>## valid: {name}</code> heading</li>
+<li>Optional prose (Markdown paragraph) explaining the behavior</li>
+<li>A <code>```lass</code> code block with the <code>.lass</code> input</li>
+<li>Zero or more companion file blocks (<code>```{filename}</code>)</li>
+<li>A <code>```css</code> code block with the expected CSS output</li>
+</ol>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-markdown"><span class="line"><span style="color:#79B8FF;--shiki-dark-font-weight:bold;--shiki-light:#005CC5;--shiki-light-font-weight:bold">## valid: basic substitution</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">```lass</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">const $color = 'red'</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">p {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  color: $color;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``css</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">p {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  color: red;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``</span></span></code></pre>
+<h3>Invalid Test Cases</h3>
+<p>An invalid test case has:</p>
+<ol>
+<li><code>## invalid: {name}</code> heading</li>
+<li>Optional prose explaining why this is invalid</li>
+<li>A <code>```lass</code> code block with the invalid <code>.lass</code> input</li>
+<li>A <code>```error</code> code block with the expected error pattern</li>
+</ol>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-markdown"><span class="line"><span style="color:#79B8FF;--shiki-dark-font-weight:bold;--shiki-light:#005CC5;--shiki-light-font-weight:bold">## invalid: undefined variable</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``lass</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-dark-font-weight:bold;--shiki-light:#005CC5;--shiki-light-font-weight:bold">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">p {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  color: $undefined;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``error</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">ReferenceError: $undefined is not defined</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``</span></span></code></pre>
+<h3>Companion Files</h3>
+<p>Some test cases need external files (e.g., JSON token files for import).
+These are declared as code blocks with the filename as the language tag:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-markdown"><span class="line"><span style="color:#79B8FF;--shiki-dark-font-weight:bold;--shiki-light:#005CC5;--shiki-light-font-weight:bold">## valid: expression accessing imported data</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``lass</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">import tokens from './tokens.json'</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-dark-font-weight:bold;--shiki-light:#005CC5;--shiki-light-font-weight:bold">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">:root {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  --primary: {{ tokens.colors.primary }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``tokens.json</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  "colors": {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    "primary": "#3b82f6"</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``css</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">:root {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  --primary: #3b82f6;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">` ``</span></span></code></pre>
+<p>The axiom parser extracts companion files and creates them in a
+temp directory before running the test.</p>
+<h3>Prose Between Code Blocks</h3>
+<p>Markdown prose between the heading and the code blocks is:</p>
+<ul>
+<li><strong>For humans:</strong> rendered as documentation explaining the behavior</li>
+<li><strong>For tests:</strong> ignored by the test generator</li>
+<li><strong>For AI reference:</strong> included as context</li>
+</ul>
+<p>This is what makes axioms self-documenting. A contributor can read
+the prose to understand WHY a behavior exists, not just WHAT it does.</p>
+<h3>Prose Style</h3>
+<p>Axiom prose is developer documentation. It talks to the person using
+Lass — precise about behavior, but conversational. Think Svelte docs or
+MDN, not W3C normative specifications.</p>
+<ol>
+<li>
+<p><strong>Feature-level prose</strong> (after <code># Title</code>, before first <code>##</code>): Explain
+the feature in 2-5 short paragraphs. What it does, how it differs
+from similar features, any boundaries or gotchas. Use inline code
+examples in the prose itself when they help. Cross-reference related
+features with <code>See [feature](./feature.common.md)</code>.</p>
+<p>This prose is rendered as the feature's documentation page on the
+docs site. A developer should be able to understand the feature from
+the prose alone — the test cases prove it and show edge cases.</p>
+</li>
+<li>
+<p><strong>Test-case prose</strong> (after <code>##</code>, before code blocks): One or two
+sentences explaining what this case shows and why it matters. If the
+behavior is obvious from the code, keep it short.</p>
+<p>This prose is rendered alongside the example on the docs site.</p>
+</li>
+<li>
+<p><strong><code>&gt; Note:</code> / <code>&gt; Tip:</code> blocks</strong>: For workarounds, future-version
+hints, or &quot;if you need X, use Y instead&quot; pointers.</p>
+</li>
+<li>
+<p><strong><code>See [feature](./link)</code></strong>: Cross-reference related axioms when
+a test case touches another feature.</p>
+</li>
+<li>
+<p><strong>Tone rules</strong>:</p>
+<ul>
+<li>&quot;You&quot; is fine — you're talking to a developer.</li>
+<li>Short sentences. One idea per sentence.</li>
+<li>Strict about behavior — no ambiguity about what the output is.</li>
+<li>No RFC keywords (MUST, SHALL). Just say what happens.</li>
+<li>Concrete over abstract: &quot;the output is <code>23 * 2</code>&quot; beats
+&quot;the expression is not evaluated&quot;.</li>
+</ul>
+</li>
+</ol>
+<h2>Parsing Rules</h2>
+<p>The axiom parser extracts test cases by:</p>
+<ol>
+<li>Parse YAML frontmatter → feature metadata</li>
+<li>Extract feature-level prose (between <code># Title</code> and first <code>##</code>) → documentation text</li>
+<li>Split body on <code>## </code> headings → test cases</li>
+<li>For each test case:
+a. Parse heading → <code>{outcome}</code>, <code>{name}</code>, and <code>{visibility}</code> (default: <code>doc</code>, or <code>test</code> if <code>[test]</code> tag present)
+b. Extract first <code>```lass</code> block → input
+c. Extract all non-<code>lass</code>/non-<code>css</code>/non-<code>error</code> code blocks → companion files (language tag = filename)
+d. If <code>valid</code>: extract <code>```css</code> block → expected output
+e. If <code>invalid</code>: extract <code>```error</code> block → expected error pattern
+f. Remaining Markdown → prose (used by docs generator, ignored by test runner)</li>
+</ol>
+<h3>Code Block Ordering</h3>
+<p>Within a test case, blocks must appear in this order:</p>
+<ol>
+<li><code>```lass</code> (required — always first code block)</li>
+<li>Companion file blocks (optional — any order)</li>
+<li><code>```css</code> or <code>```error</code> (required — always last code block)</li>
+</ol>
+<h3>Error Matching</h3>
+<p>Error blocks are matched as substrings. The test runner checks that
+the actual error message <strong>contains</strong> the expected error text. This
+allows error messages to include additional context (file paths, etc.)
+without breaking axioms.</p>
+<h2>Test Generation</h2>
+<p>Axiom tests are generated <strong>dynamically at runtime</strong> — no generated test files are committed to the repository. The test runner loads axiom files directly:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>packages/axioms/dollar-substitution.common.md</span></span>
+<span class="line"><span>packages/axioms/dollar-substitution.extra-cases.md (if exists)</span></span>
+<span class="line"><span>  → packages/core/test/axioms.test.ts (dynamic test generation)</span></span></code></pre>
+<p><strong>Documentation is the source of truth:</strong> Tests are derived from the markdown files. The <code>loader.ts</code> utility parses both <code>.common.md</code> and <code>.extra-cases.md</code> files to extract code blocks for test generation.</p>
+<p>Tests are generated dynamically using Vitest's <code>describe.each</code> or <code>test.each</code>:</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-typescript"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// packages/core/test/axioms.test.ts</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { loadAllAxioms } </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '@lass-lang/axioms'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { transpile } </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '../src/index.js'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> axioms</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#B392F0;--shiki-light:#6F42C1"> loadAllAxioms</span><span style="color:#E1E4E8;--shiki-light:#24292E">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">describe.</span><span style="color:#B392F0;--shiki-light:#6F42C1">each</span><span style="color:#E1E4E8;--shiki-light:#24292E">(axioms)(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'$feature'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, ({ </span><span style="color:#FFAB70;--shiki-light:#E36209">testCases</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  describe.</span><span style="color:#B392F0;--shiki-light:#6F42C1">each</span><span style="color:#E1E4E8;--shiki-light:#24292E">(testCases.</span><span style="color:#B392F0;--shiki-light:#6F42C1">filter</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">tc</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> tc.outcome </span><span style="color:#F97583;--shiki-light:#D73A49">===</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'valid'</span><span style="color:#E1E4E8;--shiki-light:#24292E">))(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'valid: $name'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, ({ </span><span style="color:#FFAB70;--shiki-light:#E36209">input</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">expected</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">    test</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'produces expected CSS'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#F97583;--shiki-light:#D73A49">async</span><span style="color:#E1E4E8;--shiki-light:#24292E"> () </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">      const</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#79B8FF;--shiki-light:#005CC5">code</span><span style="color:#E1E4E8;--shiki-light:#24292E"> } </span><span style="color:#F97583;--shiki-light:#D73A49">=</span><span style="color:#B392F0;--shiki-light:#6F42C1"> transpile</span><span style="color:#E1E4E8;--shiki-light:#24292E">(input);</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">      const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> module</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#F97583;--shiki-light:#D73A49"> await</span><span style="color:#F97583;--shiki-light:#D73A49"> import</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">`data:text/javascript,${</span><span style="color:#B392F0;--shiki-light:#6F42C1">encodeURIComponent</span><span style="color:#9ECBFF;--shiki-light:#032F62">(</span><span style="color:#E1E4E8;--shiki-light:#24292E">code</span><span style="color:#9ECBFF;--shiki-light:#032F62">)</span><span style="color:#9ECBFF;--shiki-light:#032F62">}`</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">      expect</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">module</span><span style="color:#E1E4E8;--shiki-light:#24292E">.default).</span><span style="color:#B392F0;--shiki-light:#6F42C1">toBe</span><span style="color:#E1E4E8;--shiki-light:#24292E">(expected);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    });</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  });</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  describe.</span><span style="color:#B392F0;--shiki-light:#6F42C1">each</span><span style="color:#E1E4E8;--shiki-light:#24292E">(testCases.</span><span style="color:#B392F0;--shiki-light:#6F42C1">filter</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">tc</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> tc.outcome </span><span style="color:#F97583;--shiki-light:#D73A49">===</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'invalid'</span><span style="color:#E1E4E8;--shiki-light:#24292E">))(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'invalid: $name'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, ({ </span><span style="color:#FFAB70;--shiki-light:#E36209">input</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">expected</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">    test</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'throws expected error'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, () </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">      expect</span><span style="color:#E1E4E8;--shiki-light:#24292E">(() </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">        const</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { </span><span style="color:#79B8FF;--shiki-light:#005CC5">code</span><span style="color:#E1E4E8;--shiki-light:#24292E"> } </span><span style="color:#F97583;--shiki-light:#D73A49">=</span><span style="color:#B392F0;--shiki-light:#6F42C1"> transpile</span><span style="color:#E1E4E8;--shiki-light:#24292E">(input);</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">        eval</span><span style="color:#E1E4E8;--shiki-light:#24292E">(code);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">      }).</span><span style="color:#B392F0;--shiki-light:#6F42C1">toThrow</span><span style="color:#E1E4E8;--shiki-light:#24292E">(expected);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    });</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  });</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">});</span></span></code></pre>
+<p>No generated test files are committed — axioms are the source of truth.</p>
+<h2>Documentation Generation (Growth)</h2>
+<p>The axiom file IS the documentation source. The feature-level prose
+is the spec; the test-case prose and examples are the reference.</p>
+<ol>
+<li><strong>GitHub rendering:</strong> Axioms render natively on GitHub — contributors
+read them directly. All cases are visible (including <code>[test]</code>).</li>
+<li><strong>Docs site:</strong> A static site generator reads axiom files, extracts
+the feature-level prose and non-<code>[test]</code> cases, and renders one page
+per feature with syntax highlighting. <code>[test]</code>-tagged cases are
+excluded from the docs site.</li>
+<li><strong>AI reference:</strong> A generator reads all axioms, extracts frontmatter +
+feature-level prose + non-<code>[test]</code> code blocks, and concatenates into
+a dense single-page reference optimized for token efficiency.</li>
+</ol>
+<h2>Directory Layout (Full)</h2>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>packages/</span></span>
+<span class="line"><span>  axioms/                           # @lass-lang/axioms package</span></span>
+<span class="line"><span>    AXIOM-FORMAT-SPEC.md            # this spec</span></span>
+<span class="line"><span>    src/</span></span>
+<span class="line"><span>      index.ts                      # exports loader functions</span></span>
+<span class="line"><span>      loader.ts                     # axiom parser implementation</span></span>
+<span class="line"><span>    css-passthrough.common.md       # main docs + primary examples</span></span>
+<span class="line"><span>    css-passthrough.extra-cases.md  # edge cases (optional)</span></span>
+<span class="line"><span>    two-zone-model.common.md</span></span>
+<span class="line"><span>    dollar-substitution.common.md</span></span>
+<span class="line"><span>    dollar-substitution.extra-cases.md</span></span>
+<span class="line"><span>    ...</span></span>
+<span class="line"><span>    _companion-files/               # shared companion files</span></span>
+<span class="line"><span>      tokens.json                   # reusable token file</span></span>
+<span class="line"><span>      large-stylesheet.css          # stress test input</span></span>
+<span class="line"><span>    package.json</span></span>
+<span class="line"><span>    tsconfig.json</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  core/                             # @lass-lang/core package</span></span>
+<span class="line"><span>    src/</span></span>
+<span class="line"><span>      index.ts                      # transpile() function</span></span>
+<span class="line"><span>    test/</span></span>
+<span class="line"><span>      axioms.test.ts                # dynamic tests from axioms</span></span>
+<span class="line"><span>      manual/                       # hand-written tests (perf, integration)</span></span>
+<span class="line"><span>        benchmark.test.ts</span></span></code></pre>
+<h2>Design Decisions</h2>
+<h3>Why Markdown?</h3>
+<ul>
+<li><strong>Self-documenting by design.</strong> Prose between code blocks explains WHY,
+not just WHAT. Contributors read axioms without additional docs.</li>
+<li><strong>Renders on GitHub.</strong> No special tooling needed to read axioms.</li>
+<li><strong>Docs pipeline is nearly free.</strong> The axiom IS the documentation source.</li>
+<li><strong>YAML frontmatter is universal.</strong> Parsed by gray-matter, static site
+generators, and custom scripts alike.</li>
+</ul>
+<h3>Why one file per feature (not per test case)?</h3>
+<ul>
+<li><strong>Readable grouping.</strong> All edge cases for <code>$name</code> substitution are in
+one file. A contributor adding a new edge case opens one file.</li>
+<li><strong>Manageable file count.</strong> 14 features × 1 file = 14 files (not 200+).</li>
+<li><strong>Natural docs structure.</strong> One page per feature on the docs site.</li>
+</ul>
+<h3>Why CSS-only output (not intermediate JS)?</h3>
+<ul>
+<li><strong>Less brittle.</strong> The JS output is an implementation detail. If the
+transpiler refactors its string-assembly strategy, axioms don't break.</li>
+<li><strong>CSS is the contract.</strong> Users care about CSS output, not JS internals.</li>
+<li><strong>JS snapshots captured separately.</strong> Snapshot tests for transpiler output
+are in the manual test suite, not in axioms.</li>
+</ul>
+<h3>Why substring error matching?</h3>
+<ul>
+<li><strong>Error messages evolve.</strong> Adding file paths, column numbers, or
+suggestions to errors shouldn't break axioms.</li>
+<li><strong>Pattern captures intent.</strong> <code>ReferenceError: $undefined is not defined</code>
+captures the essential error without over-specifying format.</li>
+</ul>
+<h2>Axiom Completeness Checklist</h2>
+<p>For each feature, an axiom file should cover:</p>
+<ul>
+<li>[ ] Happy path (simplest valid usage)</li>
+<li>[ ] Multiple variations (different positions, types, combinations)</li>
+<li>[ ] Edge cases (empty input, boundary conditions, special characters)</li>
+<li>[ ] Context isolation (symbols inside strings, url(), comments NOT detected)</li>
+<li>[ ] Interaction with other features (when relevant, with cross-reference)</li>
+<li>[ ] Invalid usage (at least one error case)</li>
+<li>[ ] Prose explaining non-obvious behavior</li>
+</ul>
+
+  </main>
+  <script>
+  // Copy button for code blocks
+  (function() {
+    document.querySelectorAll('pre.shiki').forEach(function(pre) {
+      var code = pre.querySelector('code');
+      if (!code) return;
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.onclick = function() {
+        navigator.clipboard.writeText(code.textContent.trim());
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+      };
+      pre.style.position = 'relative';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.5rem';
+      btn.style.right = '0.5rem';
+      pre.appendChild(btn);
+    });
+  })();
+  </script>
+</body>
+</html>

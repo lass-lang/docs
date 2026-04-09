@@ -1,0 +1,130 @@
+# Lass Language Reference
+
+Lass = CSS + optional JavaScript preamble. Compiles to static CSS at build time.
+
+## File Structure
+
+```
+---
+// JavaScript preamble (between opening and closing delimiters)
+const x = 1;
+
+---
+
+/* CSS zone */
+.selector { property: value; }
+```
+
+Opening `---` on line 1 marks JS preamble start. Closing `---` ends preamble.
+No opening `---` = pure CSS zone (plain CSS works as-is).
+`--- comment text` is valid (space required after `---`; comment is ignored).
+
+## Syntax
+
+| Syntax | What it does |
+|--------|--------------|
+| `---` / `--- comment` | Separates JS preamble from CSS zone (optional comment after space) |
+| `{{ expr }}` | Evaluates JS expression, inserts result |
+| `@{ css }` | Creates CSS string in JS context |
+| `//` | Single-line comment (stripped) |
+
+## Expression Interpolation `{{ }}`
+
+Works in value, selector, and property name positions:
+
+```lass
+---
+const size = 16
+const tag = 'article'
+const prop = 'color'
+---
+{{ tag }} { {{ prop }}: {{ size }}px; }
+```
+Output: `article { color: 16px; }`
+
+Arrays auto-join with space: `{{ [1,2,3] }}` → `1 2 3`
+Null/undefined/false → empty string
+
+## Style Lookup `@(prop)`
+
+Reads last-declared value, walks up selector tree:
+
+```lass
+.box {
+  border: 2px solid blue;
+  outline: @(border);
+  box-shadow: 0 0 0 4px @(border-color);
+}
+```
+Output: `outline: 2px solid blue; box-shadow: 0 0 0 4px blue;`
+
+Unresolved lookups preserved for PostCSS. For custom properties, prefer `var(--name)` over `@(--name)`.
+
+## Variable Substitution `$name`
+
+Text substitution only (no evaluation). Variables must be `$`-prefixed:
+
+```lass
+---
+const $gap = 8
+---
+.box { padding: $gap * 2; }
+```
+Output: `padding: 8 * 2;` (literal text - browser sees this)
+
+For build-time math: `{{ $gap * 2 }}` → `padding: 16;`
+
+Special: `null` → `unset`, `undefined` → preserved
+
+## Style Blocks `@{ }`
+
+CSS strings in JS. Enables loops/conditionals:
+
+```lass
+---
+const sizes = [1, 2, 4]
+---
+{{ sizes.map(n => @{ .m-{{ n }} { margin: {{ n * 4 }}px; } }) }}
+```
+Output: `.m-1 { margin: 4px; } .m-2 { margin: 8px; } .m-4 { margin: 16px; }`
+
+Mixin pattern:
+```lass
+---
+function card(bg) { return @{ background: {{ bg }}; padding: 16px; } }
+---
+.card { {{ card('white') }} }
+```
+
+## Comments
+
+`//` stripped, `/* */` preserved:
+
+```lass
+// this disappears
+/* this stays */
+.box { color: red; // gone }
+```
+
+## Installation
+
+```bash
+npm install @lass-lang/vite-plugin-lass --save-dev
+```
+
+```js
+// vite.config.js
+import lass from '@lass-lang/vite-plugin-lass';
+export default { plugins: [lass()] };
+```
+
+## TypeScript
+
+```typescript
+// src/lass.d.ts
+declare module '*.lass';
+declare module '*.module.lass' {
+  const classes: { readonly [key: string]: string };
+  export default classes;
+}
+```

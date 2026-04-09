@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lass Documentation</title>
+  <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
+  <link rel="stylesheet" href="assets/index-DDfKo5i0.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="https://lass-lang.dev/">Lass</a>
+    <a href="./">Docs</a>
+    <a href="./getting-started/">Get Started</a>
+    <a href="./syntax/">Syntax</a>
+    <a href="./axioms/style-lookup/">Axioms</a>
+    <a href="./llms.txt">llms.txt</a>
+  </nav>
+  <main class="page">
+    <h1>Lass</h1>
+<p><strong>CSS with JavaScript superpowers.</strong> Zero runtime - compiles to static CSS.</p>
+<h2>Examples</h2>
+<h3>Start with CSS</h3>
+<p>Any valid CSS works as-is:</p>
+<div class="test-case" data-type="valid">
+```lass
+.button {
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+}
+<p>.button-primary {
+background: #6366f1;
+border: 2px solid #6366f1;
+box-shadow: 0 2px 4px #6366f133;
+}</p>
+<p>.button-secondary {
+background: #8b5cf6;
+border: 2px solid #8b5cf6;
+box-shadow: 0 2px 4px #8b5cf633;
+}</p>
+<p>.button-danger {
+background: #ef4444;
+border: 2px solid #ef4444;
+box-shadow: 0 2px 4px #ef444433;
+}</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
+<span class="line"><span>```css</span></span>
+<span class="line"><span>.button {</span></span>
+<span class="line"><span>  color: white;</span></span>
+<span class="line"><span>  padding: 0.75rem 1.5rem;</span></span>
+<span class="line"><span>  border-radius: 0.5rem;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button-primary {</span></span>
+<span class="line"><span>  background: #6366f1;</span></span>
+<span class="line"><span>  border: 2px solid #6366f1;</span></span>
+<span class="line"><span>  box-shadow: 0 2px 4px #6366f133;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button-secondary {</span></span>
+<span class="line"><span>  background: #8b5cf6;</span></span>
+<span class="line"><span>  border: 2px solid #8b5cf6;</span></span>
+<span class="line"><span>  box-shadow: 0 2px 4px #8b5cf633;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button-danger {</span></span>
+<span class="line"><span>  background: #ef4444;</span></span>
+<span class="line"><span>  border: 2px solid #ef4444;</span></span>
+<span class="line"><span>  box-shadow: 0 2px 4px #ef444433;</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</div>
+<h3>With Lass</h3>
+<p>Generate button variants from a color map:</p>
+<div class="test-case" data-type="valid">
+```lass
+---
+const colors = {
+  primary: '#6366f1',
+  secondary: '#8b5cf6',
+  danger: '#ef4444',
+};
+<hr>
+<p>.button {
+color: white;
+padding: 0.75rem 1.5rem;
+border-radius: 0.5rem;
+}</p>
+<p>{{ Object.entries(colors).map(([name, color]) =&gt; @{
+.button-{{ name }} {
+background: {{ color }};
+border: 2px solid {{ color }};
+box-shadow: 0 2px 4px {{ color }}33;
+}
+}) }}</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span></span></span>
+<span class="line"><span>```css</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button {</span></span>
+<span class="line"><span>  color: white;</span></span>
+<span class="line"><span>  padding: 0.75rem 1.5rem;</span></span>
+<span class="line"><span>  border-radius: 0.5rem;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>.button-primary {</span></span>
+<span class="line"><span>  background: #6366f1;</span></span>
+<span class="line"><span>  border: 2px solid #6366f1;</span></span>
+<span class="line"><span>  box-shadow: 0 2px 4px #6366f133;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>.button-secondary {</span></span>
+<span class="line"><span>  background: #8b5cf6;</span></span>
+<span class="line"><span>  border: 2px solid #8b5cf6;</span></span>
+<span class="line"><span>  box-shadow: 0 2px 4px #8b5cf633;</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>.button-danger {</span></span>
+<span class="line"><span>  background: #ef4444;</span></span>
+<span class="line"><span>  border: 2px solid #ef4444;</span></span>
+<span class="line"><span>  box-shadow: 0 2px 4px #ef444433;</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</div>
+<p>Add a variant? One line in <code>colors</code>.</p>
+<h2>Documentation</h2>
+<ul>
+<li><a href="./getting-started/index.md">Getting Started</a> - Installation and first steps</li>
+<li><a href="./syntax/index.md">Syntax Reference</a> - Complete language reference</li>
+<li><a href="./llms.txt">llms.txt</a> - AI-friendly single-page reference</li>
+</ul>
+<h2>Key Features</h2>
+<ul>
+<li><strong>JavaScript Preamble</strong> - Define variables, functions, and imports before the <code>---</code> separator</li>
+<li><strong>Expression Interpolation</strong> - Use <code>{{ expr }}</code> to inject JS values into CSS</li>
+<li><strong>Style Lookup</strong> - Read CSS values with <code>@(property)</code></li>
+<li><strong>Variable Substitution</strong> - Simple <code>$param</code> text replacement in CSS</li>
+<li><strong>Style Blocks</strong> - Generate CSS from JS with <code>@{ cssText }</code></li>
+<li><strong>Zero Runtime</strong> - Everything compiles to static CSS</li>
+</ul>
+<h2>Installation</h2>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-bash"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">npm</span><span style="color:#9ECBFF;--shiki-light:#032F62"> install</span><span style="color:#9ECBFF;--shiki-light:#032F62"> @lass-lang/vite-plugin-lass</span><span style="color:#79B8FF;--shiki-light:#005CC5"> --save-dev</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-js"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">// vite.config.js</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { defineConfig } </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'vite'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">import</span><span style="color:#E1E4E8;--shiki-light:#24292E"> lass </span><span style="color:#F97583;--shiki-light:#D73A49">from</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '@lass-lang/vite-plugin-lass'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">export</span><span style="color:#F97583;--shiki-light:#D73A49"> default</span><span style="color:#B392F0;--shiki-light:#6F42C1"> defineConfig</span><span style="color:#E1E4E8;--shiki-light:#24292E">({</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  plugins: [</span><span style="color:#B392F0;--shiki-light:#6F42C1">lass</span><span style="color:#E1E4E8;--shiki-light:#24292E">()]</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">});</span></span></code></pre>
+<h2>Links</h2>
+<ul>
+<li><a href="https://github.com/lass-lang/lass">GitHub Repository</a></li>
+<li><a href="https://www.npmjs.com/package/@lass-lang/vite-plugin-lass">npm: @lass-lang/vite-plugin-lass</a></li>
+<li><a href="https://www.npmjs.com/package/@lass-lang/core">npm: @lass-lang/core</a></li>
+</ul>
+<h2>License</h2>
+<p>MIT</p>
+
+  </main>
+  <script>
+  // Copy button for code blocks
+  (function() {
+    document.querySelectorAll('pre.shiki').forEach(function(pre) {
+      var code = pre.querySelector('code');
+      if (!code) return;
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.onclick = function() {
+        navigator.clipboard.writeText(code.textContent.trim());
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+      };
+      pre.style.position = 'relative';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.5rem';
+      btn.style.right = '0.5rem';
+      pre.appendChild(btn);
+    });
+  })();
+  </script>
+</body>
+</html>

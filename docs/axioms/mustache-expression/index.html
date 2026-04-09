@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lass Documentation</title>
+  <meta name="description" content="Documentation for the Lass CSS preprocessor — syntax reference, axioms, and getting started guide.">
+  <link rel="stylesheet" href="../../assets/index-DDfKo5i0.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <a href="https://lass-lang.dev/">Lass</a>
+    <a href="../../">Docs</a>
+    <a href="../../getting-started/">Get Started</a>
+    <a href="../../syntax/">Syntax</a>
+    <a href="../../axioms/style-lookup/">Axioms</a>
+    <a href="../../llms.txt">llms.txt</a>
+  </nav>
+  <main class="page">
+    <h1>{{ }} JS Expression Bridge</h1>
+<p><code>{{ }}</code> is where the real power lives. Anything between <code>{{</code> and <code>}}</code>
+is a JS expression — it gets evaluated at execution time and the result
+is dropped into the CSS output.</p>
+<p>This is the &quot;smart&quot; counterpart to <code>$name</code>. Where <code>$name</code> does dumb
+text substitution, <code>{{ }}</code> evaluates: arithmetic, function calls,
+ternaries, <code>.map()</code>, template literals — any valid JS expression.</p>
+<p><code>{{ }}</code> works in three positions:</p>
+<ol>
+<li><strong>Value position</strong> — inside a declaration value: <code>padding: {{ x * 2 }}px</code></li>
+<li><strong>Selector position</strong> — as part of a selector: <code>{{ tag }} { ... }</code></li>
+<li><strong>Property name position</strong> — as the property name: <code>{{ prop }}: value;</code></li>
+</ol>
+<p>All JS variables in scope from the preamble are accessible inside <code>{{ }}</code>.</p>
+<div class="test-case" data-type="valid">
+<h2>valid: simple variable interpolation</h2>
+<p>The most basic case: a single variable reference inside <code>{{ }}</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> color</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "blue"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ color }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: arithmetic expression</h2>
+<p><code>{{ gap * 2 }}</code> evaluates the multiplication and outputs <code>46</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> gap</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 23</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ gap </span><span style="color:#F97583;--shiki-light:#D73A49">*</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }}px;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  padding</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">46</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: ternary expression</h2>
+<p>Any JS expression works, including ternaries. Useful for conditional
+values without needing a full <code>if</code> block.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> darkMode</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> true</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#85E89D;--shiki-light:#22863A">body</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ darkMode </span><span style="color:#F97583;--shiki-light:#D73A49">?</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '#1a1a1a'</span><span style="color:#F97583;--shiki-light:#D73A49"> :</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '#ffffff'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">body</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#1a1a1a</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: function call</h2>
+<p>Functions defined in the preamble (or imported) work inside <code>{{ }}</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">function</span><span style="color:#B392F0;--shiki-light:#6F42C1"> px</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">n</span><span style="color:#E1E4E8;--shiki-light:#24292E">) { </span><span style="color:#F97583;--shiki-light:#D73A49">return</span><span style="color:#E1E4E8;--shiki-light:#24292E"> n </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'px'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#79B8FF;--shiki-light:#005CC5">16</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">16</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: string literal expression</h2>
+<p>A string literal inside <code>{{ }}</code> outputs its value directly.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.error</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#9ECBFF;--shiki-light:#032F62">"red"</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.error</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: multiple expressions in one declaration</h2>
+<p>Multiple <code>{{ }}</code> expressions can appear in a single property value.
+Each is evaluated independently.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> top</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 10</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> right</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 20</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> bottom</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 30</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> left</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 40</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ top }}px {{ right }}px {{ bottom }}px {{ left }}px;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  margin</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">10</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 20</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 30</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 40</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: selector position</h2>
+<p>The result of the expression replaces <code>{{ }}</code> in the selector text.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> tag</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'article'</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">{{ tag }} {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  display</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">block</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">article</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  display</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">block</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: property name position</h2>
+<p><code>{{ }}</code> can generate the property name itself.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> prop</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'background-color'</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  {{ prop }}: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background-color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: nested object access</h2>
+<p>Expressions can access nested object properties.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> theme</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { colors: { primary: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'#3b82f6'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> } }</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ theme.colors.primary }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">#3b82f6</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: array iteration with map and join</h2>
+<p>You can use <code>.map().join()</code> to produce multiple declarations from an
+array. The join separator controls formatting.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> sizes</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">4</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">8</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  {{ sizes.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">s</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#9ECBFF;--shiki-light:#032F62"> '--space-'</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#E1E4E8;--shiki-light:#24292E"> s </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> ': '</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (s </span><span style="color:#F97583;--shiki-light:#D73A49">*</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'px;'</span><span style="color:#E1E4E8;--shiki-light:#24292E">).</span><span style="color:#B392F0;--shiki-light:#6F42C1">join</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'</span><span style="color:#79B8FF;--shiki-light:#005CC5">\n</span><span style="color:#9ECBFF;--shiki-light:#032F62">  '</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --space-1</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --space-2</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">8</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --space-4</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">16</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --space-8</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">32</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: template literals inside {{ }}</h2>
+<p><code>{{ }}</code> can contain JS template literals with their own <code>${}</code>
+interpolations. The scanner handles the nesting correctly.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> items</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#9ECBFF;--shiki-light:#032F62">'a'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'b'</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.list</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  {{ items.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">((</span><span style="color:#FFAB70;--shiki-light:#E36209">item</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">i</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#9ECBFF;--shiki-light:#032F62"> `--item-${</span><span style="color:#E1E4E8;--shiki-light:#24292E">i</span><span style="color:#9ECBFF;--shiki-light:#032F62">}: "${</span><span style="color:#E1E4E8;--shiki-light:#24292E">item</span><span style="color:#9ECBFF;--shiki-light:#032F62">}";`</span><span style="color:#E1E4E8;--shiki-light:#24292E">).</span><span style="color:#B392F0;--shiki-light:#6F42C1">join</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'</span><span style="color:#79B8FF;--shiki-light:#005CC5">\n</span><span style="color:#9ECBFF;--shiki-light:#032F62">  '</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.list</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --item-0</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"a"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --item-1</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"b"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: object literal in expression</h2>
+<p>Expressions containing object literals with braces work correctly.
+The scanner tracks brace depth to find the closing <code>}}</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#B392F0;--shiki-light:#6F42C1"> getStyle</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#FFAB70;--shiki-light:#E36209">opts</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#E1E4E8;--shiki-light:#24292E"> opts.value</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">getStyle</span><span style="color:#E1E4E8;--shiki-light:#24292E">({ value: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'100px'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: multiline expression</h2>
+<p><code>{{ }}</code> can span multiple lines. The scanner matches <code>{{</code> to the
+next <code>}}</code> regardless of line breaks.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> sizes</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> { sm: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'640px'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, lg: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'1024px'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  {{</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">    Object.</span><span style="color:#B392F0;--shiki-light:#6F42C1">entries</span><span style="color:#E1E4E8;--shiki-light:#24292E">(sizes)</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">      .</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(([</span><span style="color:#FFAB70;--shiki-light:#E36209">k</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#FFAB70;--shiki-light:#E36209">v</span><span style="color:#E1E4E8;--shiki-light:#24292E">]) </span><span style="color:#F97583;--shiki-light:#D73A49">=></span><span style="color:#9ECBFF;--shiki-light:#032F62"> '--bp-'</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#E1E4E8;--shiki-light:#24292E"> k </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> ': '</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#E1E4E8;--shiki-light:#24292E"> v </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> ';'</span><span style="color:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">      .</span><span style="color:#B392F0;--shiki-light:#6F42C1">join</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">'</span><span style="color:#79B8FF;--shiki-light:#005CC5">\n</span><span style="color:#9ECBFF;--shiki-light:#032F62">  '</span><span style="color:#E1E4E8;--shiki-light:#24292E">)</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  }}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --bp-sm</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">640</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --bp-lg</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1024</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: expression returning number</h2>
+<p>Numeric results are coerced to strings.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> width</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 100</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ width }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">100</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: expression with whitespace</h2>
+<p>Whitespace inside <code>{{ }}</code> is trimmed from the expression.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> x</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 42</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{   x   }}px;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  width</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">42</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: CSS-only file unchanged</h2>
+<p>A file without <code>{{ }}</code> expressions passes through unchanged.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="invalid">
+<h2>invalid: empty expression</h2>
+<p>An empty <code>{{ }}</code> with no expression inside is a scan error. There's
+nothing to evaluate.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>Empty {{ }} expression</span></span></code></pre>
+</div>
+<div class="test-case" data-type="invalid">
+<h2>invalid: unclosed expression</h2>
+<p>If <code>{{</code> isn't closed by a matching <code>}}</code>, the scanner reports an error.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#9ECBFF;--shiki-light:#032F62">'red'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>Unclosed {{ expression</span></span></code></pre>
+</div>
+<div class="test-case" data-type="invalid">
+<h2>invalid: statement not expression</h2>
+<p>Only expressions are allowed inside <code>{{ }}</code>. Statements like <code>if</code> or
+<code>for</code> without a return value cause a runtime error.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#85E89D;--shiki-light:#22863A">p</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ </span><span style="color:#F97583;--shiki-light:#D73A49">if</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (</span><span style="color:#79B8FF;--shiki-light:#005CC5">true</span><span style="color:#E1E4E8;--shiki-light:#24292E">) { </span><span style="color:#9ECBFF;--shiki-light:#032F62">'red'</span><span style="color:#E1E4E8;--shiki-light:#24292E"> } }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-text"><span class="line"><span>Unexpected token 'if'</span></span></code></pre>
+</div>
+<!-- ============================================ -->
+<!-- Array Auto-Join & Null Handling  -->
+<!-- ============================================ -->
+<div class="test-case" data-type="valid">
+<h2>valid: array auto-join with map</h2>
+<p>Arrays returned from <code>{{ }}</code> are automatically joined with space separator.
+This enables clean <code>.map()</code> patterns without manual <code>.join(' ')</code>.
+If any element contains newlines, newline is used as separator instead.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> items</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#9ECBFF;--shiki-light:#032F62">'a'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'b'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'c'</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.list</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --items</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ items.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">x</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#E1E4E8;--shiki-light:#24292E"> x.</span><span style="color:#B392F0;--shiki-light:#6F42C1">toUpperCase</span><span style="color:#E1E4E8;--shiki-light:#24292E">()) }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.list</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --items</span><span style="color:#E1E4E8;--shiki-light:#24292E">: A B C;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: array of numbers auto-joined</h2>
+<p>Numeric array elements are coerced to strings then joined with space separator.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> nums</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">3</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --values</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ nums }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --values</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 3</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: nested array auto-join</h2>
+<p>Nested arrays are recursively flattened before joining with space separator.
+<code>[[1, 2], [3, 4]]</code> becomes <code>'1 2 3 4'</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> matrix</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [[</span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#E1E4E8;--shiki-light:#24292E">], [</span><span style="color:#79B8FF;--shiki-light:#005CC5">3</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">4</span><span style="color:#E1E4E8;--shiki-light:#24292E">]]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.grid</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --data</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ matrix }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.grid</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --data</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 3</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: empty array returns empty string</h2>
+<p>An empty array produces an empty string output.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> items</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> []</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --items</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ items }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --items</span><span style="color:#E1E4E8;--shiki-light:#24292E">: ;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: array with null elements</h2>
+<p>Arrays containing null elements filter out null during join.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> items</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">null</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --items</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ items }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --items</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 2</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: array with undefined elements</h2>
+<p>Arrays containing undefined elements filter out undefined during join.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> items</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#9ECBFF;--shiki-light:#032F62">'a'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">undefined</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'b'</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --items</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ items }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --items</span><span style="color:#E1E4E8;--shiki-light:#24292E">: a b;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: array with mixed types</h2>
+<p>Arrays with mixed types (strings, numbers) are all coerced to strings and joined with space.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> mixed</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#9ECBFF;--shiki-light:#032F62">'a'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#9ECBFF;--shiki-light:#032F62">'b'</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --mixed</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ mixed }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --mixed</span><span style="color:#E1E4E8;--shiki-light:#24292E">: a </span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#E1E4E8;--shiki-light:#24292E"> b </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: null returns empty string</h2>
+<p><code>null</code> returned from an expression produces empty string (React-style silent handling).</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> value</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> null</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">{{ value }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: undefined returns empty string</h2>
+<p><code>undefined</code> returned from an expression produces empty string.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> value</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> undefined</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">{{ value }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: explicit join still works</h2>
+<p>Explicit <code>.join('')</code> continues to work for backward compatibility.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> sizes</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [</span><span style="color:#79B8FF;--shiki-light:#005CC5">1</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">2</span><span style="color:#E1E4E8;--shiki-light:#24292E">, </span><span style="color:#79B8FF;--shiki-light:#005CC5">4</span><span style="color:#E1E4E8;--shiki-light:#24292E">]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  {{ sizes.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">s</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#9ECBFF;--shiki-light:#032F62"> '--space-'</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#E1E4E8;--shiki-light:#24292E"> s </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> ': '</span><span style="color:#F97583;--shiki-light:#D73A49"> +</span><span style="color:#E1E4E8;--shiki-light:#24292E"> (s </span><span style="color:#F97583;--shiki-light:#D73A49">*</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 4</span><span style="color:#E1E4E8;--shiki-light:#24292E">) </span><span style="color:#F97583;--shiki-light:#D73A49">+</span><span style="color:#9ECBFF;--shiki-light:#032F62"> 'px;'</span><span style="color:#E1E4E8;--shiki-light:#24292E">).</span><span style="color:#B392F0;--shiki-light:#6F42C1">join</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">''</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --space-1</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">4</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span><span style="color:#FFAB70;--shiki-light:#E36209">--space-2</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">8</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span><span style="color:#FFAB70;--shiki-light:#E36209">--space-4</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">16</span><span style="color:#F97583;--shiki-light:#D73A49">px</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: map returning CSS declarations</h2>
+<p>The canonical use case: generating multiple CSS declarations from an array.
+Arrays are joined with space separator.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> colors</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#E1E4E8;--shiki-light:#24292E"> [{name: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"primary"</span><span style="color:#E1E4E8;--shiki-light:#24292E">, value: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"blue"</span><span style="color:#E1E4E8;--shiki-light:#24292E">}, {name: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"secondary"</span><span style="color:#E1E4E8;--shiki-light:#24292E">, value: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"red"</span><span style="color:#E1E4E8;--shiki-light:#24292E">}]</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">  {{ colors.</span><span style="color:#B392F0;--shiki-light:#6F42C1">map</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#FFAB70;--shiki-light:#E36209">c</span><span style="color:#F97583;--shiki-light:#D73A49"> =></span><span style="color:#9ECBFF;--shiki-light:#032F62"> `--${</span><span style="color:#E1E4E8;--shiki-light:#24292E">c</span><span style="color:#9ECBFF;--shiki-light:#032F62">.</span><span style="color:#E1E4E8;--shiki-light:#24292E">name</span><span style="color:#9ECBFF;--shiki-light:#032F62">}: ${</span><span style="color:#E1E4E8;--shiki-light:#24292E">c</span><span style="color:#9ECBFF;--shiki-light:#032F62">.</span><span style="color:#E1E4E8;--shiki-light:#24292E">value</span><span style="color:#9ECBFF;--shiki-light:#032F62">};`</span><span style="color:#E1E4E8;--shiki-light:#24292E">) }}</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">:root</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --primary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">; </span><span style="color:#FFAB70;--shiki-light:#E36209">--secondary</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: conditional returning undefined</h2>
+<p>A ternary that returns undefined on one branch produces empty string.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> showColor</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> false</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">{{ showColor </span><span style="color:#F97583;--shiki-light:#D73A49">?</span><span style="color:#9ECBFF;--shiki-light:#032F62"> '-500'</span><span style="color:#F97583;--shiki-light:#D73A49"> :</span><span style="color:#79B8FF;--shiki-light:#005CC5"> undefined</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: function returning null</h2>
+<p>Functions that return null produce empty string output.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">function</span><span style="color:#B392F0;--shiki-light:#6F42C1"> maybeValue</span><span style="color:#E1E4E8;--shiki-light:#24292E">() { </span><span style="color:#F97583;--shiki-light:#D73A49">return</span><span style="color:#79B8FF;--shiki-light:#005CC5"> null</span><span style="color:#E1E4E8;--shiki-light:#24292E"> }</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">{{ </span><span style="color:#B392F0;--shiki-light:#6F42C1">maybeValue</span><span style="color:#E1E4E8;--shiki-light:#24292E">() }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: falsy zero is not empty</h2>
+<p>Zero (0) is falsy but not null/undefined, so it outputs as &quot;0&quot;.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> count</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> 0</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --count</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ count }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --count</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">0</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: falsy false is suppressed</h2>
+<p>Boolean <code>false</code> is now suppressed (outputs empty string) just like <code>null</code> and <code>undefined</code>.
+This enables cleaner conditional patterns like <code>{{condition &amp;&amp; @{ ... }}}</code>.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> flag</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#79B8FF;--shiki-light:#005CC5"> false</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --flag</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ flag }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --flag</span><span style="color:#E1E4E8;--shiki-light:#24292E">: ;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: empty string unchanged</h2>
+<p>Empty string remains empty string (not converted to something else).</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> empty</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> ''</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --empty</span><span style="color:#E1E4E8;--shiki-light:#24292E">: {{ empty }};</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#FFAB70;--shiki-light:#E36209">  --empty</span><span style="color:#E1E4E8;--shiki-light:#24292E">: ;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<!-- ============================================ -->
+<!-- Universal {{ }} Processing       -->
+<!-- ============================================ -->
+<div class="test-case" data-type="valid">
+<h2>valid: expression inside double-quoted string</h2>
+<p><code>{{ }}</code> is processed everywhere in the CSS zone, including inside double-quoted strings.
+This enables dynamic content values like pseudo-element text.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> name</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "world"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.greeting::before</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"Hello, {{ name }}!"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.greeting::before</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"Hello, world!"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: expression inside single-quoted string</h2>
+<p><code>{{ }}</code> works inside single-quoted strings too.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> label</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "Click me"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button::after</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'{{ label }}'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.button::after</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">'Click me'</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: expression inside url()</h2>
+<p><code>{{ }}</code> is processed inside <code>url()</code> values, enabling dynamic asset paths.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> imgPath</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "images/hero"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.hero</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">url</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">"{{ imgPath }}.jpg"</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.hero</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">url</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">"images/hero.jpg"</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: expression inside block comment</h2>
+<p><code>{{ }}</code> is processed inside CSS block comments, useful for dynamic metadata.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> version</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "1.2.3"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">/* Generated version: {{ version }} */</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.app</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">/* Generated version: 1.2.3 */</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.app</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">blue</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: multiple expressions in string</h2>
+<p>Multiple <code>{{ }}</code> expressions can appear in a single string.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> firstName</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "John"</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> lastName</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "Doe"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.name::before</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"{{ firstName }} {{ lastName }}"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.name::before</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"John Doe"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: expression with quotes inside string</h2>
+<p>Expressions containing string literals work inside CSS strings.
+The expression's quotes are evaluated, not parsed as CSS string delimiters.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> quote</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "said"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.quote::before</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"He {{ quote }}: 'Hello'"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.quote::before</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  content</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#9ECBFF;--shiki-light:#032F62">"He said: 'Hello'"</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: url with expression and query string</h2>
+<p>Expressions work in complex url() values with query strings.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> assetId</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "abc123"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.icon</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background-image</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">url</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">"/assets/{{ assetId }}?v=2"</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.icon</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  background-image</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">url</span><span style="color:#E1E4E8;--shiki-light:#24292E">(</span><span style="color:#9ECBFF;--shiki-light:#032F62">"/assets/abc123?v=2"</span><span style="color:#E1E4E8;--shiki-light:#24292E">);</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+<div class="test-case" data-type="valid">
+<h2>valid: multiline block comment with expression</h2>
+<p>Expressions work in multiline block comments.</p>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-lass"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> author</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "Lass Team"</span></span>
+<span class="line"><span style="color:#F97583;--shiki-light:#D73A49">const</span><span style="color:#79B8FF;--shiki-light:#005CC5"> date</span><span style="color:#F97583;--shiki-light:#D73A49"> =</span><span style="color:#9ECBFF;--shiki-light:#032F62"> "2026-02-06"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">---</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">/*</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D"> * Author: {{ author }}</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D"> * Date: {{ date }}</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D"> */</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+<pre class="shiki shiki-themes github-dark github-light" style="background-color:#24292e;--shiki-light-bg:#fff;color:#e1e4e8;--shiki-light:#24292e" tabindex="0"><code class="language-css"><span class="line"><span style="color:#6A737D;--shiki-light:#6A737D">/*</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D"> * Author: Lass Team</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D"> * Date: 2026-02-06</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-light:#6A737D"> */</span></span>
+<span class="line"><span style="color:#B392F0;--shiki-light:#6F42C1">.box</span><span style="color:#E1E4E8;--shiki-light:#24292E"> {</span></span>
+<span class="line"><span style="color:#79B8FF;--shiki-light:#005CC5">  color</span><span style="color:#E1E4E8;--shiki-light:#24292E">: </span><span style="color:#79B8FF;--shiki-light:#005CC5">red</span><span style="color:#E1E4E8;--shiki-light:#24292E">;</span></span>
+<span class="line"><span style="color:#E1E4E8;--shiki-light:#24292E">}</span></span></code></pre>
+</div>
+
+  </main>
+  <script>
+  // Copy button for code blocks
+  (function() {
+    document.querySelectorAll('pre.shiki').forEach(function(pre) {
+      var code = pre.querySelector('code');
+      if (!code) return;
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.onclick = function() {
+        navigator.clipboard.writeText(code.textContent.trim());
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+      };
+      pre.style.position = 'relative';
+      btn.style.position = 'absolute';
+      btn.style.top = '0.5rem';
+      btn.style.right = '0.5rem';
+      pre.appendChild(btn);
+    });
+  })();
+  </script>
+</body>
+</html>

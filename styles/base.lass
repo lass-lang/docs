@@ -1,0 +1,113 @@
+/* Reset + base typography — plain CSS, no Lass features needed */
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+@layer base {
+html {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--font-size-hero); }
+h2 { font-size: var(--font-size-2xl); margin-block-start: var(--space-xl); }
+h3 { font-size: var(--font-size-xl); margin-block-start: var(--space-lg); }
+
+p {
+  max-width: 65ch;
+  margin-block-start: var(--space-md);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-surface);
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+}
+
+pre {
+  overflow-x: auto;
+  border-radius: 8px;
+  margin-block-start: var(--space-md);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+blockquote {
+  border-inline-start: 3px solid var(--color-accent);
+  padding-inline-start: var(--space-md);
+  margin-block-start: var(--space-md);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block-start: var(--space-md);
+  font-size: var(--font-size-sm);
+}
+
+th, td {
+  text-align: start;
+  padding: var(--space-sm) var(--space-md);
+  border-block-end: 1px solid var(--color-border);
+}
+
+th {
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+ul, ol {
+  padding-inline-start: var(--space-lg);
+  margin-block-start: var(--space-md);
+}
+
+li + li {
+  margin-block-start: var(--space-sm);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+}

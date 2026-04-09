@@ -1,0 +1,281 @@
+
+/* Declare layer order - layers listed first have lower priority */
+@layer reset, base, layout, components;
+
+:root {
+  --sun-morning: oklch(85% 0.12 85); --sun-noon: oklch(95% 0.08 95); --sun-sunset: oklch(65% 0.18 35); --sun-nadir: oklch(15% 0.05 270);
+
+  /* Semantic tokens — light mode (default) */
+  --color-bg: oklch(99% 0.005 95);
+  --color-text: oklch(20% 0.02 270);
+  --color-text-muted: oklch(45% 0.02 270);
+  --color-accent: var(--sun-sunset);
+  --color-surface: oklch(97% 0.01 95);
+  --color-border: oklch(88% 0.02 95);
+  --color-code-bg: oklch(98% 0.005 95);
+  --color-code-border: oklch(88% 0.02 95);
+
+  /* Spacing scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-hero: clamp(2.5rem, 5vw, 4rem);
+
+  /* Layout */
+  --content-width: 72rem;
+  --content-padding: var(--space-lg);
+}
+
+/* Dark mode — override semantic tokens for dark backgrounds */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: oklch(16% 0.02 270);
+    --color-text: oklch(90% 0.01 95);
+    --color-text-muted: oklch(65% 0.02 270);
+    --color-accent: var(--sun-morning);
+    --color-surface: oklch(20% 0.02 270);
+    --color-border: oklch(30% 0.02 270);
+    --color-code-bg: oklch(18% 0.02 270);
+    --color-code-border: oklch(28% 0.02 270);
+  }
+}
+/* Reset + base typography — plain CSS, no Lass features needed */
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+@layer base {
+html {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--font-size-hero); }
+h2 { font-size: var(--font-size-2xl); margin-block-start: var(--space-xl); }
+h3 { font-size: var(--font-size-xl); margin-block-start: var(--space-lg); }
+
+p {
+  max-width: 65ch;
+  margin-block-start: var(--space-md);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-surface);
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+}
+
+pre {
+  overflow-x: auto;
+  border-radius: 8px;
+  margin-block-start: var(--space-md);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+blockquote {
+  border-inline-start: 3px solid var(--color-accent);
+  padding-inline-start: var(--space-md);
+  margin-block-start: var(--space-md);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block-start: var(--space-md);
+  font-size: var(--font-size-sm);
+}
+
+th, td {
+  text-align: start;
+  padding: var(--space-sm) var(--space-md);
+  border-block-end: 1px solid var(--color-border);
+}
+
+th {
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+ul, ol {
+  padding-inline-start: var(--space-lg);
+  margin-block-start: var(--space-md);
+}
+
+li + li {
+  margin-block-start: var(--space-sm);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+}
+/* Page layout */
+
+@layer layout {
+  .page {
+    max-width: var(--content-width);
+    margin-inline: auto;
+    padding-inline: var(--content-padding);
+    padding-block: var(--space-xl);
+
+    & > * + * {
+      margin-block-start: var(--space-lg);
+    }
+  }
+}
+
+/* Responsive — mobile adjustments */
+@media (max-width: 48rem) {
+  :root {
+    --content-padding: var(--space-md);
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  h2 {
+    font-size: var(--font-size-xl);
+  }
+}
+@layer components {
+/* Site navigation */
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+  justify-content: center;
+  padding: var(--space-md) var(--content-padding);
+  max-width: var(--content-width);
+  margin-inline: auto;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+}
+
+.site-nav a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.site-nav a:first-child {
+  font-weight: 700;
+  color: var(--color-text);
+  margin-inline-end: auto;
+}
+
+.site-nav a:hover {
+  color: var(--color-text);
+}
+
+/* Code blocks — Shiki-rendered with dual-theme support */
+pre.shiki {
+  background-color: var(--color-code-bg) !important;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  border: 1px solid var(--color-code-border);
+}
+
+/* Shiki dual-theme: light mode activates --shiki-light CSS custom properties */
+@media (prefers-color-scheme: light) {
+  pre.shiki span {
+    color: var(--shiki-light) !important;
+  }
+}
+
+/* WCAG AA comment color overrides */
+pre.shiki span[style*="6A737D" i] {
+  color: #57ab5a !important;
+  --shiki-light: #1a7f37;
+}
+
+/* Test case examples — styled sections for valid/invalid code examples */
+.test-case {
+  margin-block-start: var(--space-lg);
+  padding-inline-start: var(--space-md);
+  border-inline-start: 3px solid var(--color-border);
+}
+
+.test-case[data-type="valid"] {
+  border-inline-start-color: oklch(65% 0.15 145);
+}
+
+.test-case[data-type="invalid"] {
+  border-inline-start-color: oklch(65% 0.15 25);
+}
+
+/* Copy button for code blocks */
+.copy-btn {
+  appearance: none;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 4px;
+  padding: var(--space-xs) var(--space-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.copy-btn:hover {
+  background: var(--color-border);
+  color: var(--color-text);
+}
+}
